@@ -24,7 +24,9 @@ class VcfFromBed:
 
     def convert(self, bed, output_path):
         log.info("Converting to vcf from bed using config: " + self.config_filepath)
-        raise ValueError("Not implemented yet")
+        raise ValueError(
+            "Not implemented yet. In most cases you should be able to use the TSV to VCF converter with an appropriate config. One exists for CANOES"
+        )
 
 
 if __name__ == "__main__":
