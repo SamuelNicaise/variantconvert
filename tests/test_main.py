@@ -32,6 +32,11 @@ from converter_factory import ConverterFactory
 from commons import set_log_level
 
 
+def remove_if_exists(filepath):
+    if os.path.exists(filepath):
+        os.remove(filepath)
+
+
 def test_varank_to_vcf():
     varank_tester = type(
         "obj",
@@ -55,6 +60,7 @@ def test_varank_to_vcf():
             "verbosity": "debug",
         },
     )
+    remove_if_exists(varank_tester.outputFile)
     fake_main(varank_tester)
     assert os.path.exists(varank_tester.outputFile)
 
@@ -82,6 +88,7 @@ def test_decon_to_vcf():
             "verbosity": "debug",
         },
     )
+    remove_if_exists(decon_tester.outputFile)
     fake_main(decon_tester)
     assert os.path.exists(decon_tester.outputFile)
 
@@ -113,6 +120,7 @@ def test_annotsv_to_vcf():
             "verbosity": "debug",
         },
     )
+    remove_if_exists(annotsv_tester.outputFile)
     fake_main(annotsv_tester)
     assert os.path.exists(annotsv_tester.outputFile)
 
@@ -140,8 +148,44 @@ def test_bed_to_vcf():
             "verbosity": "debug",
         },
     )
+    remove_if_exists(bed_tester.outputFile)
     fake_main(bed_tester)
     assert os.path.exists(bed_tester.outputFile)
+
+
+def test_celine_splice_data_to_vcf():
+    celine_data_tester = type(
+        "obj",
+        (object,),
+        {
+            "inputFile": osj(
+                os.path.dirname(__file__),
+                "..",
+                "..",
+                "examples",
+                "VUS_test.tsv",
+            ),
+            "outputFile": osj(
+                os.path.dirname(__file__),
+                "..",
+                "..",
+                "examples",
+                "celine_splice_data.vcf",
+            ),
+            "inputFormat": "tsv",
+            "outputFormat": "vcf",
+            "configFile": osj(
+                os.path.dirname(__file__),
+                "..",
+                "configs",
+                "config_celine_splice_data.json",
+            ),
+            "verbosity": "debug",
+        },
+    )
+    remove_if_exists(celine_data_tester.outputFile)
+    fake_main(celine_data_tester)
+    assert os.path.exists(celine_data_tester.outputFile)
 
 
 def fake_main(args_tester):
@@ -165,4 +209,4 @@ def fake_main(args_tester):
 
 
 if __name__ == "__main__":
-    test_bed_to_vcf()
+    test_celine_splice_data_to_vcf()
