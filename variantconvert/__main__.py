@@ -49,6 +49,27 @@ from commons import set_log_level
 from converter_factory import ConverterFactory
 
 
+def main(args):
+    set_log_level(args.verbosity)
+    if args.inputFormat.lower() == "decon":
+        print("[ERROR] DECON is handled as a TSV conversion. Use 'tsv' as input format")
+        sys.exit()
+    factory = ConverterFactory()
+    converter = factory.get_converter(
+        args.inputFormat.lower(), args.outputFormat.lower(), args.configFile
+    )
+    if args.inputFormat == "varank":
+        converter.set_coord_conversion_file(
+            osj(
+                os.path.dirname(__file__),
+                "..",
+                "examples",
+                "VCF_Coordinates_Conversion.tsv",
+            )
+        )
+    converter.convert(args.inputFile, args.outputFile)
+
+
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(prog="python fileconverter.py")
     parser.add_argument("-i", "--inputFile", type=str, required=True, help="Input file")
@@ -72,116 +93,4 @@ if __name__ == "__main__":
         "-v", "--verbosity", type=str, default="info", help="Verbosity level"
     )
     args = parser.parse_args()
-
-    # varank_tester = type(
-    #     "obj",
-    #     (object,),
-    #     {
-    #         "inputFile": osj(
-    #             os.path.dirname(__file__),
-    #             "..",
-    #             "..",
-    #             "examples",
-    #             "fam21_ACE2105946_BBS_allVariants.rankingByGene.tsv",
-    #         ),
-    #         "outputFile": osj(
-    #             os.path.dirname(__file__), "..", "..", "examples", "varank_test.vcf"
-    #         ),
-    #         "inputFormat": "varank",
-    #         "outputFormat": "vcf",
-    #         "configFile": osj(
-    #             os.path.dirname(__file__), "..", "configs", "config_varank.json"
-    #         ),
-    #         "verbosity": "debug",
-    #     },
-    # )
-    # decon_tester = type(
-    #     "obj",
-    #     (object,),
-    #     {
-    #         "inputFile": osj(
-    #             os.path.dirname(__file__),
-    #             "..",
-    #             "..",
-    #             "examples",
-    #             "DECON.20220329-083144.Design_results_all.txt",
-    #         ),
-    #         "outputFile": osj(
-    #             os.path.dirname(__file__), "..", "..", "examples", "decon_test.vcf"
-    #         ),
-    #         "inputFormat": "tsv",
-    #         "outputFormat": "vcf",
-    #         "configFile": osj(
-    #             os.path.dirname(__file__), "..", "configs", "config_decon.json"
-    #         ),
-    #         "verbosity": "debug",
-    #     },
-    # )
-    # annotsv_tester = type(
-    #     "obj",
-    #     (object,),
-    #     {
-    #         "inputFile": osj(
-    #             os.path.dirname(__file__),
-    #             "..",
-    #             "..",
-    #             "examples",
-    #             "DECoN.20211222-135425_results_all.AnnotSV.tsv",
-    #         ),
-    #         "outputFile": osj(
-    #             os.path.dirname(__file__),
-    #             "..",
-    #             "..",
-    #             "examples",
-    #             "decon_annotsv_test.vcf",
-    #         ),
-    #         "inputFormat": "annotsv",
-    #         "outputFormat": "vcf",
-    #         "configFile": osj(
-    #             os.path.dirname(__file__), "..", "configs", "config_annotsv3.json"
-    #         ),
-    #         "verbosity": "debug",
-    #     },
-    # )
-    # bed_tester = type(
-    #     "obj",
-    #     (object,),
-    #     {
-    #         "inputFile": osj(
-    #             os.path.dirname(__file__),
-    #             "..",
-    #             "..",
-    #             "examples",
-    #             "canoes.bed",
-    #         ),
-    #         "outputFile": osj(
-    #             os.path.dirname(__file__), "..", "examples", "canoes_bed_test.vcf"
-    #         ),
-    #         "inputFormat": "tsv",
-    #         "outputFormat": "vcf",
-    #         "configFile": osj(
-    #             os.path.dirname(__file__), "..", "configs", "config_canoes_bed.json"
-    #         ),
-    #         "verbosity": "debug",
-    #     },
-    # )
-    # args = annotsv_tester
-
-    set_log_level(args.verbosity)
-    if args.inputFormat.lower() == "decon":
-        print("[ERROR] DECON is handled as a TSV conversion. Use 'tsv' as input format")
-        sys.exit()
-    factory = ConverterFactory()
-    converter = factory.get_converter(
-        args.inputFormat.lower(), args.outputFormat.lower(), args.configFile
-    )
-    if args.inputFormat == "varank":
-        converter.set_coord_conversion_file(
-            osj(
-                os.path.dirname(__file__),
-                "..",
-                "examples",
-                "VCF_Coordinates_Conversion.tsv",
-            )
-        )
-    converter.convert(args.inputFile, args.outputFile)
+    main(args)
