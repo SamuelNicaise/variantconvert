@@ -19,7 +19,7 @@ python /home1/L/NGS/BIO_INFO/BIO_INFO_Sam/scripts/tsvConversion/file_converter.p
 ----------------------------
 Configfile guidelines (JSON)
 ----------------------------
-1)[GENERAL] has 3 important fields
+1)[GENERAL] has 3 important fields.
 	#source format name: will show up in VCF meta fields
 	#skip_rows: how many rows to skip before we reach indexes.
 	This script cannot handle a tsv with unnamed columns (beds are fine)
@@ -31,10 +31,11 @@ Configfile guidelines (JSON)
 	Type and Description fields will be used in the VCF header
 4) read HelperFunctions docstring
 
+If you need a place to store variables unrelated to the vcf file (e.g number of CPUs) put them in [GENERAL]
 
 #TODO: add argument mode to change config files (particularly genome)
 #TODO: add argument mode to deal with an entire folder of varank files (or varank files in general)
-#TODO: add a Variant class and a VCF class instead of writing files line by line
+#TODO: refactor with a Variant class and a VCF class
 """
 from __future__ import division
 from __future__ import print_function
@@ -47,6 +48,7 @@ from os.path import join as osj
 
 from commons import set_log_level
 from converter_factory import ConverterFactory
+from varank_batch import main_varank_batch
 
 
 def main(args):
@@ -73,10 +75,6 @@ def main(args):
         converter.set_coord_conversion_file(args.coordConversionFile)
 
     converter.convert(args.inputFile, args.outputFile)
-
-
-def main_varank_batch(args):
-    set_log_level(args.verbosity)
 
 
 if __name__ == "__main__":
@@ -132,6 +130,33 @@ if __name__ == "__main__":
         required=True,
         help="JSON config file describing columns. See script's docstring.",
     )
+    parser_batch.add_argument(
+        "-n",
+        "--ncores",
+        type=int,
+        help="Number of cores for multiprocessing",
+    )
+    parser_batch.add_argument(
+        "-bc",
+        "--bcftools",
+        type=str,
+        default="bcftools",
+        help="path to bcftools executable [default : 'bcftools']",
+    )
+    parser_batch.add_argument(
+        "-bg",
+        "--bgzip",
+        type=str,
+        default="bgzip",
+        help="path to bgzip executable [default: 'bgzip']",
+    )
+    parser_batch.add_argument(
+        "-ta",
+        "--tabix",
+        type=str,
+        default="tabix",
+        help="path to tabix executable [default: 'tabix']",
+    )
 
     parser_config = subparsers.add_parser(
         "config", help="change variables in config files [under construction]"
@@ -145,7 +170,7 @@ if __name__ == "__main__":
         help="JSON config file describing columns. See script's docstring.",
     )
 
-    for myparser in (parser_convert, parser_config):
+    for myparser in (parser_convert, parser_batch, parser_config):
         myparser.add_argument(
             "-v", "--verbosity", type=str, default="info", help="Verbosity level"
         )
