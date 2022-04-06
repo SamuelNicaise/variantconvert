@@ -134,6 +134,7 @@ if __name__ == "__main__":
         "-n",
         "--ncores",
         type=int,
+        default=6,
         help="Number of cores for multiprocessing",
     )
     parser_batch.add_argument(
