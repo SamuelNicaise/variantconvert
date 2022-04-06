@@ -30,6 +30,7 @@ from os.path import join as osj
 sys.path.append(os.path.join(os.path.dirname(__file__), "..", "variantconvert"))
 from converter_factory import ConverterFactory
 from commons import set_log_level
+from variantconvert.__main__ import main
 
 
 def remove_if_exists(filepath):
@@ -58,10 +59,17 @@ def test_varank_to_vcf():
                 os.path.dirname(__file__), "..", "configs", "config_varank.json"
             ),
             "verbosity": "debug",
+            "coordConversionFile": osj(
+                os.path.dirname(__file__),
+                "..",
+                "..",
+                "examples",
+                "VCF_Coordinates_Conversion.tsv",
+            ),
         },
     )
     remove_if_exists(varank_tester.outputFile)
-    fake_main(varank_tester)
+    main(varank_tester)
     assert os.path.exists(varank_tester.outputFile)
 
 
@@ -89,7 +97,7 @@ def test_decon_to_vcf():
         },
     )
     remove_if_exists(decon_tester.outputFile)
-    fake_main(decon_tester)
+    main(decon_tester)
     assert os.path.exists(decon_tester.outputFile)
 
 
@@ -121,7 +129,7 @@ def test_annotsv_to_vcf():
         },
     )
     remove_if_exists(annotsv_tester.outputFile)
-    fake_main(annotsv_tester)
+    main(annotsv_tester)
     assert os.path.exists(annotsv_tester.outputFile)
 
 
@@ -149,7 +157,7 @@ def test_bed_to_vcf():
         },
     )
     remove_if_exists(bed_tester.outputFile)
-    fake_main(bed_tester)
+    main(bed_tester)
     assert os.path.exists(bed_tester.outputFile)
 
 
@@ -184,28 +192,8 @@ def test_celine_splice_data_to_vcf():
         },
     )
     remove_if_exists(celine_data_tester.outputFile)
-    fake_main(celine_data_tester)
+    main(celine_data_tester)
     assert os.path.exists(celine_data_tester.outputFile)
-
-
-def fake_main(args_tester):
-    args = args_tester
-    set_log_level(args.verbosity)
-    factory = ConverterFactory()
-    converter = factory.get_converter(
-        args.inputFormat.lower(), args.outputFormat.lower(), args.configFile
-    )
-    if args.inputFormat == "varank":
-        converter.set_coord_conversion_file(
-            osj(
-                os.path.dirname(__file__),
-                "..",
-                "..",
-                "examples",
-                "VCF_Coordinates_Conversion.tsv",
-            )
-        )
-    converter.convert(args.inputFile, args.outputFile)
 
 
 if __name__ == "__main__":

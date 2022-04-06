@@ -52,45 +52,108 @@ from converter_factory import ConverterFactory
 def main(args):
     set_log_level(args.verbosity)
     if args.inputFormat.lower() == "decon":
-        print("[ERROR] DECON is handled as a TSV conversion. Use 'tsv' as input format")
-        sys.exit()
+        raise ValueError(
+            "DECON is handled as a TSV conversion. Use 'tsv' as input format"
+        )
+
     factory = ConverterFactory()
     converter = factory.get_converter(
         args.inputFormat.lower(), args.outputFormat.lower(), args.configFile
     )
+
     if args.inputFormat == "varank":
-        converter.set_coord_conversion_file(
-            osj(
-                os.path.dirname(__file__),
-                "..",
-                "examples",
-                "VCF_Coordinates_Conversion.tsv",
+        if args.coordConversionFile == "":
+            raise ValueError(
+                "Converting from a Varank file requires setting the --coordConversionFile argument to an existing file"
             )
-        )
+        if not os.path.exists(args.coordConversionFile):
+            raise ValueError(
+                "coordConversionFile does not exist:" + args.coordConversionFile
+            )
+        converter.set_coord_conversion_file(args.coordConversionFile)
+
     converter.convert(args.inputFile, args.outputFile)
 
 
+def main_varank_batch(args):
+    set_log_level(args.verbosity)
+
+
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(prog="python fileconverter.py")
-    parser.add_argument("-i", "--inputFile", type=str, required=True, help="Input file")
-    parser.add_argument(
+    parser = argparse.ArgumentParser(prog="variantconvert")
+    subparsers = parser.add_subparsers(help="sub-command help")
+    parser_convert = subparsers.add_parser(
+        "convert", help="convert a file containing genomic variants to an other format"
+    )
+    parser_convert.add_argument(
+        "-i", "--inputFile", type=str, required=True, help="Input file"
+    )
+    parser_convert.add_argument(
         "-o", "--outputFile", type=str, required=True, help="Output file"
     )
-    parser.add_argument(
+    parser_convert.add_argument(
         "-fi", "--inputFormat", type=str, required=True, help="Input file format"
     )
-    parser.add_argument(
+    parser_convert.add_argument(
         "-fo", "--outputFormat", type=str, required=True, help="Output file format"
     )
-    parser.add_argument(
+    parser_convert.add_argument(
         "-c",
         "--configFile",
         type=str,
         required=True,
         help="JSON config file describing columns. See script's docstring.",
     )
-    parser.add_argument(
-        "-v", "--verbosity", type=str, default="info", help="Verbosity level"
+    parser_convert.add_argument(
+        "-cc",
+        "--coordConversionFile",
+        type=str,
+        default="",
+        help="Varank coordinate conversion file (only useful if inputFormat=varank)",
     )
+
+    parser_batch = subparsers.add_parser(
+        "varankBatch", help="convert an entire folder of Varank files"
+    )
+    parser_batch.add_argument(
+        "-i",
+        "--inputVarankDir",
+        type=str,
+        required=True,
+        help="Input directory containing Varank TSV files and VCF_Coordinates_Conversion.tsv",
+    )
+    parser_batch.add_argument(
+        "-o", "--outputFile", type=str, required=True, help="Output file"
+    )
+    parser_batch.add_argument(
+        "-c",
+        "--configFile",
+        type=str,
+        required=True,
+        help="JSON config file describing columns. See script's docstring.",
+    )
+
+    parser_config = subparsers.add_parser(
+        "config", help="change variables in config files [under construction]"
+    )
+    parser_config.add_argument("-g", "--genome", type=str, help="genome path")
+    parser_config.add_argument(
+        "-c",
+        "--configFile",
+        type=str,
+        required=True,
+        help="JSON config file describing columns. See script's docstring.",
+    )
+
+    for myparser in (parser_convert, parser_config):
+        myparser.add_argument(
+            "-v", "--verbosity", type=str, default="info", help="Verbosity level"
+        )
+
     args = parser.parse_args()
-    main(args)
+    if "verbosity" not in args:
+        parser.print_help()
+    elif "inputVarankDir" in args:
+        main_varank_batch(args)
+    else:
+        main(args)
