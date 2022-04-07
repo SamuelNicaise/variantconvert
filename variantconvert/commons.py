@@ -33,6 +33,23 @@ def set_log_level(verbosity):
     )
 
 
+def rename_duplicates_in_list(input_list):
+    """
+    used to rename a dataframe's columns when multiple exist
+    case insensitive
+    """
+    output_list = []
+    elt_counts = {}
+    for e in input_list:
+        e_lower = e.lower()
+        if e_lower not in elt_counts.keys():
+            output_list.append(e)
+            elt_counts[e_lower] = 1
+        else:
+            elt_counts[e_lower] += 1
+            output_list.append(e + "_" + str(elt_counts[e_lower]))
+    return output_list
+
 def is_helper_func(arg):
     if isinstance(arg, list):
         if arg[0] == "HELPER_FUNCTION":

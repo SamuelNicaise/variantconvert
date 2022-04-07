@@ -27,9 +27,9 @@ import sys
 
 from os.path import join as osj
 
-sys.path.append(os.path.join(os.path.dirname(__file__), "..", "variantconvert"))
-from converter_factory import ConverterFactory
-from commons import set_log_level
+sys.path.append(os.path.join(os.path.dirname(__file__), ".."))
+# from converter_factory import ConverterFactory
+# from commons import set_log_level
 from variantconvert.__main__ import main
 
 
@@ -197,4 +197,4 @@ def test_celine_splice_data_to_vcf():
 
 
 if __name__ == "__main__":
-    test_celine_splice_data_to_vcf()
+    test_varank_to_vcf()

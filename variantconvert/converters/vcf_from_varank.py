@@ -13,7 +13,7 @@ import time
 from converters.abstract_converter import AbstractConverter
 
 sys.path.append("..")
-from commons import clean_string, varank_to_vcf_coords
+from commons import clean_string, rename_duplicates_in_list, varank_to_vcf_coords
 from helper_functions import HelperFunctions
 
 
@@ -35,7 +35,8 @@ class VcfFromVarank(AbstractConverter):
             inplace=True,
         )
         self.df.reset_index(drop=True, inplace=True)
-        # print(self.df)
+        self.df.columns = rename_duplicates_in_list(self.df.columns)
+        log.debug(self.df)
 
     def get_sample_name(self, varank_tsv):
         # with open(varank_file, 'r') as f:
@@ -122,7 +123,7 @@ class VcfFromVarank(AbstractConverter):
 
                 vcf.write(line + "\n")
 
-        # print("Wrote: "+ output_filepath)
+        log.debug("Wrote: " + output_path)
 
     def create_vcf_header(self):
         header = []
@@ -134,7 +135,7 @@ class VcfFromVarank(AbstractConverter):
         # FILTER is not present in Varank, so all variants are set to PASS
         header.append('##FILTER=<ID=PASS,Description="Passed filter">')
         # INFO contains all columns that are not used anywhere specific
-        # print(dict(self.df.dtypes))
+        # log.debug(dict(self.df.dtypes))
         for key in self.df.columns:
             if key in self.get_known_columns():
                 continue

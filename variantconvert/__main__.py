@@ -46,6 +46,7 @@ import sys
 
 from os.path import join as osj
 
+sys.path.append(os.path.join(os.path.dirname(__file__), "."))
 from commons import set_log_level
 from converter_factory import ConverterFactory
 from varank_batch import main_varank_batch
