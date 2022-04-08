@@ -60,195 +60,765 @@
 		}
 	},
 	"COLUMNS_DESCRIPTION": {
-		"variantID": "Variant identifier [#chr]_[genomicposition]_[RefBase]_[VarBase]",
-		"gene": "Gene symbol",
-		"geneDesc": "Gene description",
-		"omimId": "OMIM id",
-		"transcript": "RefSeq transcript id",
-		"strand": "Transcript strand",
-		"transLen": "Length of transcript (full cDNA length)",
-		"cdsLen": "CDS length",
-		"chr": "Chromosome of variant",
-		"start": "Start position of variant",
-		"end": "End position of variant",
-		"ref": "Nucleotide sequence in the reference genome (restricted to 50bp)",
-		"alt": "Alternate nucleotide sequence (restricted to 50bp)",
-		"protein": "Protein ID (NCBI)",
-		"Uniprot": "UniProt ID",
-		"assembly": "Genome assembly",
-		"posAA": "Amino acid position",
-		"wtAA_1": "Reference codon",
-		"wtCodon": "WT codon",
-		"varAA_1": "Alternate codon",
-		"zygosity": "Homozygote or heterozygote status",
-		"totalReadDepth": "Total number of reads covering the position",
-		"varReadDepth": "Number of reads supporting the variant",
-		"readsVariationPercent": "Percent of reads supporting variant over those supporting reference sequence/base",
-		"QUALphred ": "QUAL: The Phred scaled probability that a REF/ALT polymorphism exists at this site given sequencing data. Because the Phred scale is -10*log(1-p), a value of 10 indicates a 1 in 10 chance of error, while a 100 indicates a 1 in 10^10 chance. These values can grow very large when a large amount of NGS data is used for variant calling.",
-		"varType": "Variant Type (substitution, deletion, insertion, duplication, delins)",
-		"codingEffect": "Variant Coding effect (synonymous, missense, stop gain, in-frame, frameshift, start loss, stop loss)",
-		"VarLocation": "Variant location (upstream, 5'UTR, exon, intron, 3'UTR, downstream)",
-		"exon": "Exon number (nearest exon if intronic variant)",
-		"intron": "Intron number",
-		"gDNAstart": "gDNA start",
-		"gDNAend": "gDNA end",
-		"gNomen": "Genomic-level nomenclature",
-		"cDNAstart": "cDNA start",
-		"cDNAend": "cDNA end",
-		"cNomen": "cDNA-level nomenclature",
-		"pNomen": "Protein-level nomenclature",
-		"clinVarIds": "List of ClinVar Ids separated by '|'",
-		"clinVarOrigins": "List of ClinVar origins separated by '|', values: germline, somatic, de novo, maternal...",
-		"clinVarMethods": "List of ClinVar methods separated by '|', values: clinical testing, research, literature only...",
-		"clinVarClinSignifs": "List of ClinVar clinical significances separated by '|'",
-		"clinVarReviewStatus": "List of ClinVar reviews separated by '|', number of stars (0-4)",
-		"clinVarPhenotypes": "List of ClinVar phenotypes Ids separated by '|'",
-		"rsID": "dbSNP variation",
-		"rsValidation": "dbSNP validated status",
-		"rsValidationNumber": "dbSNP number of validation categories",
-		"rsClinicalSignificance": "dbSNP variation clinical significance",
-		"rsAncestralAllele": "dbSNP ancestral allele",
-		"rsHeterozygosity": "dbSNP variation average heterozygosity",
-		"rsMAF": "dbSNP variation global Minor Allele",
-		"rsMAFAllele": "dbSNP variation global minor allele",
-		"rsMAFCount": "dbSNP variation sample size",
-		"1000g_AF": "1000 genomes global allele frequency",
-		"1000g_AFR_AF": "1000 genomes allele frequency in African population",
-		"1000g_SAS_AF": "1000 genomes allele frequency in South Asian population",
-		"1000g_EAS_AF": "1000 genomes allele frequency in East Asian population",
-		"1000g_EUR_AF": "1000 genomes allele frequency in European population",
-		"1000g_AMR_AF": "1000 genomes allele frequency in American population",
-		"gnomadAltFreq_all": "gnomAD alternate allele frequency (All populations)",
-		"gnomadHomCount_all": "gnomAD homozygous genotype count (All populations)",
-		"gnomadHetCount_all": "gnomAD heterozygous genotype count (All populations)",
-		"gnomadHemCount_all": "gnomAD hemizygous genotype count (All populations)",
-		"gnomadAltFreq_afr": "gnomAD alternate allele frequency (African)",
-		"gnomadHomCount_afr": "gnomAD homozygous genotype count (African)",
-		"gnomadHetCount_afr": "gnomAD heterozygous genotype count (African)",
-		"gnomadHemCount_afr": "gnomAD hemizygous genotype count (African)",
-		"gnomadAltFreq_amr": "gnomAD alternate allele frequency (Latino)",
-		"gnomadHomCount_amr": "gnomAD homozygous genotype count (Latino)",
-		"gnomadHetCount_amr": "gnomAD heterozygous genotype count (Latino)",
-		"gnomadHemCount_amr": "gnomAD hemizygous genotype count (Latino)",
-		"gnomadAltFreq_asj": "gnomAD alternate allele frequency (Ashkenazy Jewish)",
-		"gnomadHomCount_asj": "gnomAD homozygous genotype count (Ashkenazy Jewish)",
-		"gnomadHetCount_asj": "gnomAD heterozygous genotype count (Ashkenazy Jewish)",
-		"gnomadHemCount_asj": "gnomAD hemizygous genotype count (Ashkenazy Jewish)",
-		"gnomadAltFreq_eas": "gnomAD alternate allele frequency (East Asian)",
-		"gnomadHomCount_eas": "gnomAD homozygous genotype count (East Asian)",
-		"gnomadHetCount_eas": "gnomAD heterozygous genotype count (East Asian)",
-		"gnomadHemCount_eas": "gnomAD hemizygous genotype count (East Asian)",
-		"gnomadAltFreq_sas": "gnomAD alternate allele frequency (South Asian)",
-		"gnomadHomCount_sas": "gnomAD homozygous genotype count (South Asian)",
-		"gnomadHetCount_sas": "gnomAD heterozygous genotype count (South Asian)",
-		"gnomadHemCount_sas": "gnomAD hemizygous genotype count (South Asian)",
-		"gnomadAltFreq_nfe": "gnomAD alternate allele frequency (Non-Finnish European)",
-		"gnomadHomCount_nfe": "gnomAD homozygous genotype count (Non-Finnish European)",
-		"gnomadHetCount_nfe": "gnomAD heterozygous genotype count (Non-Finnish European)",
-		"gnomadHemCount_nfe": "gnomAD hemizygous genotype count (Non-Finnish European)",
-		"gnomadAltFreq_fin": "gnomAD alternate allele frequency (Finnish European)",
-		"gnomadHomCount_fin": "gnomAD homozygous genotype count (Finnish European)",
-		"gnomadHetCount_fin": "gnomAD heterozygous genotype count (Finnish European)",
-		"gnomadHemCount_fin": "gnomAD hemizygous genotype count (Finnish European)",
-		"gnomadAltFreq_oth": "gnomAD alternate allele frequency (Other populations)",
-		"gnomadHomCount_oth": "gnomAD homozygous genotype count (Other populations)",
-		"gnomadHetCount_oth": "gnomAD heterozygous genotype count (Other populations)",
-		"gnomadHemCount_oth": "gnomAD hemizygous genotype count (Other populations)",
-		"gnomadAltFreq_popmax": "gnomAD alternate allele frequency (Maximum Allele Frequency across populations, excluding OTH)",
-		"gnomadHomCount_popmax": "gnomAD homozygous genotype count (Maximum Allele Frequency across populations, excluding OTH)",
-		"gnomadHetCount_popmax": "gnomAD heterozygous genotype count (Maximum Allele Frequency across populations, excluding OTH)",
-		"gnomadHemCount_popmax": "gnomAD hemizygous genotype count (Maximum Allele Frequency across populations, excluding OTH)",
-		"gnomadFilter": "gnomAD VCF filter value (AC0, PASS, RF...)",
-		"gnomadReadDepth": "gnomAD read depth",
-		"gnomadOrigin": "gnomAD variant origin (Exomes, genomes, or both)",
-		"deltaMaxEntSscorePercent": "% difference between the splice score of variant with the score of the reference base",
-		"wtMaxEntScore": "WT seq. MaxEntScan score",
-		"varMaxEntScore": "Variant seq. MaxEntScan score",
-		"deltaSSFscorePercent": "% difference between the splice score of variant with the score of the reference base",
-		"wtSSFScore": "WT seq. SpliceSiteFinder score",
-		"varSSFScore": "Variant seq. SpliceSiteFinder score",
-		"deltaNNSscorePercent": "% difference between the splice score of variant with the score of the reference base",
-		"wtNNSScore": "WT seq. NNSPLICE score",
-		"varNNSScore": "Variant seq. NNSPLICE score",
-		"distNearestSS": "Distance to Nearest splice site",
-		"nearestSSChange": "Nearest splice site change",
-		"nearestSSType": "Nearest splice site type",
-		"localSpliceEffect": "Splicing  effect  in  variation  vicinity  (New  donor  Site,  New  Acceptor  Site,  Cryptic  Donor  Strongly  Activated, Cryptic Donor Weakly Activated, Cryptic Acceptor Strongly Activated, Cryptic Acceptor Weakly Activated)",
-		"localSpliceSiteAnnotation": "Splice site annotation: 'essential splice donor': variant in 5' SS at intronic position +1 or +2, 'essential splice acceptor': variant in 3' SS at intronic position -1 or -2, 'close splice donor': variant in 5' SS at position -3 to -1, +3 to +6, 'close splice acceptor': variant in 3' SS at position -12 to -2, and 0 to +2",
-		"localSS_pos": "Genomic position of predicted new splice site or activated cryptic site",
-		"localSS_wtMaxEntScore": "WT seq. MaxEntScan score used for local splice effect detection",
-		"localSS_wtNNSScore": "WT seq. NNSPLICE score used for local splice effect detection",
-		"localSS_wtHSFScore": "WT seq. HSF score used for local splice effect detection",
-		"localSS_varMaxEntScore": "Variant seq. MaxEntScan score used for local splice effect detection",
-		"localSS_varNNSScore": "Variant seq. NNSPLICE score used for local splice effect detection",
-		"localSS_varHSFScore": "Variant seq. HSF score used for local splice effect detection",
-		"branchPointPos": "Genomic position of affected putative branch point",
-		"branchPointChange": "Change between WT and variant BP scores (range -5 to 100)",
-		"proteinDomain1": "Protein domain 1",
-		"proteinDomain2": "Protein domain 2",
-		"proteinDomain3": "Protein domain 3",
-		"proteinDomain4": "Protein domain 4",
-		"SIFTprediction": "SIFT prediction",
-		"SIFTweight": "SIFT score ranges from 0 to 1. The amino acid substitution is predicted damaging is the score is <= 0.05, and tolerated if the score is > 0.05",
-		"SIFTmedian": "SIFT median ranges from 0 to 4.32. This is used to measure the diversity of the sequences used for prediction. A warning will occur if this is greater than 3.25 because this indicates that the prediction was based on closely related sequences. The number should be between 2.75 and 3.5",
-		"PPH2pred": "PolyPhen-2 prediction using HumVar model are either 'neutral, possibly damaging, probably damaging' or 'neutral, deleterious' depending on the annotation engine.",
-		"phyloP": "phyloP score",
-		"PhastCons": "phastCons score",
-		"GranthamDist": "Grantham distance",
-		"AGVGDclass": "AlignGVGD class",
-		"AGVGDgv": "AlignGVGD: variation (GV)",
-		"AGVGDgd": "AlignGVGD: deviation (GD)",
-		"vaRank_VarScore": "Prioritization score according to VaRank",
-		"annotationAnalysis": "Indicates the annotation status (value: Yes or No)",
-		"avgTotalDepth": "Total read depth average at the variant position for all samples analyzed that have the variation",
-		"sdTotalDepth": "Standard deviation associated with Avg_TotalDepth",
-		"countTotalDepth": "Number of samples considered for the average total read depth",
-		"avgVariantDepth": "Variation read depth average at the variant position for all samples analyzed that have the variation",
-		"sdVariantDepth": "Standard deviation associated with Avg_SNVDepth",
-		"countVariantDepth": "Number of samples considered for the average SNV read depth",
-		"familyBarcode": "Homozygote or heterozygote status for the sample of interest and its associated samples",
-		"barcode": "Homozygote or heterozygote status for all sample analyzed together (Hom: 2 ; Het: 1; Sample name is given at the first line of the file: ## Barcode)",
-		"homCount": "Number of homozygote over all samples analyzed together",
-		"hetCount": "Number of heterozygote over all samples analyzed together",
-		"alleleCount": "Number of alleles supporting the variant",
-		"sampleCount": "Total number of samples",
-		"alleleFrequency": "Allele frequency in all samples analyzed (with 4 decimals)",
-		"samVa": "Sample ID of the 10 first non WT variants, with their homozygote/heterozygote status",
-		"Annotation_Impact": "Estimation of putative impact / deleteriousness : {HIGH, MODERATE, LOW, MODIFIER}",
-		"Gene_ID": "Gene identifier",
-		"Feature_Type": "Which type of feature is in the next field (e.g. transcript, motif, miRNA, ...)",
-		"Feature_ID": "Transcript ID (preferably using version number), Motif ID, miRNA, ...)",
-		"Transcript_BioType": "The bare minimum is at least a description on whether the transcript is {'Coding', 'Noncoding'}",
-		"cDNA.pos": "Position in cDNA",
-		"cDNA.length": "Transcript's cDNA length",
-		"CDS.pos": "Position of coding bases",
-		"CDS.length": "Number of coding bases",
-		"AA.pos": "Position of AA",
-		"AA.length": "Number of AA",
-		"Distance": "Up/Downstream: Distance to first / last codon Intergenic: Distance to closest gene Distance to closest Intron boundary in exon (+/- up/downstream)",
-		"LOF": "Loss of function prediction",
-		"NMD": "Nonsense-mediated decay prediction",
-		"dbNSFP_1000Gp1_...": "1000 genomes allele frequency in ... population",
-		"dbNSFP_CADD_phred": "CADD phred score",
-		"dbNSFP_ExAC_..._AC": "ExAC allele count in ... population",
-		"dbNSFP_ExAC_..._AF": "ExAC allele frequency in ... population",
-		"dbNSFP_FATHMM_pred": "FATHMM prediction scores",
-		"dbNSFP_GERP___NR": "GERP conservation NR scores",
-		"dbNSFP_GERP___RS": "GERP conservation RS scores",
-		"dbNSFP_LRT_pred": "LRT conservation scores",
-		"dbNSFP_MetaSVM_pred": "dbNSFP scores based on 10 component scores (SIFT, PolyPhen-2 HDIV and HVAR, GERP++, MutationTaster, Mutation Assessor, FATHMM, LRT, SiPhy, PhyloP) and the maximum frequency observed (1000 genomes)",
-		"dbNSFP_MutationAssessor_pred": "MutationAssessor prediction scores",
-		"dbNSFP_MutationTaster_pred": "MutationTaster prediction scores",
-		"dbNSFP_PROVEAN_pred": "Provean prediction scores",
-		"dbNSFP_Polyphen2_HDIV_pred": "PolyPhen-2 HDIV prediction scores",
-		"dbNSFP_Polyphen2_HVAR_pred": "PolyPhen-2 HVAR prediction scores",
-		"dbNSFP_SIFT_pred": "SIFT prediction scores",
-		"Mim Number": "OMIM unique six digit identifier",
-		"Phenotypes": "e.g. Charcot-Marie-Tooth disease",
-		"Inheritance": "e.g. AD (= 'Autosomal dominant'). Detailed in VaRank 1.4.3 FAQ.",
-		"synZ": "Positive synZ (Z score) indicate gene intolerance to synonymous variation",
-		"misZ": "Positive misZ (Z score) indicate gene intolerance to missense variation",
-		"pLI": "Score computed in the ExAc database indicating the probability that a gene is intolerant to a loss of function variation  (Nonsense,  splice  acceptor  and  donor  variants  caused  by  SNV).  ExAC  consider  pLI  >=  0.9  as  an extremely LoF intolerant set of genes",
-		"HI_percent": "Haploinsufficiency ranks"
+		"variantID": {
+			"Type": "String",
+			"Description": "Variant identifier [#chr]_[genomicposition]_[RefBase]_[VarBase]"
+		},
+		"gene": {
+			"Type": "String",
+			"Description": "Gene symbol"
+		},
+		"geneDesc": {
+			"Type": "String",
+			"Description": "Gene description"
+		},
+		"omimId": {
+			"Type": "String",
+			"Description": "OMIM id"
+		},
+		"transcript": {
+			"Type": "String",
+			"Description": "RefSeq transcript id"
+		},
+		"strand": {
+			"Type": "String",
+			"Description": "Transcript strand"
+		},
+		"transLen": {
+			"Type": "String",
+			"Description": "Length of transcript (full cDNA length)"
+		},
+		"cdsLen": {
+			"Type": "String",
+			"Description": "CDS length"
+		},
+		"chr": {
+			"Type": "String",
+			"Description": "Chromosome of variant"
+		},
+		"start": {
+			"Type": "String",
+			"Description": "Start position of variant"
+		},
+		"end": {
+			"Type": "String",
+			"Description": "End position of variant"
+		},
+		"ref": {
+			"Type": "String",
+			"Description": "Nucleotide sequence in the reference genome (restricted to 50bp)"
+		},
+		"alt": {
+			"Type": "String",
+			"Description": "Alternate nucleotide sequence (restricted to 50bp)"
+		},
+		"protein": {
+			"Type": "String",
+			"Description": "Protein ID (NCBI)"
+		},
+		"Uniprot": {
+			"Type": "String",
+			"Description": "UniProt ID"
+		},
+		"assembly": {
+			"Type": "String",
+			"Description": "Genome assembly"
+		},
+		"posAA": {
+			"Type": "String",
+			"Description": "Amino acid position"
+		},
+		"wtAA_1": {
+			"Type": "String",
+			"Description": "Reference codon"
+		},
+		"wtCodon": {
+			"Type": "String",
+			"Description": "WT codon"
+		},
+		"varAA_1": {
+			"Type": "String",
+			"Description": "Alternate codon"
+		},
+		"zygosity": {
+			"Type": "String",
+			"Description": "Homozygote or heterozygote status"
+		},
+		"totalReadDepth": {
+			"Type": "String",
+			"Description": "Total number of reads covering the position"
+		},
+		"varReadDepth": {
+			"Type": "String",
+			"Description": "Number of reads supporting the variant"
+		},
+		"readsVariationPercent": {
+			"Type": "String",
+			"Description": "Percent of reads supporting variant over those supporting reference sequence/base"
+		},
+		"QUALphred ": {
+			"Type": "String",
+			"Description": "QUAL: The Phred scaled probability that a REF/ALT polymorphism exists at this site given sequencing data. Because the Phred scale is -10*log(1-p), a value of 10 indicates a 1 in 10 chance of error, while a 100 indicates a 1 in 10^10 chance. These values can grow very large when a large amount of NGS data is used for variant calling."
+		},
+		"varType": {
+			"Type": "String",
+			"Description": "Variant Type (substitution, deletion, insertion, duplication, delins)"
+		},
+		"codingEffect": {
+			"Type": "String",
+			"Description": "Variant Coding effect (synonymous, missense, stop gain, in-frame, frameshift, start loss, stop loss)"
+		},
+		"VarLocation": {
+			"Type": "String",
+			"Description": "Variant location (upstream, 5'UTR, exon, intron, 3'UTR, downstream)"
+		},
+		"exon": {
+			"Type": "String",
+			"Description": "Exon number (nearest exon if intronic variant)"
+		},
+		"intron": {
+			"Type": "String",
+			"Description": "Intron number"
+		},
+		"gDNAstart": {
+			"Type": "String",
+			"Description": "gDNA start"
+		},
+		"gDNAend": {
+			"Type": "String",
+			"Description": "gDNA end"
+		},
+		"gNomen": {
+			"Type": "String",
+			"Description": "Genomic-level nomenclature"
+		},
+		"cDNAstart": {
+			"Type": "String",
+			"Description": "cDNA start"
+		},
+		"cDNAend": {
+			"Type": "String",
+			"Description": "cDNA end"
+		},
+		"cNomen": {
+			"Type": "String",
+			"Description": "cDNA-level nomenclature"
+		},
+		"pNomen": {
+			"Type": "String",
+			"Description": "Protein-level nomenclature"
+		},
+		"clinVarIds": {
+			"Type": "String",
+			"Description": "List of ClinVar Ids separated by '|'"
+		},
+		"clinVarOrigins": {
+			"Type": "String",
+			"Description": "List of ClinVar origins separated by '|', values: germline, somatic, de novo, maternal..."
+		},
+		"clinVarMethods": {
+			"Type": "String",
+			"Description": "List of ClinVar methods separated by '|', values: clinical testing, research, literature only..."
+		},
+		"clinVarClinSignifs": {
+			"Type": "String",
+			"Description": "List of ClinVar clinical significances separated by '|'"
+		},
+		"clinVarReviewStatus": {
+			"Type": "String",
+			"Description": "List of ClinVar reviews separated by '|', number of stars (0-4)"
+		},
+		"clinVarPhenotypes": {
+			"Type": "String",
+			"Description": "List of ClinVar phenotypes Ids separated by '|'"
+		},
+		"rsID": {
+			"Type": "String",
+			"Description": "dbSNP variation"
+		},
+		"rsValidation": {
+			"Type": "String",
+			"Description": "dbSNP validated status"
+		},
+		"rsValidationNumber": {
+			"Type": "String",
+			"Description": "dbSNP number of validation categories"
+		},
+		"rsClinicalSignificance": {
+			"Type": "String",
+			"Description": "dbSNP variation clinical significance"
+		},
+		"rsAncestralAllele": {
+			"Type": "String",
+			"Description": "dbSNP ancestral allele"
+		},
+		"rsHeterozygosity": {
+			"Type": "String",
+			"Description": "dbSNP variation average heterozygosity"
+		},
+		"rsMAF": {
+			"Type": "Float",
+			"Description": "dbSNP variation global Minor Allele"
+		},
+		"rsMAFAllele": {
+			"Type": "String",
+			"Description": "dbSNP variation global minor allele"
+		},
+		"rsMAFCount": {
+			"Type": "Integer",
+			"Description": "dbSNP variation sample size"
+		},
+		"1000g_AF": {
+			"Type": "Float",
+			"Description": "1000 genomes global allele frequency"
+		},
+		"1000g_AFR_AF": {
+			"Type": "Float",
+			"Description": "1000 genomes allele frequency in African population"
+		},
+		"1000g_SAS_AF": {
+			"Type": "Float",
+			"Description": "1000 genomes allele frequency in South Asian population"
+		},
+		"1000g_EAS_AF": {
+			"Type": "Float",
+			"Description": "1000 genomes allele frequency in East Asian population"
+		},
+		"1000g_EUR_AF": {
+			"Type": "Float",
+			"Description": "1000 genomes allele frequency in European population"
+		},
+		"1000g_AMR_AF": {
+			"Type": "Float",
+			"Description": "1000 genomes allele frequency in American population"
+		},
+		"gnomadAltFreq_all": {
+			"Type": "Float",
+			"Description": "gnomAD alternate allele frequency (All populations)"
+		},
+		"gnomadHomCount_all": {
+			"Type": "String",
+			"Description": "gnomAD homozygous genotype count (All populations)"
+		},
+		"gnomadHetCount_all": {
+			"Type": "String",
+			"Description": "gnomAD heterozygous genotype count (All populations)"
+		},
+		"gnomadHemCount_all": {
+			"Type": "String",
+			"Description": "gnomAD hemizygous genotype count (All populations)"
+		},
+		"gnomadAltFreq_afr": {
+			"Type": "Float",
+			"Description": "gnomAD alternate allele frequency (African)"
+		},
+		"gnomadHomCount_afr": {
+			"Type": "String",
+			"Description": "gnomAD homozygous genotype count (African)"
+		},
+		"gnomadHetCount_afr": {
+			"Type": "String",
+			"Description": "gnomAD heterozygous genotype count (African)"
+		},
+		"gnomadHemCount_afr": {
+			"Type": "String",
+			"Description": "gnomAD hemizygous genotype count (African)"
+		},
+		"gnomadAltFreq_amr": {
+			"Type": "Float",
+			"Description": "gnomAD alternate allele frequency (Latino)"
+		},
+		"gnomadHomCount_amr": {
+			"Type": "String",
+			"Description": "gnomAD homozygous genotype count (Latino)"
+		},
+		"gnomadHetCount_amr": {
+			"Type": "String",
+			"Description": "gnomAD heterozygous genotype count (Latino)"
+		},
+		"gnomadHemCount_amr": {
+			"Type": "String",
+			"Description": "gnomAD hemizygous genotype count (Latino)"
+		},
+		"gnomadAltFreq_asj": {
+			"Type": "Float",
+			"Description": "gnomAD alternate allele frequency (Ashkenazy Jewish)"
+		},
+		"gnomadHomCount_asj": {
+			"Type": "String",
+			"Description": "gnomAD homozygous genotype count (Ashkenazy Jewish)"
+		},
+		"gnomadHetCount_asj": {
+			"Type": "String",
+			"Description": "gnomAD heterozygous genotype count (Ashkenazy Jewish)"
+		},
+		"gnomadHemCount_asj": {
+			"Type": "String",
+			"Description": "gnomAD hemizygous genotype count (Ashkenazy Jewish)"
+		},
+		"gnomadAltFreq_eas": {
+			"Type": "Float",
+			"Description": "gnomAD alternate allele frequency (East Asian)"
+		},
+		"gnomadHomCount_eas": {
+			"Type": "String",
+			"Description": "gnomAD homozygous genotype count (East Asian)"
+		},
+		"gnomadHetCount_eas": {
+			"Type": "String",
+			"Description": "gnomAD heterozygous genotype count (East Asian)"
+		},
+		"gnomadHemCount_eas": {
+			"Type": "String",
+			"Description": "gnomAD hemizygous genotype count (East Asian)"
+		},
+		"gnomadAltFreq_sas": {
+			"Type": "Float",
+			"Description": "gnomAD alternate allele frequency (South Asian)"
+		},
+		"gnomadHomCount_sas": {
+			"Type": "String",
+			"Description": "gnomAD homozygous genotype count (South Asian)"
+		},
+		"gnomadHetCount_sas": {
+			"Type": "String",
+			"Description": "gnomAD heterozygous genotype count (South Asian)"
+		},
+		"gnomadHemCount_sas": {
+			"Type": "String",
+			"Description": "gnomAD hemizygous genotype count (South Asian)"
+		},
+		"gnomadAltFreq_nfe": {
+			"Type": "Float",
+			"Description": "gnomAD alternate allele frequency (Non-Finnish European)"
+		},
+		"gnomadHomCount_nfe": {
+			"Type": "String",
+			"Description": "gnomAD homozygous genotype count (Non-Finnish European)"
+		},
+		"gnomadHetCount_nfe": {
+			"Type": "String",
+			"Description": "gnomAD heterozygous genotype count (Non-Finnish European)"
+		},
+		"gnomadHemCount_nfe": {
+			"Type": "String",
+			"Description": "gnomAD hemizygous genotype count (Non-Finnish European)"
+		},
+		"gnomadAltFreq_fin": {
+			"Type": "Float",
+			"Description": "gnomAD alternate allele frequency (Finnish European)"
+		},
+		"gnomadHomCount_fin": {
+			"Type": "String",
+			"Description": "gnomAD homozygous genotype count (Finnish European)"
+		},
+		"gnomadHetCount_fin": {
+			"Type": "String",
+			"Description": "gnomAD heterozygous genotype count (Finnish European)"
+		},
+		"gnomadHemCount_fin": {
+			"Type": "String",
+			"Description": "gnomAD hemizygous genotype count (Finnish European)"
+		},
+		"gnomadAltFreq_oth": {
+			"Type": "Float",
+			"Description": "gnomAD alternate allele frequency (Other populations)"
+		},
+		"gnomadHomCount_oth": {
+			"Type": "String",
+			"Description": "gnomAD homozygous genotype count (Other populations)"
+		},
+		"gnomadHetCount_oth": {
+			"Type": "String",
+			"Description": "gnomAD heterozygous genotype count (Other populations)"
+		},
+		"gnomadHemCount_oth": {
+			"Type": "String",
+			"Description": "gnomAD hemizygous genotype count (Other populations)"
+		},
+		"gnomadAltFreq_popmax": {
+			"Type": "Float",
+			"Description": "gnomAD alternate allele frequency (Maximum Allele Frequency across populations, excluding OTH)"
+		},
+		"gnomadHomCount_popmax": {
+			"Type": "String",
+			"Description": "gnomAD homozygous genotype count (Maximum Allele Frequency across populations, excluding OTH)"
+		},
+		"gnomadHetCount_popmax": {
+			"Type": "String",
+			"Description": "gnomAD heterozygous genotype count (Maximum Allele Frequency across populations, excluding OTH)"
+		},
+		"gnomadHemCount_popmax": {
+			"Type": "String",
+			"Description": "gnomAD hemizygous genotype count (Maximum Allele Frequency across populations, excluding OTH)"
+		},
+		"gnomadFilter": {
+			"Type": "String",
+			"Description": "gnomAD VCF filter value (AC0, PASS, RF...)"
+		},
+		"gnomadReadDepth": {
+			"Type": "String",
+			"Description": "gnomAD read depth"
+		},
+		"gnomadOrigin": {
+			"Type": "String",
+			"Description": "gnomAD variant origin (Exomes, genomes, or both)"
+		},
+		"deltaMaxEntSscorePercent": {
+			"Type": "Float",
+			"Description": "% difference between the splice score of variant with the score of the reference base"
+		},
+		"wtMaxEntScore": {
+			"Type": "Float",
+			"Description": "WT seq. MaxEntScan score"
+		},
+		"varMaxEntScore": {
+			"Type": "Float",
+			"Description": "Variant seq. MaxEntScan score"
+		},
+		"deltaSSFscorePercent": {
+			"Type": "Float",
+			"Description": "% difference between the splice score of variant with the score of the reference base"
+		},
+		"wtSSFScore": {
+			"Type": "Float",
+			"Description": "WT seq. SpliceSiteFinder score"
+		},
+		"varSSFScore": {
+			"Type": "Float",
+			"Description": "Variant seq. SpliceSiteFinder score"
+		},
+		"deltaNNSscorePercent": {
+			"Type": "Float",
+			"Description": "% difference between the splice score of variant with the score of the reference base"
+		},
+		"wtNNSScore": {
+			"Type": "Float",
+			"Description": "WT seq. NNSPLICE score"
+		},
+		"varNNSScore": {
+			"Type": "Float",
+			"Description": "Variant seq. NNSPLICE score"
+		},
+		"distNearestSS": {
+			"Type": "String",
+			"Description": "Distance to Nearest splice site"
+		},
+		"nearestSSChange": {
+			"Type": "String",
+			"Description": "Nearest splice site change"
+		},
+		"nearestSSType": {
+			"Type": "String",
+			"Description": "Nearest splice site type"
+		},
+		"localSpliceEffect": {
+			"Type": "String",
+			"Description": "Splicing  effect  in  variation  vicinity  (New  donor  Site,  New  Acceptor  Site,  Cryptic  Donor  Strongly  Activated, Cryptic Donor Weakly Activated, Cryptic Acceptor Strongly Activated, Cryptic Acceptor Weakly Activated)"
+		},
+		"localSpliceSiteAnnotation": {
+			"Type": "String",
+			"Description": "Splice site annotation: 'essential splice donor': variant in 5' SS at intronic position +1 or +2, 'essential splice acceptor': variant in 3' SS at intronic position -1 or -2, 'close splice donor': variant in 5' SS at position -3 to -1, +3 to +6, 'close splice acceptor': variant in 3' SS at position -12 to -2, and 0 to +2"
+		},
+		"localSS_pos": {
+			"Type": "String",
+			"Description": "Genomic position of predicted new splice site or activated cryptic site"
+		},
+		"localSS_wtMaxEntScore": {
+			"Type": "Float",
+			"Description": "WT seq. MaxEntScan score used for local splice effect detection"
+		},
+		"localSS_wtNNSScore": {
+			"Type": "Float",
+			"Description": "WT seq. NNSPLICE score used for local splice effect detection"
+		},
+		"localSS_wtHSFScore": {
+			"Type": "Float",
+			"Description": "WT seq. HSF score used for local splice effect detection"
+		},
+		"localSS_varMaxEntScore": {
+			"Type": "Float",
+			"Description": "Variant seq. MaxEntScan score used for local splice effect detection"
+		},
+		"localSS_varNNSScore": {
+			"Type": "Float",
+			"Description": "Variant seq. NNSPLICE score used for local splice effect detection"
+		},
+		"localSS_varHSFScore": {
+			"Type": "Float",
+			"Description": "Variant seq. HSF score used for local splice effect detection"
+		},
+		"branchPointPos": {
+			"Type": "String",
+			"Description": "Genomic position of affected putative branch point"
+		},
+		"branchPointChange": {
+			"Type": "String",
+			"Description": "Change between WT and variant BP scores (range -5 to 100)"
+		},
+		"proteinDomain1": {
+			"Type": "String",
+			"Description": "Protein domain 1"
+		},
+		"proteinDomain2": {
+			"Type": "String",
+			"Description": "Protein domain 2"
+		},
+		"proteinDomain3": {
+			"Type": "String",
+			"Description": "Protein domain 3"
+		},
+		"proteinDomain4": {
+			"Type": "String",
+			"Description": "Protein domain 4"
+		},
+		"SIFTprediction": {
+			"Type": "String",
+			"Description": "SIFT prediction"
+		},
+		"SIFTweight": {
+			"Type": "Float",
+			"Description": "SIFT score ranges from 0 to 1. The amino acid substitution is predicted damaging is the score is <= 0.05, and tolerated if the score is > 0.05"
+		},
+		"SIFTmedian": {
+			"Type": "Float",
+			"Description": "SIFT median ranges from 0 to 4.32. This is used to measure the diversity of the sequences used for prediction. A warning will occur if this is greater than 3.25 because this indicates that the prediction was based on closely related sequences. The number should be between 2.75 and 3.5"
+		},
+		"PPH2pred": {
+			"Type": "String",
+			"Description": "PolyPhen-2 prediction using HumVar model are either 'neutral, possibly damaging, probably damaging' or 'neutral, deleterious' depending on the annotation engine."
+		},
+		"phyloP": {
+			"Type": "Float",
+			"Description": "phyloP score"
+		},
+		"PhastCons": {
+			"Type": "Float",
+			"Description": "phastCons score"
+		},
+		"GranthamDist": {
+			"Type": "String",
+			"Description": "Grantham distance"
+		},
+		"AGVGDclass": {
+			"Type": "String",
+			"Description": "AlignGVGD class"
+		},
+		"AGVGDgv": {
+			"Type": "String",
+			"Description": "AlignGVGD: variation (GV)"
+		},
+		"AGVGDgd": {
+			"Type": "String",
+			"Description": "AlignGVGD: deviation (GD)"
+		},
+		"vaRank_VarScore": {
+			"Type": "String",
+			"Description": "Prioritization score according to VaRank"
+		},
+		"annotationAnalysis": {
+			"Type": "String",
+			"Description": "Indicates the annotation status (value: Yes or No)"
+		},
+		"avgTotalDepth": {
+			"Type": "Integer",
+			"Description": "Total read depth average at the variant position for all samples analyzed that have the variation"
+		},
+		"sdTotalDepth": {
+			"Type": "Integer",
+			"Description": "Standard deviation associated with Avg_TotalDepth"
+		},
+		"countTotalDepth": {
+			"Type": "Integer",
+			"Description": "Number of samples considered for the average total read depth"
+		},
+		"avgVariantDepth": {
+			"Type": "String",
+			"Description": "Variation read depth average at the variant position for all samples analyzed that have the variation"
+		},
+		"sdVariantDepth": {
+			"Type": "String",
+			"Description": "Standard deviation associated with Avg_SNVDepth"
+		},
+		"countVariantDepth": {
+			"Type": "Integer",
+			"Description": "Number of samples considered for the average SNV read depth"
+		},
+		"familyBarcode": {
+			"Type": "String",
+			"Description": "Homozygote or heterozygote status for the sample of interest and its associated samples"
+		},
+		"barcode": {
+			"Type": "String",
+			"Description": "Homozygote or heterozygote status for all sample analyzed together (Hom: 2 ; Het: 1; Sample name is given at the first line of the file: ## Barcode)"
+		},
+		"homCount": {
+			"Type": "Integer",
+			"Description": "Number of homozygote over all samples analyzed together"
+		},
+		"hetCount": {
+			"Type": "Integer",
+			"Description": "Number of heterozygote over all samples analyzed together"
+		},
+		"alleleCount": {
+			"Type": "String",
+			"Description": "Number of alleles supporting the variant"
+		},
+		"sampleCount": {
+			"Type": "Integer",
+			"Description": "Total number of samples"
+		},
+		"alleleFrequency": {
+			"Type": "Float",
+			"Description": "Allele frequency in all samples analyzed (with 4 decimals)"
+		},
+		"samVa": {
+			"Type": "String",
+			"Description": "Sample ID of the 10 first non WT variants, with their homozygote/heterozygote status"
+		},
+		"Annotation_Impact": {
+			"Type": "String",
+			"Description": "Estimation of putative impact / deleteriousness : {HIGH, MODERATE, LOW, MODIFIER}"
+		},
+		"Gene_ID": {
+			"Type": "String",
+			"Description": "Gene identifier"
+		},
+		"Feature_Type": {
+			"Type": "String",
+			"Description": "Which type of feature is in the next field (e.g. transcript, motif, miRNA, ...)"
+		},
+		"Feature_ID": {
+			"Type": "String",
+			"Description": "Transcript ID (preferably using version number), Motif ID, miRNA, ...)"
+		},
+		"Transcript_BioType": {
+			"Type": "String",
+			"Description": "The bare minimum is at least a description on whether the transcript is {'Coding', 'Noncoding'}"
+		},
+		"cDNA.pos": {
+			"Type": "String",
+			"Description": "Position in cDNA"
+		},
+		"cDNA.length": {
+			"Type": "String",
+			"Description": "Transcript's cDNA length"
+		},
+		"CDS.pos": {
+			"Type": "String",
+			"Description": "Position of coding bases"
+		},
+		"CDS.length": {
+			"Type": "String",
+			"Description": "Number of coding bases"
+		},
+		"AA.pos": {
+			"Type": "String",
+			"Description": "Position of AA"
+		},
+		"AA.length": {
+			"Type": "String",
+			"Description": "Number of AA"
+		},
+		"Distance": {
+			"Type": "String",
+			"Description": "Up/Downstream: Distance to first / last codon Intergenic: Distance to closest gene Distance to closest Intron boundary in exon (+/- up/downstream)"
+		},
+		"LOF": {
+			"Type": "String",
+			"Description": "Loss of function prediction"
+		},
+		"NMD": {
+			"Type": "String",
+			"Description": "Nonsense-mediated decay prediction"
+		},
+		"dbNSFP_1000Gp1_...": {
+			"Type": "String",
+			"Description": "1000 genomes allele frequency in ... population"
+		},
+		"dbNSFP_CADD_phred": {
+			"Type": "String",
+			"Description": "CADD phred score"
+		},
+		"dbNSFP_ExAC_..._AC": {
+			"Type": "String",
+			"Description": "ExAC allele count in ... population"
+		},
+		"dbNSFP_ExAC_..._AF": {
+			"Type": "String",
+			"Description": "ExAC allele frequency in ... population"
+		},
+		"dbNSFP_FATHMM_pred": {
+			"Type": "String",
+			"Description": "FATHMM prediction scores"
+		},
+		"dbNSFP_GERP___NR": {
+			"Type": "String",
+			"Description": "GERP conservation NR scores"
+		},
+		"dbNSFP_GERP___RS": {
+			"Type": "String",
+			"Description": "GERP conservation RS scores"
+		},
+		"dbNSFP_LRT_pred": {
+			"Type": "String",
+			"Description": "LRT conservation scores"
+		},
+		"dbNSFP_MetaSVM_pred": {
+			"Type": "String",
+			"Description": "dbNSFP scores based on 10 component scores (SIFT, PolyPhen-2 HDIV and HVAR, GERP++, MutationTaster, Mutation Assessor, FATHMM, LRT, SiPhy, PhyloP) and the maximum frequency observed (1000 genomes)"
+		},
+		"dbNSFP_MutationAssessor_pred": {
+			"Type": "String",
+			"Description": "MutationAssessor prediction scores"
+		},
+		"dbNSFP_MutationTaster_pred": {
+			"Type": "String",
+			"Description": "MutationTaster prediction scores"
+		},
+		"dbNSFP_PROVEAN_pred": {
+			"Type": "String",
+			"Description": "Provean prediction scores"
+		},
+		"dbNSFP_Polyphen2_HDIV_pred": {
+			"Type": "String",
+			"Description": "PolyPhen-2 HDIV prediction scores"
+		},
+		"dbNSFP_Polyphen2_HVAR_pred": {
+			"Type": "String",
+			"Description": "PolyPhen-2 HVAR prediction scores"
+		},
+		"dbNSFP_SIFT_pred": {
+			"Type": "String",
+			"Description": "SIFT prediction scores"
+		},
+		"Mim Number": {
+			"Type": "String",
+			"Description": "OMIM unique six digit identifier"
+		},
+		"Phenotypes": {
+			"Type": "String",
+			"Description": "e.g. Charcot-Marie-Tooth disease"
+		},
+		"Inheritance": {
+			"Type": "String",
+			"Description": "e.g. AD (= 'Autosomal dominant'). Detailed in VaRank 1.4.3 FAQ."
+		},
+		"synZ": {
+			"Type": "Float",
+			"Description": "Positive synZ (Z score) indicate gene intolerance to synonymous variation"
+		},
+		"misZ": {
+			"Type": "Float",
+			"Description": "Positive misZ (Z score) indicate gene intolerance to missense variation"
+		},
+		"pLI": {
+			"Type": "Float",
+			"Description": "Score computed in the ExAc database indicating the probability that a gene is intolerant to a loss of function variation  (Nonsense,  splice  acceptor  and  donor  variants  caused  by  SNV).  ExAC  consider  pLI  >=  0.9  as  an extremely LoF intolerant set of genes"
+		},
+		"HI_percent": {
+			"Type": "Float",
+			"Description": "Haploinsufficiency ranks"
+		}
 	}
 }
