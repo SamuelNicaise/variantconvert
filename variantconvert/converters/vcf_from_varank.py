@@ -38,8 +38,23 @@ class VcfFromVarank(AbstractConverter):
         self.df.reset_index(drop=True, inplace=True)
         self.df.columns = rename_duplicates_in_list(self.df.columns)
 
+        # convert french commas to dot in floats
+        for col in self.config["COLUMNS_DESCRIPTION"]:
+            if self.config["COLUMNS_DESCRIPTION"][col]["Type"] == "Float":
+                if col in self.df.columns:
+                    self.df[col] = self.df.apply(
+                        lambda row: self.french_commas_to_dots(row[col]), axis=1
+                    )
+
+        # homemade annotation
         self.add_gene_counts_to_df()
         log.debug(self.df)
+
+    def french_commas_to_dots(self, val):
+        if isinstance(val, str):
+            if "," in val:
+                return val.replace(",", ".")
+        return val
 
     def add_gene_counts_to_df(self):
         """
@@ -169,7 +184,8 @@ class VcfFromVarank(AbstractConverter):
                 )
 
             if key in self.config["COLUMNS_DESCRIPTION"]:
-                description = self.config["COLUMNS_DESCRIPTION"][key]
+                description = self.config["COLUMNS_DESCRIPTION"][key]["Description"]
+                info_type = self.config["COLUMNS_DESCRIPTION"][key]["Type"]
             else:
                 description = "Extracted from " + self.config["GENERAL"]["origin"]
                 info_type = "String"  # ugly fix of that bug where bcftools change POOL_ columns to Float (--> cutevariant crash)
