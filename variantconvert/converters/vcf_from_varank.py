@@ -36,7 +36,19 @@ class VcfFromVarank(AbstractConverter):
         )
         self.df.reset_index(drop=True, inplace=True)
         self.df.columns = rename_duplicates_in_list(self.df.columns)
+
+        self.add_gene_counts_to_df()
         log.debug(self.df)
+
+    def add_gene_counts_to_df(self):
+        """
+        Count how many times a gene appears muted in the sample and add it to the dataframe.
+        This allows to create cutevariant filters selecting genes that have at least two separate heterozygote recessive mutations.
+
+        No need to check for genotype because Varank TSV files are a list of variants contained in one sample.
+        There are no "0/0" or "./." in the output VCF made from a Varank TSV file.
+        """
+        self.df["mut_gene_counts"] = self.df.groupby("genes")["genes"].transform("size")
 
     def get_sample_name(self, varank_tsv):
         # with open(varank_file, 'r') as f:
@@ -68,6 +80,7 @@ class VcfFromVarank(AbstractConverter):
         known.append("totalRead")  # DP
         known.append("varReadDepth")  # AD[1] ; AD[0] = DP - AD[1]
         known.append("varReadPercent")  # VAF
+        known.append("mut_gene_counts")  # MGC ; see add_gene_counts_to_df(self)
         # No GQ, no PL, and apparently no multi allelic variants
         return known
 
@@ -101,7 +114,7 @@ class VcfFromVarank(AbstractConverter):
                         info_field.append(s)
                 line += ";".join(info_field) + "\t"
 
-                line += "GT:DP:AD:VAF\t"
+                line += "GT:DP:AD:VAF:MGC\t"
                 gt_dic = {"hom": "1/1", "het": "0/1"}
                 sample_field = (
                     gt_dic[data[self.config["VCF_COLUMNS"]["FORMAT"]["GT"]][i]] + ":"
@@ -118,7 +131,8 @@ class VcfFromVarank(AbstractConverter):
                 vaf = data[self.config["VCF_COLUMNS"]["FORMAT"]["VAF"]][i]
                 if vaf != ".":
                     vaf = str(int(float(vaf) / 100))
-                sample_field += vaf
+                sample_field += vaf + ":"
+                sample_field += str(data["mut_gene_counts"][i])
                 line += sample_field
 
                 vcf.write(line + "\n")
@@ -132,8 +146,10 @@ class VcfFromVarank(AbstractConverter):
         header.append("##fileDate=%s" % time.strftime("%d/%m/%Y"))
         header.append("##source=" + self.config["GENERAL"]["origin"])
         header.append("##InputFile=%s" % os.path.abspath(self.filepath))
+
         # FILTER is not present in Varank, so all variants are set to PASS
         header.append('##FILTER=<ID=PASS,Description="Passed filter">')
+
         # INFO contains all columns that are not used anywhere specific
         # log.debug(dict(self.df.dtypes))
         for key in self.df.columns:
@@ -150,6 +166,7 @@ class VcfFromVarank(AbstractConverter):
                     "Unrecognized type in Varank dataframe. Column causing issue: "
                     + key
                 )
+
             if key in self.config["COLUMNS_DESCRIPTION"]:
                 description = self.config["COLUMNS_DESCRIPTION"][key]
             else:
@@ -174,6 +191,9 @@ class VcfFromVarank(AbstractConverter):
         header.append('##FORMAT=<ID=GT,Number=1,Type=String,Description="Genotype">')
         header.append(
             '##FORMAT=<ID=VAF,Number=1,Type=Float,Description="VAF Variant Frequency">'
+        )
+        header.append(
+            '##FORMAT=<ID=MGC,Number=1,Type=Integer,Description="Number of variants occuring in the same gene based on <genes> column. Computed when Varank files are converted to VCF">'
         )
         # genome stuff
         header += self.config["GENOME"]["vcf_header"]
