@@ -34,6 +34,7 @@ class VcfFromVarank(AbstractConverter):
             [self.config["VCF_COLUMNS"]["#CHROM"], self.config["VCF_COLUMNS"]["POS"]],
             inplace=True,
         )
+        self.df = self.df.drop_duplicates()  # varank files have duplicate lines!
         self.df.reset_index(drop=True, inplace=True)
         self.df.columns = rename_duplicates_in_list(self.df.columns)
 
