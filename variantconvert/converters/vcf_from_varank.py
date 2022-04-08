@@ -64,7 +64,7 @@ class VcfFromVarank(AbstractConverter):
         No need to check for genotype because Varank TSV files are a list of variants contained in one sample.
         There are no "0/0" or "./." in the output VCF made from a Varank TSV file.
         """
-        self.df["mut_gene_counts"] = self.df.groupby("genes")["genes"].transform("size")
+        self.df["gene_mut_counts"] = self.df.groupby("genes")["genes"].transform("size")
 
     def get_sample_name(self, varank_tsv):
         # with open(varank_file, 'r') as f:
@@ -96,7 +96,7 @@ class VcfFromVarank(AbstractConverter):
         known.append("totalRead")  # DP
         known.append("varReadDepth")  # AD[1] ; AD[0] = DP - AD[1]
         known.append("varReadPercent")  # VAF
-        known.append("mut_gene_counts")  # MGC ; see add_gene_counts_to_df(self)
+        known.append("gene_mut_counts")  # GMC ; see add_gene_counts_to_df(self)
         # No GQ, no PL, and apparently no multi allelic variants
         return known
 
@@ -130,7 +130,7 @@ class VcfFromVarank(AbstractConverter):
                         info_field.append(s)
                 line += ";".join(info_field) + "\t"
 
-                line += "GT:DP:AD:VAF:MGC\t"
+                line += "GT:DP:AD:VAF:GMC\t"
                 gt_dic = {"hom": "1/1", "het": "0/1"}
                 sample_field = (
                     gt_dic[data[self.config["VCF_COLUMNS"]["FORMAT"]["GT"]][i]] + ":"
@@ -148,7 +148,7 @@ class VcfFromVarank(AbstractConverter):
                 if vaf != ".":
                     vaf = str(int(float(vaf) / 100))
                 sample_field += vaf + ":"
-                sample_field += str(data["mut_gene_counts"][i])
+                sample_field += str(data["gene_mut_counts"][i])
                 line += sample_field
 
                 vcf.write(line + "\n")
@@ -210,7 +210,7 @@ class VcfFromVarank(AbstractConverter):
             '##FORMAT=<ID=VAF,Number=1,Type=Float,Description="VAF Variant Frequency">'
         )
         header.append(
-            '##FORMAT=<ID=MGC,Number=1,Type=Integer,Description="Number of variants occuring in the same gene based on <genes> column. Computed when Varank files are converted to VCF">'
+            '##FORMAT=<ID=GMC,Number=1,Type=Integer,Description="Gene Mutations count: number of variants occuring in the same gene based on <genes> column. Computed when Varank files are converted to VCF">'
         )
         # genome stuff
         header += self.config["GENOME"]["vcf_header"]
