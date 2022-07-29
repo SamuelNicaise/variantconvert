@@ -146,7 +146,7 @@ class VcfFromVarank(AbstractConverter):
                 )
                 vaf = data[self.config["VCF_COLUMNS"]["FORMAT"]["VAF"]][i]
                 if vaf != ".":
-                    vaf = str(int(float(vaf) / 100))
+                    vaf = str(float(vaf) / 100)
                 sample_field += vaf + ":"
                 sample_field += str(data["gene_mut_counts"][i])
                 line += sample_field
