@@ -85,7 +85,7 @@
 			"Description": "Transcript strand"
 		},
 		"transLen": {
-			"Type": "String",
+			"Type": "Integer",
 			"Description": "Length of transcript (full cDNA length)"
 		},
 		"cdsLen": {
@@ -97,11 +97,11 @@
 			"Description": "Chromosome of variant"
 		},
 		"start": {
-			"Type": "String",
+			"Type": "Integer",
 			"Description": "Start position of variant"
 		},
 		"end": {
-			"Type": "String",
+			"Type": "Integer",
 			"Description": "End position of variant"
 		},
 		"ref": {
@@ -297,15 +297,15 @@
 			"Description": "gnomAD alternate allele frequency (All populations)"
 		},
 		"gnomadHomCount_all": {
-			"Type": "String",
+			"Type": "Integer",
 			"Description": "gnomAD homozygous genotype count (All populations)"
 		},
 		"gnomadHetCount_all": {
-			"Type": "String",
+			"Type": "Integer",
 			"Description": "gnomAD heterozygous genotype count (All populations)"
 		},
 		"gnomadHemCount_all": {
-			"Type": "String",
+			"Type": "Integer",
 			"Description": "gnomAD hemizygous genotype count (All populations)"
 		},
 		"gnomadAltFreq_afr": {
@@ -313,15 +313,15 @@
 			"Description": "gnomAD alternate allele frequency (African)"
 		},
 		"gnomadHomCount_afr": {
-			"Type": "String",
+			"Type": "Integer",
 			"Description": "gnomAD homozygous genotype count (African)"
 		},
 		"gnomadHetCount_afr": {
-			"Type": "String",
+			"Type": "Integer",
 			"Description": "gnomAD heterozygous genotype count (African)"
 		},
 		"gnomadHemCount_afr": {
-			"Type": "String",
+			"Type": "Integer",
 			"Description": "gnomAD hemizygous genotype count (African)"
 		},
 		"gnomadAltFreq_amr": {
@@ -329,15 +329,15 @@
 			"Description": "gnomAD alternate allele frequency (Latino)"
 		},
 		"gnomadHomCount_amr": {
-			"Type": "String",
+			"Type": "Integer",
 			"Description": "gnomAD homozygous genotype count (Latino)"
 		},
 		"gnomadHetCount_amr": {
-			"Type": "String",
+			"Type": "Integer",
 			"Description": "gnomAD heterozygous genotype count (Latino)"
 		},
 		"gnomadHemCount_amr": {
-			"Type": "String",
+			"Type": "Integer",
 			"Description": "gnomAD hemizygous genotype count (Latino)"
 		},
 		"gnomadAltFreq_asj": {
@@ -345,15 +345,15 @@
 			"Description": "gnomAD alternate allele frequency (Ashkenazy Jewish)"
 		},
 		"gnomadHomCount_asj": {
-			"Type": "String",
+			"Type": "Integer",
 			"Description": "gnomAD homozygous genotype count (Ashkenazy Jewish)"
 		},
 		"gnomadHetCount_asj": {
-			"Type": "String",
+			"Type": "Integer",
 			"Description": "gnomAD heterozygous genotype count (Ashkenazy Jewish)"
 		},
 		"gnomadHemCount_asj": {
-			"Type": "String",
+			"Type": "Integer",
 			"Description": "gnomAD hemizygous genotype count (Ashkenazy Jewish)"
 		},
 		"gnomadAltFreq_eas": {
@@ -361,15 +361,15 @@
 			"Description": "gnomAD alternate allele frequency (East Asian)"
 		},
 		"gnomadHomCount_eas": {
-			"Type": "String",
+			"Type": "Integer",
 			"Description": "gnomAD homozygous genotype count (East Asian)"
 		},
 		"gnomadHetCount_eas": {
-			"Type": "String",
+			"Type": "Integer",
 			"Description": "gnomAD heterozygous genotype count (East Asian)"
 		},
 		"gnomadHemCount_eas": {
-			"Type": "String",
+			"Type": "Integer",
 			"Description": "gnomAD hemizygous genotype count (East Asian)"
 		},
 		"gnomadAltFreq_sas": {
@@ -377,15 +377,15 @@
 			"Description": "gnomAD alternate allele frequency (South Asian)"
 		},
 		"gnomadHomCount_sas": {
-			"Type": "String",
+			"Type": "Integer",
 			"Description": "gnomAD homozygous genotype count (South Asian)"
 		},
 		"gnomadHetCount_sas": {
-			"Type": "String",
+			"Type": "Integer",
 			"Description": "gnomAD heterozygous genotype count (South Asian)"
 		},
 		"gnomadHemCount_sas": {
-			"Type": "String",
+			"Type": "Integer",
 			"Description": "gnomAD hemizygous genotype count (South Asian)"
 		},
 		"gnomadAltFreq_nfe": {
@@ -393,15 +393,15 @@
 			"Description": "gnomAD alternate allele frequency (Non-Finnish European)"
 		},
 		"gnomadHomCount_nfe": {
-			"Type": "String",
+			"Type": "Integer",
 			"Description": "gnomAD homozygous genotype count (Non-Finnish European)"
 		},
 		"gnomadHetCount_nfe": {
-			"Type": "String",
+			"Type": "Integer",
 			"Description": "gnomAD heterozygous genotype count (Non-Finnish European)"
 		},
 		"gnomadHemCount_nfe": {
-			"Type": "String",
+			"Type": "Integer",
 			"Description": "gnomAD hemizygous genotype count (Non-Finnish European)"
 		},
 		"gnomadAltFreq_fin": {
@@ -409,15 +409,15 @@
 			"Description": "gnomAD alternate allele frequency (Finnish European)"
 		},
 		"gnomadHomCount_fin": {
-			"Type": "String",
+			"Type": "Integer",
 			"Description": "gnomAD homozygous genotype count (Finnish European)"
 		},
 		"gnomadHetCount_fin": {
-			"Type": "String",
+			"Type": "Integer",
 			"Description": "gnomAD heterozygous genotype count (Finnish European)"
 		},
 		"gnomadHemCount_fin": {
-			"Type": "String",
+			"Type": "Integer",
 			"Description": "gnomAD hemizygous genotype count (Finnish European)"
 		},
 		"gnomadAltFreq_oth": {
@@ -425,15 +425,15 @@
 			"Description": "gnomAD alternate allele frequency (Other populations)"
 		},
 		"gnomadHomCount_oth": {
-			"Type": "String",
+			"Type": "Integer",
 			"Description": "gnomAD homozygous genotype count (Other populations)"
 		},
 		"gnomadHetCount_oth": {
-			"Type": "String",
+			"Type": "Integer",
 			"Description": "gnomAD heterozygous genotype count (Other populations)"
 		},
 		"gnomadHemCount_oth": {
-			"Type": "String",
+			"Type": "Integer",
 			"Description": "gnomAD hemizygous genotype count (Other populations)"
 		},
 		"gnomadAltFreq_popmax": {
@@ -441,15 +441,15 @@
 			"Description": "gnomAD alternate allele frequency (Maximum Allele Frequency across populations, excluding OTH)"
 		},
 		"gnomadHomCount_popmax": {
-			"Type": "String",
+			"Type": "Integer",
 			"Description": "gnomAD homozygous genotype count (Maximum Allele Frequency across populations, excluding OTH)"
 		},
 		"gnomadHetCount_popmax": {
-			"Type": "String",
+			"Type": "Integer",
 			"Description": "gnomAD heterozygous genotype count (Maximum Allele Frequency across populations, excluding OTH)"
 		},
 		"gnomadHemCount_popmax": {
-			"Type": "String",
+			"Type": "Integer",
 			"Description": "gnomAD hemizygous genotype count (Maximum Allele Frequency across populations, excluding OTH)"
 		},
 		"gnomadFilter": {
@@ -501,11 +501,11 @@
 			"Description": "Variant seq. NNSPLICE score"
 		},
 		"distNearestSS": {
-			"Type": "String",
+			"Type": "Integer",
 			"Description": "Distance to Nearest splice site"
 		},
 		"nearestSSChange": {
-			"Type": "String",
+			"Type": "Float",
 			"Description": "Nearest splice site change"
 		},
 		"nearestSSType": {
@@ -521,7 +521,7 @@
 			"Description": "Splice site annotation: 'essential splice donor': variant in 5' SS at intronic position +1 or +2, 'essential splice acceptor': variant in 3' SS at intronic position -1 or -2, 'close splice donor': variant in 5' SS at position -3 to -1, +3 to +6, 'close splice acceptor': variant in 3' SS at position -12 to -2, and 0 to +2"
 		},
 		"localSS_pos": {
-			"Type": "String",
+			"Type": "Integer",
 			"Description": "Genomic position of predicted new splice site or activated cryptic site"
 		},
 		"localSS_wtMaxEntScore": {
@@ -549,11 +549,11 @@
 			"Description": "Variant seq. HSF score used for local splice effect detection"
 		},
 		"branchPointPos": {
-			"Type": "String",
+			"Type": "Integer",
 			"Description": "Genomic position of affected putative branch point"
 		},
 		"branchPointChange": {
-			"Type": "String",
+			"Type": "Float",
 			"Description": "Change between WT and variant BP scores (range -5 to 100)"
 		},
 		"proteinDomain1": {
