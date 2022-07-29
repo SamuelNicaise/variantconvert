@@ -1,4 +1,4 @@
-name: tsvconvert
+name: variantconvert
 channels:
   - defaults
   - conda-forge
@@ -37,4 +37,4 @@ dependencies:
     - six==1.16.0
     - tomli==2.0.1
     - typing-extensions==4.1.1
-prefix: C:\Users\nicaises\Anaconda3\envs\tsvconvert
+prefix: C:\Users\nicaises\Miniconda3\envs\variantconvert

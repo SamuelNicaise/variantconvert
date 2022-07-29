@@ -31,6 +31,7 @@ class VcfFromVarank(AbstractConverter):
             sep="\t",
             low_memory=False,
         )
+
         self.df.sort_values(
             [self.config["VCF_COLUMNS"]["#CHROM"], self.config["VCF_COLUMNS"]["POS"]],
             inplace=True,
@@ -38,6 +39,13 @@ class VcfFromVarank(AbstractConverter):
         self.df = self.df.drop_duplicates()  # varank files have duplicate lines!
         self.df.reset_index(drop=True, inplace=True)
         self.df.columns = rename_duplicates_in_list(self.df.columns)
+
+       # pandas converts all numbers to floats. Change integers back to integers
+       # otherwise cutevariant complains because of the added ".0" to every integer
+        for col in self.config["COLUMNS_DESCRIPTION"]:
+            if self.config["COLUMNS_DESCRIPTION"][col]["Type"] == "Integer":
+                if col in self.df.columns:
+                    self.df[col] = self.df[col].astype('Int64')
 
         # convert french commas to dot in floats
         for col in self.config["COLUMNS_DESCRIPTION"]:
@@ -53,9 +61,19 @@ class VcfFromVarank(AbstractConverter):
                 lambda row: self.remove_transcript_from_cnomen(row)
             )
 
+        if "HI_percent" in self.df.columns:
+            self.df["HI_percent"] = self.df["HI_percent"].apply(
+                lambda row: self.remove_percent(row)
+            )
+
         # homemade annotation
         self.add_gene_counts_to_df()
         log.debug(self.df)
+
+    def remove_percent(self, val):
+        if not isinstance(val, float): #dirty way to check if value is not nan
+            if val.endswith("%"):
+                return val.split("%")[0]
 
     def remove_transcript_from_cnomen(self, val):
         if not isinstance(val, float): #dirty way to check if value is not nan
@@ -77,6 +95,10 @@ class VcfFromVarank(AbstractConverter):
         There are no "0/0" or "./." in the output VCF made from a Varank TSV file.
         """
         self.df["gene_mut_counts"] = self.df.groupby("genes")["genes"].transform("size")
+        self.df["gene_mut_counts"] = self.df["gene_mut_counts"].fillna(-1)
+        # pd.set_option('display.max_rows', None)
+        # print(self.df["variantID"])
+        # print(self.df["gene_mut_counts"])
 
     def get_sample_name(self, varank_tsv):
         # with open(varank_file, 'r') as f:
@@ -123,7 +145,7 @@ class VcfFromVarank(AbstractConverter):
             for l in vcf_header:
                 vcf.write(l + "\n")
 
-            data = self.df.fillna(".").astype(str).to_dict()
+            data = self.df.astype(str).fillna(".").to_dict()
             # "#CHROM", "POS", "ID", "REF", "ALT", "QUAL", "FILTER", "INFO", "FORMAT", self.sample_name]
             for i in range(len(data["variantID"])):
                 line = id_to_coords[data["variantID"][i]]["#CHROM"] + "\t"
@@ -187,7 +209,7 @@ class VcfFromVarank(AbstractConverter):
                 info_type = "String"
             elif str(self.df[key].dtypes) == "float64":
                 info_type = "Float"
-            elif str(self.df[key].dtypes) == "int64":
+            elif str(self.df[key].dtypes) in ("int64", "Int64"):
                 info_type = "Integer"
             else:
                 raise ValueError(
@@ -222,7 +244,7 @@ class VcfFromVarank(AbstractConverter):
             '##FORMAT=<ID=VAF,Number=1,Type=Float,Description="VAF Variant Frequency">'
         )
         header.append(
-            '##FORMAT=<ID=GMC,Number=1,Type=Integer,Description="Gene Mutations count: number of variants occuring in the same gene based on <genes> column. Computed when Varank files are converted to VCF">'
+            '##FORMAT=<ID=GMC,Number=1,Type=String,Description="Gene Mutations count: number of variants occuring in the same gene based on <genes> column. Computed when Varank files are converted to VCF">'
         )
         # genome stuff
         header += self.config["GENOME"]["vcf_header"]

@@ -26,12 +26,12 @@ def conversion_worker(args):
     args are contained in a tuple for ease of use with multiprocessing
     """
     varank_tsv, bcftools, bgzip, tabix, json_config, tmp_dir = args
-    log.debug("###varank_tsv:", varank_tsv)
+    log.debug("###varank_tsv: " + varank_tsv)
     factory = ConverterFactory()
     converter = factory.get_converter("varank", "vcf", json_config)
 
     sample_name = converter.get_sample_name(varank_tsv)
-    log.debug("###sample_name:", sample_name)
+    log.debug("###sample_name: " + sample_name)
     sample_output = osj(tmp_dir, sample_name + "_from_varank.vcf")
     coords_file = osj(os.path.dirname(varank_tsv), "VCF_Coordinates_Conversion.tsv")
 
