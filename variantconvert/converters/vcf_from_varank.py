@@ -4,6 +4,7 @@ from __future__ import division
 from __future__ import print_function
 
 import logging as log
+import numpy
 import os
 import pandas as pd
 import re
@@ -48,9 +49,8 @@ class VcfFromVarank(AbstractConverter):
 
         # request from Jean: remove the transcript part in cNomen columns
         if "cNomen" in self.df.columns:
-            print(self.df["cNomen"])
             self.df["cNomen"] = self.df["cNomen"].apply(
-                lambda row: self.remove_transcript_from_cnomen(row[col])
+                lambda row: self.remove_transcript_from_cnomen(row)
             )
 
         # homemade annotation
@@ -58,9 +58,9 @@ class VcfFromVarank(AbstractConverter):
         log.debug(self.df)
 
     def remove_transcript_from_cnomen(self, val):
-        print(val)
-        if ":" in val:
-            return val.split(":")[1]
+        if not isinstance(val, float): #dirty way to check if value is not nan
+            if ":" in val:
+                return val.split(":")[1]
 
     def french_commas_to_dots(self, val):
         if isinstance(val, str):
