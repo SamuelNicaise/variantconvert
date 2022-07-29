@@ -46,9 +46,21 @@ class VcfFromVarank(AbstractConverter):
                         lambda row: self.french_commas_to_dots(row[col]), axis=1
                     )
 
+        # request from Jean: remove the transcript part in cNomen columns
+        if "cNomen" in self.df.columns:
+            print(self.df["cNomen"])
+            self.df["cNomen"] = self.df["cNomen"].apply(
+                lambda row: self.remove_transcript_from_cnomen(row[col])
+            )
+
         # homemade annotation
         self.add_gene_counts_to_df()
         log.debug(self.df)
+
+    def remove_transcript_from_cnomen(self, val):
+        print(val)
+        if ":" in val:
+            return val.split(":")[1]
 
     def french_commas_to_dots(self, val):
         if isinstance(val, str):
