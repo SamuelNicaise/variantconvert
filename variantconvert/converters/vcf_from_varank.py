@@ -40,13 +40,6 @@ class VcfFromVarank(AbstractConverter):
         self.df.reset_index(drop=True, inplace=True)
         self.df.columns = rename_duplicates_in_list(self.df.columns)
 
-       # pandas converts all numbers to floats. Change integers back to integers
-       # otherwise cutevariant complains because of the added ".0" to every integer
-        for col in self.config["COLUMNS_DESCRIPTION"]:
-            if self.config["COLUMNS_DESCRIPTION"][col]["Type"] == "Integer":
-                if col in self.df.columns:
-                    self.df[col] = self.df[col].astype('Int64')
-
         # convert french commas to dot in floats
         for col in self.config["COLUMNS_DESCRIPTION"]:
             if self.config["COLUMNS_DESCRIPTION"][col]["Type"] == "Float":
@@ -145,7 +138,7 @@ class VcfFromVarank(AbstractConverter):
             for l in vcf_header:
                 vcf.write(l + "\n")
 
-            data = self.df.astype(str).fillna(".").to_dict()
+            data = self.df.fillna(".").astype(str).to_dict()
             # "#CHROM", "POS", "ID", "REF", "ALT", "QUAL", "FILTER", "INFO", "FORMAT", self.sample_name]
             for i in range(len(data["variantID"])):
                 line = id_to_coords[data["variantID"][i]]["#CHROM"] + "\t"
