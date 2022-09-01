@@ -32,7 +32,3 @@ class ConverterFactory:
         if not converter:
             raise ValueError("Unknown converter: " + source_format + ">" + dest_format)
         return converter(config)
-
-
-if __name__ == "__main__":
-    pass

@@ -16,6 +16,7 @@ from helper_functions import HelperFunctions
 
 
 class VcfFromTsv(AbstractConverter):
+
     def _init_dataframe(self):
         self.df = pd.read_csv(
             self.filepath,
@@ -30,7 +31,7 @@ class VcfFromTsv(AbstractConverter):
         self.df.reset_index(drop=True, inplace=True)
         self.df.fillna(".", inplace=True)
         log.debug(self.df)
-        self.df["__!UNIQUE_VARIANT_ID!__"] = self.df.apply(
+        self.df[self.UNIQUE_ID] = self.df.apply(
             lambda row: self._get_unique_variant_id(row), axis=1
         )
         if self.config["VCF_COLUMNS"]["SAMPLE"] != "":
@@ -58,14 +59,14 @@ class VcfFromTsv(AbstractConverter):
             return name
 
     def _get_unique_variant_id(self, row):
-        id = []
+        var_id = []
         for col in self.config["GENERAL"]["unique_variant_id"]:
-            id.append(str(row[col]))
-        return "_".join(id)
+            var_id.append(str(row[col]))
+        return "_".join(var_id)
 
     def _get_unique_id_to_index_list(self, data):
         id_dic = {}
-        for k, v in data["__!UNIQUE_VARIANT_ID!__"].items():
+        for k, v in data[self.UNIQUE_ID].items():
             if v not in id_dic:
                 id_dic[v] = [k]
             else:
@@ -75,6 +76,7 @@ class VcfFromTsv(AbstractConverter):
     def convert(self, tsv, output_path):
         log.info("Converting to vcf from annotSV using config: " + self.config_filepath)
 
+        self.UNIQUE_ID = "__!UNIQUE_VARIANT_ID!__"
         self.filepath = tsv
         self.output_path = output_path
         self._init_dataframe()
@@ -93,7 +95,7 @@ class VcfFromTsv(AbstractConverter):
             already_seen_variants = set()
             unique_id_to_index_list = self._get_unique_id_to_index_list(data)
             for i in range(len(data[self.config["VCF_COLUMNS"]["#CHROM"]])):
-                if data["__!UNIQUE_VARIANT_ID!__"][i] in already_seen_variants:
+                if data[self.UNIQUE_ID][i] in already_seen_variants:
                     continue
 
                 line = ""
@@ -147,7 +149,7 @@ class VcfFromTsv(AbstractConverter):
                     sample_field_dic = {}
                     # If the variant exists in other lines in the source file, fetch their sample data now
                     for index in unique_id_to_index_list[
-                        data["__!UNIQUE_VARIANT_ID!__"][i]
+                        data[self.UNIQUE_ID][i]
                     ]:
                         sample_field = []
                         for key, val in self.config["VCF_COLUMNS"]["FORMAT"].items():
@@ -190,12 +192,9 @@ class VcfFromTsv(AbstractConverter):
                                     ]
                                 )
                             line += empty + "\t"
-                    already_seen_variants.add(data["__!UNIQUE_VARIANT_ID!__"][i])
+                    already_seen_variants.add(data[self.UNIQUE_ID][i])
                     line = line.rstrip("\t")
                     print("after", line.split("\t"))
 
                 vcf.write(line + "\n")
 
-
-if __name__ == "__main__":
-    pass
