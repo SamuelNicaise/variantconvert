@@ -89,6 +89,13 @@ class VcfFromBreakpoints(AbstractConverter):
 
                 for vcf_col in ["#CHROM", "POS", "ID", "REF", "ALT", "QUAL"]:
                     col = self.config["VCF_COLUMNS"][vcf_col]
+
+                    if vcf_col == "ID" and col == "":
+                        #special override to name breakends
+                        lines[0].append("bnd_" + str(i*2))
+                        lines[1].append("bnd_" + str(i*2+1))
+                        continue
+
                     if is_helper_func(col):
                         # col[1] is a function name, col[2] its list of args
                         # the function named in col[1] has to be callable from this module
@@ -111,7 +118,8 @@ class VcfFromBreakpoints(AbstractConverter):
                 lines[0].append("PASS")
                 lines[1].append("PASS")
 
-                info_field = []
+                left_info_field = ["SVTYPE=BND", "MATEID=" + "bnd_" + str(i*2+1)]
+                right_info_field = ["SVTYPE=BND", "MATEID=" + "bnd_" + str(i*2)]
                 for vcf_col, tsv_col in self.config["VCF_COLUMNS"]["INFO"].items():
                     if is_helper_func(tsv_col):
                         func = helper.get(tsv_col[1])
@@ -119,9 +127,10 @@ class VcfFromBreakpoints(AbstractConverter):
                         s = vcf_col + "=" + func(*args)
                     else:
                         s = vcf_col + "=" + data[tsv_col][i]
-                    info_field.append(clean_string(s))
-                lines[0].append(";".join(info_field))
-                lines[1].append(";".join(info_field))
+                    left_info_field.append(clean_string(s))
+                    right_info_field.append(clean_string(s))
+                lines[0].append(";".join(left_info_field))
+                lines[1].append(";".join(right_info_field))
 
                 vcf_format_fields = []
                 tsv_format_fields = []
