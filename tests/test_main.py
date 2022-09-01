@@ -159,39 +159,32 @@ def test_bed_to_vcf():
     assert os.path.exists(bed_tester.outputFile)
 
 
-# def test_celine_splice_data_to_vcf():
-#     celine_data_tester = type(
-#         "obj",
-#         (object,),
-#         {
-#             "inputFile": osj(
-#                 os.path.dirname(__file__),
-#                 "..",
-#                 "..",
-#                 "examples",
-#                 "VUS_test.tsv",
-#             ),
-#             "outputFile": osj(
-#                 os.path.dirname(__file__),
-#                 "..",
-#                 "..",
-#                 "examples",
-#                 "celine_splice_data.vcf",
-#             ),
-#             "inputFormat": "tsv",
-#             "outputFormat": "vcf",
-#             "configFile": osj(
-#                 os.path.dirname(__file__),
-#                 "..",
-#                 "configs",
-#                 "config_celine_splice_data.json",
-#             ),
-#             "verbosity": "debug",
-#         },
-#     )
-#     remove_if_exists(celine_data_tester.outputFile)
-#     main(celine_data_tester)
-#     assert os.path.exists(celine_data_tester.outputFile)
+def test_breakpoints_to_vcf():
+    breakpoints_tester = type(
+        "obj",
+        (object,),
+        {
+            "inputFile": osj(
+                os.path.dirname(__file__),
+                "..",
+                "..",
+                "examples",
+                "star-fusion.fusion_predictions.tsv",
+            ),
+            "outputFile": osj(
+                os.path.dirname(__file__), "..", "..", "examples", "star-fusion.vcf"
+            ),
+            "inputFormat": "breakpoints",
+            "outputFormat": "vcf",
+            "configFile": osj(
+                os.path.dirname(__file__), "..", "configs", "config_starfusion.json"
+            ),
+            "verbosity": "debug",
+        },
+    )
+    remove_if_exists(breakpoints_tester.outputFile)
+    main(breakpoints_tester)
+    assert os.path.exists(breakpoints_tester.outputFile)
 
 
 if __name__ == "__main__":

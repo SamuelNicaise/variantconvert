@@ -36,6 +36,10 @@ class HelperFunctions:
             "get_info_from_annotsv": self.get_info_from_annotsv,
             "get_ref_from_canoes_bed": self.get_ref_from_canoes_bed,
             "get_alt_from_canoes_bed": self.get_alt_from_canoes_bed,
+            "get_chr_from_breakpoint": self.get_chr_from_breakpoint,
+            "get_pos_from_breakpoint": self.get_pos_from_breakpoint,
+            "get_ref_from_breakpoint": self.get_ref_from_breakpoint,
+            "get_alt_from_breakpoint": self.get_alt_from_breakpoint
         }
 
     def get(self, func_name):
@@ -48,6 +52,42 @@ class HelperFunctions:
     def get_ref_from_canoes_bed(self, chr, start):
         f = get_genome(self.config["GENOME"]["path"])
         return f["chr" + str(chr)][int(start) - 1]
+
+    def get_ref_from_breakpoint(self, left_breakpoint, right_breakpoint):
+        f = get_genome(self.config["GENOME"]["path"])
+
+        left_chr = left_breakpoint.split(":")[0]
+        if not left_chr.startswith("chr"):
+            left_chr = "chr" + chr
+        left_start = left_breakpoint.split(":")[1]
+
+        right_chr = right_breakpoint.split(":")[0]
+        if not right_chr.startswith("chr"):
+            right_chr = "chr" + chr
+        right_start = right_breakpoint.split(":")[1]
+
+        return (f[left_chr][int(left_start) - 1], f[right_chr][int(right_start) - 1])
+
+    def get_alt_from_breakpoint(self, left_breakpoint, right_breakpoint):
+        left_ref, right_ref = self.get_ref_from_breakpoint(left_breakpoint, right_breakpoint)
+        left_chr, left_pos, left_orientation = left_breakpoint.split(":")
+        right_chr, right_pos, right_orientation = right_breakpoint.split(":")
+
+        if left_orientation == "+":
+            left_alt = f"{left_ref}[{right_chr}:{right_pos}["
+        elif left_orientation == "-":
+            left_alt = f"{left_ref}]{right_chr}:{right_pos}]"
+        else:
+            raise ValueError("Unexpected left_orientation:" + str(left_orientation))
+
+        if right_orientation == "+":
+            right_alt = f"]{left_chr}:{left_pos}]{right_ref}"
+        elif right_orientation == "-":
+            right_alt = f"[{left_chr}:{left_pos}[{right_ref}"
+        else:
+            raise ValueError("Unexpected right_orientation:" + str(right_orientation))
+
+        return left_alt, right_alt
 
     @staticmethod
     def get_alt_from_decon(cnv_type_field):
@@ -77,6 +117,10 @@ class HelperFunctions:
         """
         return "."
 
-
-if __name__ == "__main__":
-    pass
+    @staticmethod
+    def get_chr_from_breakpoint(left_breakpoint):
+        return (left_breakpoint.split(":")[0], left_breakpoint.split(":")[0])
+    
+    @staticmethod
+    def get_pos_from_breakpoint(left_breakpoint):
+        return (left_breakpoint.split(":")[1], left_breakpoint.split(":")[1])
