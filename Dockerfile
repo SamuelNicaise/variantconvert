@@ -16,7 +16,7 @@ RUN rm -f /tmp/Miniconda3-latest-Linux-x86_64.sh
 
 #work env
 RUN conda create -n common python=3.9.7 pandas requests
-RUN /usr/local/lib/miniconda3/envs/common/bin/pip install pyfasta
+RUN /usr/local/lib/miniconda3/envs/common/bin/pip install pyfaidx
 
 #bcftools
 ENV BCFTOOLS_INSTALL_DIR=/opt/bcftools

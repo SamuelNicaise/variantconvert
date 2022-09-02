@@ -6,3 +6,5 @@ __all__ = [
     "helper_functions",
     "varank_batch",
 ]
+
+__version__ = "1.0.0"
