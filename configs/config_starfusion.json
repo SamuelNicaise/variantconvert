@@ -84,7 +84,11 @@
             "LeftBreakEntropy": "LeftBreakEntropy",
             "RightBreakDinuc": "RightBreakDinuc",
             "RightBreakEntropy": "RightBreakEntropy",
-            "Annots": "annots"
+            "Annots": [
+                "HELPER_FUNCTION",
+                "readable_starfusion_annots",
+                "annots"
+            ]
         },
         "FORMAT": {
             "GT": ""

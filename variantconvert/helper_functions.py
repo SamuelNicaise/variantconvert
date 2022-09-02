@@ -39,7 +39,8 @@ class HelperFunctions:
             "get_chr_from_breakpoint": self.get_chr_from_breakpoint,
             "get_pos_from_breakpoint": self.get_pos_from_breakpoint,
             "get_ref_from_breakpoint": self.get_ref_from_breakpoint,
-            "get_alt_from_breakpoint": self.get_alt_from_breakpoint
+            "get_alt_from_breakpoint": self.get_alt_from_breakpoint,
+            "readable_starfusion_annots" : self.readable_starfusion_annots
         }
 
     def get(self, func_name):
@@ -123,7 +124,15 @@ class HelperFunctions:
     @staticmethod
     def get_chr_from_breakpoint(left_breakpoint):
         return (left_breakpoint.split(":")[0], left_breakpoint.split(":")[0])
-    
+
     @staticmethod
     def get_pos_from_breakpoint(left_breakpoint):
         return (left_breakpoint.split(":")[1], left_breakpoint.split(":")[1])
+
+    @staticmethod
+    def readable_starfusion_annots(annots):
+        """
+        input: '["Mitelman","ChimerKB","GUO2018CR_TCGA","DEEPEST2019","HGNC_GENEFAM","Cosmic","ChimerSeq","INTERCHROMOSOMAL[chr11--chr10]"]'
+        output: 'Mitelman,ChimerKB,GUO2018CR_TCGA,DEEPEST2019,HGNC_GENEFAM,Cosmic,ChimerSeq,INTERCHROMOSOMAL[chr11--chr10]'
+        """
+        return ",".join([v[1:-1] for v in s[1:-1].split(",")])
