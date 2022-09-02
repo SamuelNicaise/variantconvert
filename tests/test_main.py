@@ -28,7 +28,7 @@ import sys
 from os.path import join as osj
 
 sys.path.append(os.path.join(os.path.dirname(__file__), ".."))
-from variantconvert.__main__ import main
+from variantconvert.__main__ import main_convert
 
 
 def remove_if_exists(filepath):
@@ -67,7 +67,7 @@ def test_varank_to_vcf():
         },
     )
     remove_if_exists(varank_tester.outputFile)
-    main(varank_tester)
+    main_convert(varank_tester)
     assert os.path.exists(varank_tester.outputFile)
 
 
@@ -95,7 +95,7 @@ def test_decon_to_vcf():
         },
     )
     remove_if_exists(decon_tester.outputFile)
-    main(decon_tester)
+    main_convert(decon_tester)
     assert os.path.exists(decon_tester.outputFile)
 
 
@@ -127,7 +127,7 @@ def test_annotsv_to_vcf():
         },
     )
     remove_if_exists(annotsv_tester.outputFile)
-    main(annotsv_tester)
+    main_convert(annotsv_tester)
     assert os.path.exists(annotsv_tester.outputFile)
 
 
@@ -155,7 +155,7 @@ def test_bed_to_vcf():
         },
     )
     remove_if_exists(bed_tester.outputFile)
-    main(bed_tester)
+    main_convert(bed_tester)
     assert os.path.exists(bed_tester.outputFile)
 
 
@@ -183,7 +183,7 @@ def test_breakpoints_to_vcf():
         },
     )
     remove_if_exists(breakpoints_tester.outputFile)
-    main(breakpoints_tester)
+    main_convert(breakpoints_tester)
     assert os.path.exists(breakpoints_tester.outputFile)
 
 

@@ -52,7 +52,7 @@ from converter_factory import ConverterFactory
 from varank_batch import main_varank_batch
 
 
-def main(args):
+def main_convert(args):
     set_log_level(args.verbosity)
     if args.inputFormat.lower() == "decon":
         raise ValueError(
@@ -78,7 +78,7 @@ def main(args):
     converter.convert(args.inputFile, args.outputFile)
 
 
-if __name__ == "__main__":
+def main():
     parser = argparse.ArgumentParser(prog="variantconvert")
     subparsers = parser.add_subparsers(help="sub-command help")
     parser_convert = subparsers.add_parser(
@@ -183,4 +183,8 @@ if __name__ == "__main__":
     elif "inputVarankDir" in args:
         main_varank_batch(args)
     else:
-        main(args)
+        main_convert(args)
+
+
+if __name__ == "__main__":
+    main()
