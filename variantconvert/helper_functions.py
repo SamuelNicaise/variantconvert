@@ -135,4 +135,4 @@ class HelperFunctions:
         input: '["Mitelman","ChimerKB","GUO2018CR_TCGA","DEEPEST2019","HGNC_GENEFAM","Cosmic","ChimerSeq","INTERCHROMOSOMAL[chr11--chr10]"]'
         output: 'Mitelman,ChimerKB,GUO2018CR_TCGA,DEEPEST2019,HGNC_GENEFAM,Cosmic,ChimerSeq,INTERCHROMOSOMAL[chr11--chr10]'
         """
-        return ",".join([v[1:-1] for v in s[1:-1].split(",")])
+        return ",".join([v[1:-1] for v in annots[1:-1].split(",")])
