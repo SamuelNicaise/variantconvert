@@ -8,7 +8,7 @@ import os
 import time
 
 from functools import lru_cache
-from pyfasta import Fasta
+from pyfaidx import Fasta
 
 
 def set_log_level(verbosity):

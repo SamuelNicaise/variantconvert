@@ -47,11 +47,14 @@ class HelperFunctions:
 
     def get_ref_from_decon(self, chr, start):
         f = get_genome(self.config["GENOME"]["path"])
-        return f[chr][int(start) - 1]
+        return f[chr][int(start) - 1].seq
 
     def get_ref_from_canoes_bed(self, chr, start):
         f = get_genome(self.config["GENOME"]["path"])
-        return f["chr" + str(chr)][int(start) - 1]
+        print(self.config["GENOME"]["path"])
+        print(f.keys())
+        print("chr:", chr)
+        return f["chr" + str(chr)][int(start) - 1].seq
 
     def get_ref_from_breakpoint(self, left_breakpoint, right_breakpoint):
         f = get_genome(self.config["GENOME"]["path"])
@@ -66,7 +69,7 @@ class HelperFunctions:
             right_chr = "chr" + chr
         right_start = right_breakpoint.split(":")[1]
 
-        return (f[left_chr][int(left_start) - 1], f[right_chr][int(right_start) - 1])
+        return (f[left_chr][int(left_start) - 1].seq, f[right_chr][int(right_start) - 1].seq)
 
     def get_alt_from_breakpoint(self, left_breakpoint, right_breakpoint):
         left_ref, right_ref = self.get_ref_from_breakpoint(left_breakpoint, right_breakpoint)
