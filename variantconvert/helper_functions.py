@@ -122,12 +122,12 @@ class HelperFunctions:
         return "."
 
     @staticmethod
-    def get_chr_from_breakpoint(left_breakpoint):
-        return (left_breakpoint.split(":")[0], left_breakpoint.split(":")[0])
+    def get_chr_from_breakpoint(left_breakpoint, right_breakpoint):
+        return (left_breakpoint.split(":")[0], right_breakpoint.split(":")[0])
 
     @staticmethod
-    def get_pos_from_breakpoint(left_breakpoint):
-        return (left_breakpoint.split(":")[1], left_breakpoint.split(":")[1])
+    def get_pos_from_breakpoint(left_breakpoint, right_breakpoint):
+        return (left_breakpoint.split(":")[1], right_breakpoint.split(":")[1])
 
     @staticmethod
     def readable_starfusion_annots(annots):

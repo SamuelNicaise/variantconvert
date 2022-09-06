@@ -45,12 +45,14 @@
         "#CHROM": [
             "HELPER_FUNCTION",
             "get_chr_from_breakpoint",
-            "LeftBreakpoint"
+            "LeftBreakpoint",
+            "RightBreakpoint"
         ],
         "POS": [
             "HELPER_FUNCTION",
             "get_pos_from_breakpoint",
-            "LeftBreakpoint"
+            "LeftBreakpoint",
+            "RightBreakpoint"
         ],
         "ID": "",
         "REF": [
