@@ -35,7 +35,7 @@
             "##contig=<ID=chr20,length=63025520,assembly=hg19>",
             "##contig=<ID=chr21,length=48129895,assembly=hg19>",
             "##contig=<ID=chr22,length=51304566,assembly=hg19>",
-            "##contig=<ID=chrM,length=16571,assembly=hg19>",
+            "##contig=<ID=chrM,length=16569,assembly=hg19>",
             "##contig=<ID=chrX,length=155270560,assembly=hg19>",
             "##contig=<ID=chrY,length=59373566,assembly=hg19>",
             "##reference=file:///home1/BAS/DOCKER_STARK_MAIN_FOLDER/data/users/nicaises/rnaseq/GRCh37_gencode_v19_CTAT_lib_Mar012021.plug-n-play/ctat_genome_lib_build_dir/ref_genome.fa"
