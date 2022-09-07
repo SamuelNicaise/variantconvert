@@ -201,7 +201,9 @@ class VcfFromBreakpoints(AbstractConverter):
                             lines[0].append(empty)
                             lines[1].append(empty)
                     already_seen_variants.add(data["__!UNIQUE_VARIANT_ID!__"][i])
-
+                
+                #sort by chr/pos
+                lines = sorted(lines, key=lambda x: (x[0], int(x[1])))
                 for line in lines:
                     vcf.write("\t".join(line) + "\n")
 
