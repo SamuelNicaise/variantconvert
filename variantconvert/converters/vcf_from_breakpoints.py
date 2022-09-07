@@ -71,7 +71,7 @@ class VcfFromBreakpoints(AbstractConverter):
         helper = HelperFunctions(self.config)
 
         with open(output_path, "w") as vcf:
-            vcf_header = create_vcf_header(tsv, self.config, sample_list)
+            vcf_header = create_vcf_header(tsv, self.config, sample_list, True)
             for l in vcf_header:
                 vcf.write(l + "\n")
 

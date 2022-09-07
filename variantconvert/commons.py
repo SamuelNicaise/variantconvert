@@ -108,7 +108,7 @@ def clean_string(s):
     return s
 
 
-def create_vcf_header(input_path, config, sample_list):
+def create_vcf_header(input_path, config, sample_list, breakpoints=False):
     header = []
     header.append("##fileformat=VCFv4.3")
     header.append("##fileDate=%s" % time.strftime("%d/%m/%Y"))
@@ -130,8 +130,16 @@ def create_vcf_header(input_path, config, sample_list):
     if "ALT" in config["COLUMNS_DESCRIPTION"]:
         for key, desc in config["COLUMNS_DESCRIPTION"]["ALT"].items():
             header.append("##ALT=<ID=" + key + ',Description="' + desc + '">')
+
     if "INFO" in config["COLUMNS_DESCRIPTION"]:
-        for key, dic in config["COLUMNS_DESCRIPTION"]["INFO"].items():
+        info_dic = config["COLUMNS_DESCRIPTION"]["INFO"]
+        if breakpoints:
+            if "SVTYPE" not in info_dic.keys():
+                info_dic["SVTYPE"] = {"Type":"String", "Description":"Type of structural variant"}
+            if "MATEDID" not in info_dic.keys():
+                info_dic["MATEID"] = {"Type":"String", "Description":"ID of mate breakends"}
+
+        for key, dic in info_dic.items():
             header.append(
                 "##INFO=<ID="
                 + key
