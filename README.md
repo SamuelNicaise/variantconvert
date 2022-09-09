@@ -9,6 +9,3 @@ Usage instructions:
 
 For more info:
 variantconvert --help
-
-To test the program:
-pytest
