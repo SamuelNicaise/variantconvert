@@ -40,6 +40,7 @@ class HelperFunctions:
             "get_pos_from_breakpoint": self.get_pos_from_breakpoint,
             "get_ref_from_breakpoint": self.get_ref_from_breakpoint,
             "get_alt_from_breakpoint": self.get_alt_from_breakpoint,
+            "get_alt_from_arriba_breakpoint" : self.get_alt_from_arriba_breakpoint,
             "readable_starfusion_annots" : self.readable_starfusion_annots
         }
 
@@ -62,12 +63,12 @@ class HelperFunctions:
 
         left_chr = left_breakpoint.split(":")[0]
         if not left_chr.startswith("chr"):
-            left_chr = "chr" + chr
+            left_chr = "chr" + left_chr
         left_start = left_breakpoint.split(":")[1]
 
         right_chr = right_breakpoint.split(":")[0]
         if not right_chr.startswith("chr"):
-            right_chr = "chr" + chr
+            right_chr = "chr" + right_chr
         right_start = right_breakpoint.split(":")[1]
 
         return (f[left_chr][int(left_start) - 1].seq, f[right_chr][int(right_start) - 1].seq)
@@ -87,6 +88,27 @@ class HelperFunctions:
         if right_orientation == "+":
             right_alt = f"]{left_chr}:{left_pos}]{right_ref}"
         elif right_orientation == "-":
+            right_alt = f"[{left_chr}:{left_pos}[{right_ref}"
+        else:
+            raise ValueError("Unexpected right_orientation:" + str(right_orientation))
+
+        return left_alt, right_alt
+
+    def get_alt_from_arriba_breakpoint(self, left_breakpoint, right_breakpoint, left_strand, right_strand):
+        left_ref, right_ref = self.get_ref_from_breakpoint(left_breakpoint, right_breakpoint)
+        left_chr, left_pos = left_breakpoint.split(":")
+        right_chr, right_pos = right_breakpoint.split(":")
+
+        if left_strand == "+/+":
+            left_alt = f"{left_ref}[{right_chr}:{right_pos}["
+        elif left_strand == "-/-":
+            left_alt = f"{left_ref}]{right_chr}:{right_pos}]"
+        else:
+            raise ValueError("Unexpected left_orientation:" + str(left_orientation))
+
+        if right_strand == "+/+":
+            right_alt = f"]{left_chr}:{left_pos}]{right_ref}"
+        elif right_strand == "-/-":
             right_alt = f"[{left_chr}:{left_pos}[{right_ref}"
         else:
             raise ValueError("Unexpected right_orientation:" + str(right_orientation))

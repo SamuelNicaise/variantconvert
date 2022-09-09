@@ -187,5 +187,33 @@ def test_breakpoints_to_vcf():
     assert os.path.exists(breakpoints_tester.outputFile)
 
 
+def test_arriba_breakpoints_to_vcf():
+    breakpoints_tester = type(
+        "obj",
+        (object,),
+        {
+            "inputFile": osj(
+                os.path.dirname(__file__),
+                "..",
+                "..",
+                "examples",
+                "arriba.fusions.tsv",
+            ),
+            "outputFile": osj(
+                os.path.dirname(__file__), "..", "..", "examples", "arriba.vcf"
+            ),
+            "inputFormat": "breakpoints",
+            "outputFormat": "vcf",
+            "configFile": osj(
+                os.path.dirname(__file__), "..", "configs", "config_arriba.json"
+            ),
+            "verbosity": "debug",
+        },
+    )
+    remove_if_exists(breakpoints_tester.outputFile)
+    main_convert(breakpoints_tester)
+    assert os.path.exists(breakpoints_tester.outputFile)
+
+
 if __name__ == "__main__":
     test_varank_to_vcf()
