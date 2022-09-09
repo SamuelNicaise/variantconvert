@@ -5,6 +5,7 @@ Usage instructions:
 2) git clone the project
 3) cd variantconvert
 4) pip install -e .
+5) change the genome path in config files
 
 For more info:
 variantconvert --help
