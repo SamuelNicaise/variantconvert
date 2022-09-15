@@ -144,7 +144,7 @@ def test_bed_to_vcf():
                 "canoes.bed",
             ),
             "outputFile": osj(
-                os.path.dirname(__file__), "..", "..", "examples", "canoes_bed_test.vcf"
+                os.path.dirname(__file__), "..", "..", "examples", "canoes_bed.vcf"
             ),
             "inputFormat": "tsv",
             "outputFormat": "vcf",
