@@ -34,6 +34,7 @@ class HelperFunctions:
             "get_alt_from_decon": self.get_alt_from_decon,
             "get_svlen_from_decon": self.get_svlen_from_decon,
             "get_info_from_annotsv": self.get_info_from_annotsv,
+            "get_alt_for_bed_based_annotsv": self.get_alt_for_bed_based_annotsv,
             "get_ref_from_canoes_bed": self.get_ref_from_canoes_bed,
             "get_alt_from_canoes_bed": self.get_alt_from_canoes_bed,
             "get_chr_from_breakpoint": self.get_chr_from_breakpoint,
@@ -41,21 +42,21 @@ class HelperFunctions:
             "get_ref_from_breakpoint": self.get_ref_from_breakpoint,
             "get_alt_from_breakpoint": self.get_alt_from_breakpoint,
             "get_alt_from_arriba_breakpoint" : self.get_alt_from_arriba_breakpoint,
-            "readable_starfusion_annots" : self.readable_starfusion_annots
+            "readable_starfusion_annots" : self.readable_starfusion_annots,
+            "get_undefined_value": self.get_undefined_value
         }
 
     def get(self, func_name):
         return self.dispatcher[func_name]
 
-    def get_ref_from_decon(self, chr, start):
+    def get_ref_from_decon(self, chrom, start):
         f = get_genome(self.config["GENOME"]["path"])
-        return f[chr][int(start) - 1].seq
+        if self.config["GENOME"]["vcf_header"][0].startswith("##contig=<ID=chr") and not chrom.startswith("chr"):
+            chrom = "chr" + str(chrom)
+        return f[chrom][int(start) - 1].seq
 
     def get_ref_from_canoes_bed(self, chr, start):
         f = get_genome(self.config["GENOME"]["path"])
-        print(self.config["GENOME"]["path"])
-        print(f.keys())
-        print("chr:", chr)
         return f["chr" + str(chr)][int(start) - 1].seq
 
     def get_ref_from_breakpoint(self, left_breakpoint, right_breakpoint):
@@ -142,6 +143,10 @@ class HelperFunctions:
         as if they were generic TSV (not recommended)
         """
         return "."
+    
+    @staticmethod
+    def get_alt_for_bed_based_annotsv(sv_type):
+        return "<" + sv_type + ">"
 
     @staticmethod
     def get_chr_from_breakpoint(left_breakpoint, right_breakpoint):
@@ -158,3 +163,7 @@ class HelperFunctions:
         output: 'Mitelman,ChimerKB,GUO2018CR_TCGA,DEEPEST2019,HGNC_GENEFAM,Cosmic,ChimerSeq,INTERCHROMOSOMAL[chr11--chr10]'
         """
         return ",".join([v[1:-1] for v in annots[1:-1].split(",")])
+
+    @staticmethod
+    def get_undefined_value():
+        return "."

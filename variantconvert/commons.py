@@ -117,7 +117,7 @@ def create_vcf_header(input_path, config, sample_list, breakpoints=False):
 
     # TODO: FILTER is not present in any tool implemented yet
     # so all variants are set to PASS
-    if config["VCF_COLUMNS"]["FILTER"] != "":
+    if config["VCF_COLUMNS"]["FILTER"] != "" and config["GENERAL"]["origin"] != "AnnotSV":
         raise ValueError(
             "Filters are not implemented yet. "
             'Leave config["COLUMNS_DESCRIPTION"]["FILTER"] empty '
