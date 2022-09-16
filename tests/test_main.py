@@ -144,7 +144,7 @@ def test_bed_to_vcf():
                 "canoes.bed",
             ),
             "outputFile": osj(
-                os.path.dirname(__file__), "..", "..", "examples", "canoes_bed_test.vcf"
+                os.path.dirname(__file__), "..", "..", "examples", "canoes_bed.vcf"
             ),
             "inputFormat": "tsv",
             "outputFormat": "vcf",
@@ -206,6 +206,34 @@ def test_arriba_breakpoints_to_vcf():
             "outputFormat": "vcf",
             "configFile": osj(
                 os.path.dirname(__file__), "..", "configs", "config_arriba.json"
+            ),
+            "verbosity": "debug",
+        },
+    )
+    remove_if_exists(breakpoints_tester.outputFile)
+    main_convert(breakpoints_tester)
+    assert os.path.exists(breakpoints_tester.outputFile)
+
+
+def test_bed_based_annotsv3_to_vcf():
+    breakpoints_tester = type(
+        "obj",
+        (object,),
+        {
+            "inputFile": osj(
+                os.path.dirname(__file__),
+                "..",
+                "..",
+                "examples",
+                "test.41_SV.annotated.tsv",
+            ),
+            "outputFile": osj(
+                os.path.dirname(__file__), "..", "..", "examples", "annotsv3_from_bed.vcf"
+            ),
+            "inputFormat": "annotsv",
+            "outputFormat": "vcf",
+            "configFile": osj(
+                os.path.dirname(__file__), "..", "configs", "config_annotsv3_from_bed.json"
             ),
             "verbosity": "debug",
         },
