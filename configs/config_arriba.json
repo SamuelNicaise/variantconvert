@@ -67,8 +67,8 @@
             "get_alt_from_arriba_breakpoint",
             "breakpoint1",
             "breakpoint2",
-            "strand1(gene/fusion)",
-            "strand2(gene/fusion)"
+            "direction1",
+            "direction2"
         ],
         "QUAL": "",
         "FILTER": "",
