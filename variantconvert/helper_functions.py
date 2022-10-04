@@ -95,24 +95,28 @@ class HelperFunctions:
 
         return left_alt, right_alt
 
-    def get_alt_from_arriba_breakpoint(self, left_breakpoint, right_breakpoint, left_strand, right_strand):
+    def get_alt_from_arriba_breakpoint(self, left_breakpoint, right_breakpoint, left_direction, right_direction):
         left_ref, right_ref = self.get_ref_from_breakpoint(left_breakpoint, right_breakpoint)
         left_chr, left_pos = left_breakpoint.split(":")
         right_chr, right_pos = right_breakpoint.split(":")
 
-        if left_strand == "+/+":
-            left_alt = f"{left_ref}[{right_chr}:{right_pos}["
-        elif left_strand == "-/-":
-            left_alt = f"{left_ref}]{right_chr}:{right_pos}]"
-        else:
-            raise ValueError("Unexpected left_orientation:" + str(left_orientation))
+        if left_direction not in ("upstream", "downstream"):
+            raise ValueError("Unexpected left_direction:" + str(left_direction))
+        if right_direction not in ("upstream, downstream"):
+            raise ValueError("Unexpected right_direction:" + str(right_direction))
 
-        if right_strand == "+/+":
-            right_alt = f"]{left_chr}:{left_pos}]{right_ref}"
-        elif right_strand == "-/-":
+        if left_direction == "upstream" and right_direction == "upstream":
+            left_alt = f"[{right_chr}:{right_pos}[{left_ref}"
             right_alt = f"[{left_chr}:{left_pos}[{right_ref}"
-        else:
-            raise ValueError("Unexpected right_orientation:" + str(right_orientation))
+        elif left_direction == "downstream" and right_direction == "upstream":
+            left_alt = f"{left_ref}[{right_chr}:{right_pos}["
+            right_alt = f"]{left_chr}:{left_pos}]{right_ref}"
+        elif left_direction == "upstream" and right_direction == "downstream":
+            left_alt = f"]{right_chr}:{right_pos}]{left_ref}"
+            right_alt = f"{right_ref}[{left_chr}:{left_pos}["
+        elif left_direction == "downstream" and right_direction == "downstream":
+            left_alt = f"{left_ref}]{right_chr}:{right_pos}]"
+            right_alt = f"{right_ref}]{left_chr}:{left_pos}]"
 
         return left_alt, right_alt
 
