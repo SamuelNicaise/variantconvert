@@ -13,7 +13,7 @@ from natsort import index_natsorted
 from converters.abstract_converter import AbstractConverter
 
 sys.path.append("..")
-from commons import create_vcf_header, is_helper_func, remove_decimal_or_strip
+from commons import create_vcf_header, is_helper_func
 from helper_functions import HelperFunctions
 
 
@@ -62,11 +62,9 @@ class VcfFromAnnotsv(AbstractConverter):
         if self.config["VCF_COLUMNS"]["FORMAT"] == "FORMAT":
             if not set(sample_list).issubset(self.input_df.columns):
                 raise ValueError(
-                    "When using an AnnotSV file generated from a VCF, all samples in '"
-                    + samples_col
-                    + "' column are expected to "
+                    "When using an AnnotSV file generated from a VCF, all samples in '" + samples_col + "' column are expected to "
                     "have their own column in the input AnnotSV file"
-                )
+            )
         return sample_list
 
     def _build_input_annot_df(self):
@@ -88,16 +86,13 @@ class VcfFromAnnotsv(AbstractConverter):
             ";", ",", regex=True
         )  # any ';' in annots will ruin the vcf INFO field
 
-        # TODO: check if CHROM col is in compliance with config ref genome (chrX or X)
+        #TODO: check if CHROM col is in compliance with config ref genome (chrX or X)
         # if self.config["GENOME"]["vcf_header"][0].startswith("##contig=<ID=chr"):
-        #     if not chrom.startswith
+        #     if not chrom.startswith 
 
-        if (
-            self.config["VCF_COLUMNS"]["INFO"]["SV_type"] == ""
-            or self.config["VCF_COLUMNS"]["INFO"]["SV_type"] not in df.columns
-        ):
+        if self.config["VCF_COLUMNS"]["INFO"]["SV_type"] == "" or self.config["VCF_COLUMNS"]["INFO"]["SV_type"] not in df.columns:
             raise ValueError(
-                "SV_type column is required to turn an AnnotSV file into a VCF. Check if SV_type col is set in config or missing in your file.\n"
+                "SV_type column is required to turn an AnnotSV file into a VCF. Check if SV_type col is set in config or missing in your file.\n" \
                 + "If you generated your AnnotSV file from a bed, AnnotSV option -svtBEDcol is required."
             )
         return df
@@ -114,26 +109,17 @@ class VcfFromAnnotsv(AbstractConverter):
                 "Unexpected value in json config['GENERAL']['mode']: "
                 "only 'full&split' mode is implemented yet."
             )
-        # Do not keep 'base vcf col' in info field
-        df = df.loc[
-            :,
-            [
-                cols
-                for cols in df.columns
-                if cols not in ["ID", "REF", "ALT", "QUAL", "FILTER"]
-            ],
-        ]
-        # except_full_list = ['Gene_name', 'ACMG_class']
+
         annots = {}
         dfs = {}
-        for typemode, df_type in df.groupby(
+        for type, df_type in df.groupby(
             self.config["VCF_COLUMNS"]["INFO"]["Annotation_mode"]
         ):
-            if typemode not in ("full", "split"):
+            if type not in ("full", "split"):
                 raise ValueError(
                     "Annotation type is assumed to be only 'full' or 'split'"
                 )
-            dfs[typemode] = df_type
+            dfs[type] = df_type
 
         # deal with full
         if "full" not in dfs.keys():
@@ -150,39 +136,22 @@ class VcfFromAnnotsv(AbstractConverter):
                 raise ValueError(
                     "Each variant is assumed to only have one single line of 'full' annotation"
                 )
-            # remove float decimal full rows
             for ann in dfs["full"].columns:
-                annots[ann] = remove_decimal_or_strip(dfs["full"].loc[df.index[0], ann])
+                annots[ann] = dfs["full"].loc[df.index[0], ann]
 
         # deal with split
         if "split" not in dfs.keys():
             return annots
-        # each info field split
         for ann in dfs["split"].columns:
-            transform = []
             if ann == self.config["VCF_COLUMNS"]["INFO"]["Annotation_mode"]:
                 annots[ann] = self.config["GENERAL"]["mode"]
                 continue
-            # if you only keep full annotations split is lost advitam eternam
-            # list of all values in each columns
-            for splitval in dfs["split"][ann].tolist():
-                transform.append(remove_decimal_or_strip(splitval))
-            # we don't report split infos only if there are ALL equal to full row or they are stack to dot
-            # if all([nq == annots[ann] for nq in transform]) or all(
-            #     eq == "." for eq in transform
-            # ):  # or ann in except_full_list:
-
-            #    continue
-            # In case of full and n split are different we keep values from all (more than 2 differencies)
-            # else:
-            values = [annots[ann]]
-            values.extend(transform)
-            annots[ann] = "|".join(values)
-            # TODO in case of pipe already present in annotations change separator, maybe '+'
+            if annots[ann] != ".":
+                continue  #'full' annot is always prioritized
+            annots[ann] = ",".join(dfs["split"][ann].tolist())
 
         # remove empty annots
-        annots = {k: v for k, v in annots.items()}
-        # annots = {k: int(v) for k, v in annots.items() if isinstance(v, float)}
+        annots = {k: v for k, v in annots.items() if v != "."}
         return annots
 
     def _build_info_dic(self):
@@ -197,8 +166,8 @@ class VcfFromAnnotsv(AbstractConverter):
         for variant_id, df_variant in input_annot_df.groupby(id_col):
             merged_annots = self._merge_full_and_split(df_variant)
             annots_dic[variant_id] = merged_annots
-        # print("annots_dic")
-        # print(annots_dic)
+        print("annots_dic")
+        print(annots_dic)
         return annots_dic
 
     # TODO: merge this with the other create_vcf_header method if possible
@@ -348,20 +317,16 @@ class VcfFromAnnotsv(AbstractConverter):
                 vcf.write(l + "\n")
 
             id_col = self.config["VCF_COLUMNS"]["INFO"]["AnnotSV_ID"]
-            self.input_df = self.input_df.iloc[
-                index_natsorted(self.input_df[self.config["VCF_COLUMNS"]["#CHROM"]])
-            ]
+            self.input_df = self.input_df.iloc[index_natsorted(self.input_df[self.config["VCF_COLUMNS"]["#CHROM"]])]
 
             for variant_id, df_variant in self.input_df.groupby(id_col, sort=False):
 
-                # fill columns that need a helper func
+                #fill columns that need a helper func
                 for config_key, config_val in self.config["VCF_COLUMNS"].items():
                     if config_key == "INFO":
                         for info_col in self.config["VCF_COLUMNS"][config_key].values():
                             if is_helper_func(info_col):
-                                raise ValueError(
-                                    "HELPER_FUNCTIONS for INFO fields are not implemented yet for AnnotSV converter"
-                                )
+                                raise ValueError("HELPER_FUNCTIONS for INFO fields are not implemented yet for AnnotSV converter")
                     elif config_key == "FILTER" and config_val == "":
                         df_variant[config_key] = "PASS"
                     elif is_helper_func(config_val):
@@ -387,5 +352,6 @@ class VcfFromAnnotsv(AbstractConverter):
                     )
                 else:
                     sample_cols = "GT\t" + self.config["GENERAL"]["default_genotype"]
+
                 vcf.write(sample_cols)
                 vcf.write("\n")
