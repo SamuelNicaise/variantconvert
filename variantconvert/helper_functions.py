@@ -79,19 +79,23 @@ class HelperFunctions:
         left_chr, left_pos, left_orientation = left_breakpoint.split(":")
         right_chr, right_pos, right_orientation = right_breakpoint.split(":")
 
-        if left_orientation == "+":
-            left_alt = f"{left_ref}[{right_chr}:{right_pos}["
-        elif left_orientation == "-":
-            left_alt = f"{left_ref}]{right_chr}:{right_pos}]"
-        else:
+        if left_orientation not in ("+", "-"):
             raise ValueError("Unexpected left_orientation:" + str(left_orientation))
-
-        if right_orientation == "+":
-            right_alt = f"]{left_chr}:{left_pos}]{right_ref}"
-        elif right_orientation == "-":
-            right_alt = f"[{left_chr}:{left_pos}[{right_ref}"
-        else:
+        if right_orientation not in ("+", "-"):
             raise ValueError("Unexpected right_orientation:" + str(right_orientation))
+
+        if left_orientation == "-" and right_orientation == "-":
+            left_alt = f"[{right_chr}:{right_pos}[{left_ref}"
+            right_alt = f"[{left_chr}:{left_pos}[{right_ref}"
+        elif left_orientation == "-" and right_orientation == "+":
+            left_alt = f"{left_ref}[{right_chr}:{right_pos}["
+            right_alt = f"[{left_chr}:{left_pos}[{right_ref}"
+        elif left_orientation == "+" and right_orientation == "-":
+            left_alt = f"{left_ref}[{right_chr}:{right_pos}["
+            right_alt = f"[{left_chr}:{left_pos}[{right_ref}"
+        elif left_orientation == "+" and right_orientation == "+":
+            left_alt = f"{left_ref}[{right_chr}:{right_pos}["
+            right_alt = f"[{left_chr}:{left_pos}[{right_ref}"
 
         return left_alt, right_alt
 
