@@ -206,7 +206,7 @@ class VcfFromAnnotsv(AbstractConverter):
     @staticmethod
     def _create_vcf_header(input_path, config, sample_list, input_df, info_keys):
         header = []
-        header.append("##fileformat=VCFv4.3")
+        header.append("##fileformat=VCFv4.2")
         header.append("##fileDate=%s" % time.strftime("%d/%m/%Y"))
         header.append("##source=" + config["GENERAL"]["origin"])
         header.append("##InputFile=%s" % os.path.abspath(input_path))
