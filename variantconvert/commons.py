@@ -183,11 +183,11 @@ def create_vcf_header(input_path, config, sample_list, breakpoints=False):
 
 def remove_decimal_or_strip(value):
     # Due to string value info field
-    if value.endswith(".0"):
-        value = str(int(float(value)))
-    # forbidden to have blank space in vcf info field
-    else:
-        value = value.replace(" ", "_")
+    if value.isdigit():
+        if value.endswith(".0"):
+            value = str(int(float(value)))
+    # forbidden to have blank space in vcf info field VCF v4.2
+    value = value.replace(" ", "_")
     return value
 
 
