@@ -50,6 +50,7 @@ def rename_duplicates_in_list(input_list):
             output_list.append(e + "_" + str(elt_counts[e_lower]))
     return output_list
 
+
 def is_helper_func(arg):
     if isinstance(arg, list):
         if arg[0] == "HELPER_FUNCTION":
@@ -117,7 +118,10 @@ def create_vcf_header(input_path, config, sample_list, breakpoints=False):
 
     # TODO: FILTER is not present in any tool implemented yet
     # so all variants are set to PASS
-    if config["VCF_COLUMNS"]["FILTER"] != "" and config["GENERAL"]["origin"] != "AnnotSV":
+    if (
+        config["VCF_COLUMNS"]["FILTER"] != ""
+        and config["GENERAL"]["origin"] != "AnnotSV"
+    ):
         raise ValueError(
             "Filters are not implemented yet. "
             'Leave config["COLUMNS_DESCRIPTION"]["FILTER"] empty '
@@ -135,9 +139,15 @@ def create_vcf_header(input_path, config, sample_list, breakpoints=False):
         info_dic = config["COLUMNS_DESCRIPTION"]["INFO"]
         if breakpoints:
             if "SVTYPE" not in info_dic.keys():
-                info_dic["SVTYPE"] = {"Type":"String", "Description":"Type of structural variant"}
+                info_dic["SVTYPE"] = {
+                    "Type": "String",
+                    "Description": "Type of structural variant",
+                }
             if "MATEDID" not in info_dic.keys():
-                info_dic["MATEID"] = {"Type":"String", "Description":"ID of mate breakends"}
+                info_dic["MATEID"] = {
+                    "Type": "String",
+                    "Description": "ID of mate breakends",
+                }
 
         for key, dic in info_dic.items():
             header.append(
@@ -169,6 +179,16 @@ def create_vcf_header(input_path, config, sample_list, breakpoints=False):
         )
     )
     return header
+
+
+def remove_decimal_or_strip(value):
+    # Due to string value info field
+    if value.isdigit():
+        if value.endswith(".0"):
+            value = str(int(float(value)))
+    # forbidden to have blank space in vcf info field VCF v4.2
+    value = value.replace(" ", "_")
+    return value
 
 
 if __name__ == "__main__":
