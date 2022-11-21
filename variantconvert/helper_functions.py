@@ -40,10 +40,10 @@ class HelperFunctions:
             "get_chr_from_breakpoint": self.get_chr_from_breakpoint,
             "get_pos_from_breakpoint": self.get_pos_from_breakpoint,
             "get_ref_from_breakpoint": self.get_ref_from_breakpoint,
-            "get_alt_from_breakpoint": self.get_alt_from_breakpoint,
-            "get_alt_from_arriba_breakpoint" : self.get_alt_from_arriba_breakpoint,
-            "readable_starfusion_annots" : self.readable_starfusion_annots,
-            "get_undefined_value": self.get_undefined_value
+            "get_alt_from_star_breakpoint": self.get_alt_from_star_breakpoint,
+            "get_alt_from_arriba_breakpoint": self.get_alt_from_arriba_breakpoint,
+            "readable_starfusion_annots": self.readable_starfusion_annots,
+            "get_undefined_value": self.get_undefined_value,
         }
 
     def get(self, func_name):
@@ -51,7 +51,9 @@ class HelperFunctions:
 
     def get_ref_from_decon(self, chrom, start):
         f = get_genome(self.config["GENOME"]["path"])
-        if self.config["GENOME"]["vcf_header"][0].startswith("##contig=<ID=chr") and not chrom.startswith("chr"):
+        if self.config["GENOME"]["vcf_header"][0].startswith(
+            "##contig=<ID=chr"
+        ) and not chrom.startswith("chr"):
             chrom = "chr" + str(chrom)
         return f[chrom][int(start) - 1].seq
 
@@ -72,57 +74,99 @@ class HelperFunctions:
             right_chr = "chr" + right_chr
         right_start = right_breakpoint.split(":")[1]
 
-        return (f[left_chr][int(left_start) - 1].seq, f[right_chr][int(right_start) - 1].seq)
+        return (
+            f[left_chr][int(left_start) - 1].seq,
+            f[right_chr][int(right_start) - 1].seq,
+        )
 
-    def get_alt_from_breakpoint(self, left_breakpoint, right_breakpoint):
-        left_ref, right_ref = self.get_ref_from_breakpoint(left_breakpoint, right_breakpoint)
-        left_chr, left_pos, left_orientation = left_breakpoint.split(":")
-        right_chr, right_pos, right_orientation = right_breakpoint.split(":")
+    def get_alt_with_breakpoints(
+        self, chr1, pos1, strand1, ref1, chr2, pos2, strand2, ref2
+    ):
+        """
+        See VCF 4.3 specification, section 5.4 "Specifying complex rearrangements with breakends"
 
-        if left_orientation not in ("+", "-"):
-            raise ValueError("Unexpected left_orientation:" + str(left_orientation))
-        if right_orientation not in ("+", "-"):
-            raise ValueError("Unexpected right_orientation:" + str(right_orientation))
+        Returns a tuple of two strings: left ALT and right ALT fields
+        """
+        for chrom in (chr1, chr2):
+            if not chrom.startswith("chr"):
+                chrom = "chr" + str(chrom)
 
-        if left_orientation == "-" and right_orientation == "-":
-            left_alt = f"[{right_chr}:{right_pos}[{left_ref}"
-            right_alt = f"[{left_chr}:{left_pos}[{right_ref}"
-        elif left_orientation == "-" and right_orientation == "+":
-            left_alt = f"{left_ref}[{right_chr}:{right_pos}["
-            right_alt = f"[{left_chr}:{left_pos}[{right_ref}"
-        elif left_orientation == "+" and right_orientation == "-":
-            left_alt = f"{left_ref}[{right_chr}:{right_pos}["
-            right_alt = f"[{left_chr}:{left_pos}[{right_ref}"
-        elif left_orientation == "+" and right_orientation == "+":
-            left_alt = f"{left_ref}[{right_chr}:{right_pos}["
-            right_alt = f"[{left_chr}:{left_pos}[{right_ref}"
+        if strand1 == "+" and strand2 == "+":
+            alt1 = f"{ref1}[{chr2}:{pos2}["
+            alt2 = f"]{chr1}:{pos1}]{ref2}"
+        elif strand1 == "+" and strand2 == "-":
+            alt1 = f"{ref1}]{chr2}:{pos2}]"
+            alt2 = f"{ref2}]{chr1}:{pos1}]"
+        elif strand1 == "-" and strand2 == "+":
+            alt1 = f"[{chr2}:{pos2}[{ref1}"
+            alt2 = f"[{chr1}:{pos1}[{ref2}"
+        elif strand1 == "-" and strand2 == "-":
+            alt1 = f"]{chr2}:{pos2}]{ref1}"
+            alt2 = f"{ref2}[{chr1}:{pos1}["
+        else:
+            raise ValueError(
+                "Strand should be + or -. Got values: strand1:"
+                + str(strand1)
+                + " ; strand2:"
+                + str(strand2)
+            )
 
-        return left_alt, right_alt
+        return (alt1, alt2)
 
-    def get_alt_from_arriba_breakpoint(self, left_breakpoint, right_breakpoint, left_direction, right_direction):
-        left_ref, right_ref = self.get_ref_from_breakpoint(left_breakpoint, right_breakpoint)
-        left_chr, left_pos = left_breakpoint.split(":")
-        right_chr, right_pos = right_breakpoint.split(":")
+    def get_alt_from_star_breakpoint(self, left_breakpoint, right_breakpoint):
+        left_ref, right_ref = self.get_ref_from_breakpoint(
+            left_breakpoint, right_breakpoint
+        )
+        left_chr, left_pos, left_strand = left_breakpoint.split(":")
+        right_chr, right_pos, right_strand = right_breakpoint.split(":")
 
-        if left_direction not in ("upstream", "downstream"):
-            raise ValueError("Unexpected left_direction:" + str(left_direction))
-        if right_direction not in ("upstream, downstream"):
-            raise ValueError("Unexpected right_direction:" + str(right_direction))
+        return self.get_alt_with_breakpoints(
+            left_chr,
+            left_pos,
+            left_strand,
+            left_ref,
+            right_chr,
+            right_pos,
+            right_strand,
+            right_ref,
+        )
 
-        if left_direction == "upstream" and right_direction == "upstream":
-            left_alt = f"[{right_chr}:{right_pos}[{left_ref}"
-            right_alt = f"[{left_chr}:{left_pos}[{right_ref}"
-        elif left_direction == "downstream" and right_direction == "upstream":
-            left_alt = f"{left_ref}[{right_chr}:{right_pos}["
-            right_alt = f"]{left_chr}:{left_pos}]{right_ref}"
-        elif left_direction == "upstream" and right_direction == "downstream":
-            left_alt = f"]{right_chr}:{right_pos}]{left_ref}"
-            right_alt = f"{right_ref}[{left_chr}:{left_pos}["
-        elif left_direction == "downstream" and right_direction == "downstream":
-            left_alt = f"{left_ref}]{right_chr}:{right_pos}]"
-            right_alt = f"{right_ref}]{left_chr}:{left_pos}]"
+    def get_alt_from_arriba_breakpoint(
+        self, breakpoint1, breakpoint2, direction1, direction2
+    ):
+        """
+        In Arriba, unlike with STAR-Fusion, breakpoints aren't directly given as "left" and "right" breakpoints.
+        This information can be inferred from the "direction" column.
+        The inferrence method here should be equivalent to using the second strand from each breakpoint's strand column, when it is present.
+        See Arriba documentation: https://arriba.readthedocs.io/en/latest/output-files/
+        """
+        ref1, ref2 = self.get_ref_from_breakpoint(breakpoint1, breakpoint2)
+        chr1, pos1 = breakpoint1.split(":")
+        chr2, pos2 = breakpoint2.split(":")
 
-        return left_alt, right_alt
+        if direction1 == "upstream" and direction2 == "upstream":
+            strand1 = "-"
+            strand2 = "+"
+        elif direction1 == "upstream" and direction2 == "downstream":
+            strand1 = "-"
+            strand2 = "-"
+        elif direction1 == "downstream" and direction2 == "upstream":
+            strand1 = "+"
+            strand2 = "+"
+        elif direction1 == "downstream" and direction2 == "downstream":
+            strand1 = "+"
+            strand2 = "-"
+        else:
+            raise ValueError(
+                "Direction should be upstream or downstream. Got values: direction1:"
+                + str(direction1)
+                + " ; direction2:"
+                + str(direction2)
+            )
+
+        return self.get_alt_with_breakpoints(
+            chr1, pos1, strand1, ref1, chr2, pos2, strand2, ref2
+        )
 
     @staticmethod
     def get_alt_from_decon(cnv_type_field):
@@ -151,7 +195,7 @@ class HelperFunctions:
         as if they were generic TSV (not recommended)
         """
         return "."
-    
+
     @staticmethod
     def get_alt_for_bed_based_annotsv(sv_type):
         return "<" + sv_type + ">"

@@ -63,7 +63,7 @@
         ],
         "ALT": [
             "HELPER_FUNCTION",
-            "get_alt_from_breakpoint",
+            "get_alt_from_star_breakpoint",
             "LeftBreakpoint",
             "RightBreakpoint"
         ],
