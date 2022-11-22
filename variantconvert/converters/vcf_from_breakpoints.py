@@ -13,14 +13,16 @@ from converters.abstract_converter import AbstractConverter
 sys.path.append("..")
 from commons import create_vcf_header, is_helper_func, clean_string
 from helper_functions import HelperFunctions
+from variant import Variant
 
 
 class VcfFromBreakpoints(AbstractConverter):
     """Made for file formats such as the TSV outputs of STAR-Fusion and ARRIBA.
     Other converters (for now) are not able to generate a VCF containing breakpoints.
-    
+
     Each input line will result in two VCF lines, one for each side of the breakpoint.
     """
+
     def _init_dataframe(self):
         self.df = pd.read_csv(
             self.filepath,
@@ -81,20 +83,17 @@ class VcfFromBreakpoints(AbstractConverter):
             # __!UNIQUE_VARIANT_ID!__ allows to identify such variants and only add them to the VCF once
             already_seen_variants = set()
             unique_id_to_index_list = self._get_unique_id_to_index_list(data)
+
             for i in range(len(data["__!UNIQUE_VARIANT_ID!__"])):
                 if data["__!UNIQUE_VARIANT_ID!__"][i] in already_seen_variants:
                     continue
 
-                lines = [[], []] # left side of the breakpoint, right side of the breakpoint
+                lines = [[], []]  # left side of the breakpoint, right side of the breakpoint
+                left_var = Variant()
+                right_var = Variant()
 
                 for vcf_col in ["#CHROM", "POS", "ID", "REF", "ALT", "QUAL"]:
                     col = self.config["VCF_COLUMNS"][vcf_col]
-
-                    if vcf_col == "ID" and col == "":
-                        #special override to name breakends
-                        lines[0].append("bnd_" + str(i*2))
-                        lines[1].append("bnd_" + str(i*2+1))
-                        continue
 
                     if is_helper_func(col):
                         # col[1] is a function name, col[2] its list of args
@@ -103,23 +102,49 @@ class VcfFromBreakpoints(AbstractConverter):
                         args = [data[c][i] for c in col[2:]]
                         result = func(*args)
                         if len(result) != 2:
-                            raise ValueError("HELPER_FUNCTIONS used with vcf_from_breakpoints.py are expected to return a tuple of len 2. Got instead:" + str(result))
-                        lines[0].append(result[0])
-                        lines[1].append(result[1])
+                            raise ValueError(
+                                "HELPER_FUNCTIONS used with vcf_from_breakpoints.py are expected to return a tuple of len 2. Got instead:"
+                                + str(result)
+                            )
+                        left_var.set_column(vcf_col, result[0])
+                        right_var.set_column(vcf_col, result[1])
 
                     elif col == "":
-                        lines[0].append(".")
-                        lines[1].append(".")
+                        left_var.set_column(vcf_col, ".")
+                        right_var.set_column(vcf_col, ".")
                     else:
-                        lines[0].append(data[col][i])
-                        lines[1].append(data[col][i])
+                        left_var.set_column(vcf_col, data[col][i])
+                        right_var.set_column(vcf_col, data[col][i])
+
+                # doing this after defining chr/pos/ref/alt because they're required fields to make a unique hash
+                if self.config["VCF_COLUMNS"]["ID"] == "":
+                    left_var.id = left_var.get_hash()
+                    right_var.id = right_var.get_hash()
+
+                # Variant class not implementing INFO field yet: extract data into text lines now
+                lines[0] = [
+                    left_var.chrom,
+                    left_var.pos,
+                    left_var.get_hash(),
+                    left_var.ref,
+                    left_var.alt,
+                    left_var.qual,
+                ]
+                lines[1] = [
+                    right_var.chrom,
+                    right_var.pos,
+                    right_var.get_hash(),
+                    right_var.ref,
+                    right_var.alt,
+                    right_var.qual,
+                ]
 
                 # Cutting-edge FILTER implementation
                 lines[0].append("PASS")
                 lines[1].append("PASS")
 
-                left_info_field = ["SVTYPE=BND", "MATEID=" + "bnd_" + str(i*2+1)]
-                right_info_field = ["SVTYPE=BND", "MATEID=" + "bnd_" + str(i*2)]
+                left_info_field = ["SVTYPE=BND", "MATEID=" + right_var.get_hash()]
+                right_info_field = ["SVTYPE=BND", "MATEID=" + left_var.get_hash()]
                 for vcf_col, tsv_col in self.config["VCF_COLUMNS"]["INFO"].items():
                     if is_helper_func(tsv_col):
                         func = helper.get(tsv_col[1])
@@ -154,9 +179,7 @@ class VcfFromBreakpoints(AbstractConverter):
                 else:
                     sample_field_dic = {}
                     # If the variant exists in other lines in the source file, fetch their sample data now
-                    for index in unique_id_to_index_list[
-                        data["__!UNIQUE_VARIANT_ID!__"][i]
-                    ]:
+                    for index in unique_id_to_index_list[data["__!UNIQUE_VARIANT_ID!__"][i]]:
                         sample_field = []
                         for key, val in self.config["VCF_COLUMNS"]["FORMAT"].items():
                             if key == "GT" and val == "":
@@ -181,10 +204,7 @@ class VcfFromBreakpoints(AbstractConverter):
                                         [
                                             "."
                                             for i in range(
-                                                len(
-                                                    self.config["VCF_COLUMNS"]["FORMAT"]
-                                                )
-                                                - 1
+                                                len(self.config["VCF_COLUMNS"]["FORMAT"]) - 1
                                             )
                                         ]
                                     )
@@ -193,16 +213,15 @@ class VcfFromBreakpoints(AbstractConverter):
                                     [
                                         "."
                                         for i in range(
-                                            len(self.config["VCF_COLUMNS"]["FORMAT"])
-                                            - 1
+                                            len(self.config["VCF_COLUMNS"]["FORMAT"]) - 1
                                         )
                                     ]
                                 )
                             lines[0].append(empty)
                             lines[1].append(empty)
                     already_seen_variants.add(data["__!UNIQUE_VARIANT_ID!__"][i])
-                
-                #sort by chr/pos
+
+                # sort by chr/pos
                 lines = sorted(lines, key=lambda x: (x[0], int(x[1])))
                 for line in lines:
                     vcf.write("\t".join(line) + "\n")
