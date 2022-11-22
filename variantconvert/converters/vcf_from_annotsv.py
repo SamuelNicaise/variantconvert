@@ -84,9 +84,7 @@ class VcfFromAnnotsv(AbstractConverter):
                 df = self.input_df.drop([col], axis=1)
             except KeyError:
                 log.debug(f"Failed to drop column: {col}")
-        df = df.replace(
-            ";", ",", regex=True
-        )  # any ';' in annots will ruin the vcf INFO field
+        df = df.replace(";", ",", regex=True)  # any ';' in annots will ruin the vcf INFO field
 
         # TODO: check if CHROM col is in compliance with config ref genome (chrX or X)
         # if self.config["GENOME"]["vcf_header"][0].startswith("##contig=<ID=chr"):
@@ -117,22 +115,14 @@ class VcfFromAnnotsv(AbstractConverter):
         # Do not keep 'base vcf col' in info field
         df = df.loc[
             :,
-            [
-                cols
-                for cols in df.columns
-                if cols not in ["ID", "REF", "ALT", "QUAL", "FILTER"]
-            ],
+            [cols for cols in df.columns if cols not in ["ID", "REF", "ALT", "QUAL", "FILTER"]],
         ]
-        # except_full_list = ['Gene_name', 'ACMG_class']
+
         annots = {}
         dfs = {}
-        for typemode, df_type in df.groupby(
-            self.config["VCF_COLUMNS"]["INFO"]["Annotation_mode"]
-        ):
+        for typemode, df_type in df.groupby(self.config["VCF_COLUMNS"]["INFO"]["Annotation_mode"]):
             if typemode not in ("full", "split"):
-                raise ValueError(
-                    "Annotation type is assumed to be only 'full' or 'split'"
-                )
+                raise ValueError("Annotation type is assumed to be only 'full' or 'split'")
             dfs[typemode] = df_type
 
         # deal with full
@@ -182,7 +172,6 @@ class VcfFromAnnotsv(AbstractConverter):
 
         # remove empty annots
         annots = {k: v for k, v in annots.items()}
-        # annots = {k: int(v) for k, v in annots.items() if isinstance(v, float)}
         return annots
 
     def _build_info_dic(self):
@@ -197,7 +186,6 @@ class VcfFromAnnotsv(AbstractConverter):
         for variant_id, df_variant in input_annot_df.groupby(id_col):
             merged_annots = self._merge_full_and_split(df_variant)
             annots_dic[variant_id] = merged_annots
-        # print("annots_dic")
         # print(annots_dic)
         return annots_dic
 
@@ -372,16 +360,11 @@ class VcfFromAnnotsv(AbstractConverter):
 
                 main_cols = "\t".join(df_variant[self.main_vcf_cols].iloc[0].to_list())
                 vcf.write(main_cols + "\t")
-                vcf.write(
-                    ";".join([k + "=" + v for k, v in info_dic[variant_id].items()])
-                    + "\t"
-                )
+                vcf.write(";".join([k + "=" + v for k, v in info_dic[variant_id].items()]) + "\t")
 
                 if self.config["VCF_COLUMNS"]["FORMAT"] != "":
                     sample_cols = "\t".join(
-                        df_variant[
-                            [self.config["VCF_COLUMNS"]["FORMAT"]] + self.sample_list
-                        ]
+                        df_variant[[self.config["VCF_COLUMNS"]["FORMAT"]] + self.sample_list]
                         .iloc[0]
                         .to_list()
                     )

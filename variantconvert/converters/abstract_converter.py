@@ -17,7 +17,3 @@ class AbstractConverter(ABC):
     @abstractmethod
     def convert(self, file, output_path):
         pass
-
-
-if __name__ == "__main__":
-    pass

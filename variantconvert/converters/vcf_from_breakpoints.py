@@ -23,6 +23,10 @@ class VcfFromBreakpoints(AbstractConverter):
     Each input line will result in two VCF lines, one for each side of the breakpoint.
     """
 
+    def __init__(self, *args, **kwargs):
+        super(VcfFromBreakpoints, self).__init__(*args, **kwargs)
+        self.unique_variant_id_column = "__!UNIQUE_VARIANT_ID!__"
+
     def _init_dataframe(self):
         self.df = pd.read_csv(
             self.filepath,
@@ -33,7 +37,7 @@ class VcfFromBreakpoints(AbstractConverter):
         self.df.reset_index(drop=True, inplace=True)
         self.df.fillna(".", inplace=True)
         log.debug(self.df)
-        self.df["__!UNIQUE_VARIANT_ID!__"] = self.df.apply(
+        self.df[self.unique_variant_id_column] = self.df.apply(
             lambda row: self._get_unique_variant_id(row), axis=1
         )
         log.debug(self.df)
@@ -49,14 +53,14 @@ class VcfFromBreakpoints(AbstractConverter):
             return [os.path.basename(self.output_path)]
 
     def _get_unique_variant_id(self, row):
-        id = []
+        variant_id = []
         for col in self.config["GENERAL"]["unique_variant_id"]:
-            id.append(str(row[col]))
-        return "_".join(id)
+            variant_id.append(str(row[col]))
+        return "_".join(variant_id)
 
     def _get_unique_id_to_index_list(self, data):
         id_dic = {}
-        for k, v in data["__!UNIQUE_VARIANT_ID!__"].items():
+        for k, v in data[self.unique_variant_id_column].items():
             if v not in id_dic:
                 id_dic[v] = [k]
             else:
@@ -84,8 +88,8 @@ class VcfFromBreakpoints(AbstractConverter):
             already_seen_variants = set()
             unique_id_to_index_list = self._get_unique_id_to_index_list(data)
 
-            for i in range(len(data["__!UNIQUE_VARIANT_ID!__"])):
-                if data["__!UNIQUE_VARIANT_ID!__"][i] in already_seen_variants:
+            for i in range(len(data[self.unique_variant_id_column])):
+                if data[self.unique_variant_id_column][i] in already_seen_variants:
                     continue
 
                 lines = [[], []]  # left side of the breakpoint, right side of the breakpoint
@@ -179,7 +183,7 @@ class VcfFromBreakpoints(AbstractConverter):
                 else:
                     sample_field_dic = {}
                     # If the variant exists in other lines in the source file, fetch their sample data now
-                    for index in unique_id_to_index_list[data["__!UNIQUE_VARIANT_ID!__"][i]]:
+                    for index in unique_id_to_index_list[data[self.unique_variant_id_column][i]]:
                         sample_field = []
                         for key, val in self.config["VCF_COLUMNS"]["FORMAT"].items():
                             if key == "GT" and val == "":
@@ -201,31 +205,17 @@ class VcfFromBreakpoints(AbstractConverter):
                                     empty = "./."
                                 else:
                                     empty = "./.:" + ":".join(
-                                        [
-                                            "."
-                                            for i in range(
-                                                len(self.config["VCF_COLUMNS"]["FORMAT"]) - 1
-                                            )
-                                        ]
+                                        ["."] * (len(self.config["VCF_COLUMNS"]["FORMAT"]) - 1)
                                     )
                             else:
                                 empty = ":".join(
-                                    [
-                                        "."
-                                        for i in range(
-                                            len(self.config["VCF_COLUMNS"]["FORMAT"]) - 1
-                                        )
-                                    ]
+                                    ["."] * (len(self.config["VCF_COLUMNS"]["FORMAT"]) - 1)
                                 )
                             lines[0].append(empty)
                             lines[1].append(empty)
-                    already_seen_variants.add(data["__!UNIQUE_VARIANT_ID!__"][i])
+                    already_seen_variants.add(data[self.unique_variant_id_column][i])
 
                 # sort by chr/pos
                 lines = sorted(lines, key=lambda x: (x[0], int(x[1])))
                 for line in lines:
                     vcf.write("\t".join(line) + "\n")
-
-
-if __name__ == "__main__":
-    pass

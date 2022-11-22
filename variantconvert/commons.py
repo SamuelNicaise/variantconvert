@@ -21,10 +21,7 @@ def set_log_level(verbosity):
     }
     if verbosity not in configs.keys():
         raise ValueError(
-            "Unknown verbosity level:"
-            + verbosity
-            + "\nPlease use any in:"
-            + configs.keys()
+            "Unknown verbosity level:" + verbosity + "\nPlease use any in:" + configs.keys()
         )
     log.basicConfig(
         format="%(asctime)s [%(levelname)s] %(message)s",
@@ -57,8 +54,7 @@ def is_helper_func(arg):
             return True
         else:
             raise ValueError(
-                "This config file value should be a String or a HELPER_FUNCTION pattern:"
-                + arg
+                "This config file value should be a String or a HELPER_FUNCTION pattern:" + arg
             )
     return False
 
@@ -118,10 +114,7 @@ def create_vcf_header(input_path, config, sample_list, breakpoints=False):
 
     # TODO: FILTER is not present in any tool implemented yet
     # so all variants are set to PASS
-    if (
-        config["VCF_COLUMNS"]["FILTER"] != ""
-        and config["GENERAL"]["origin"] != "AnnotSV"
-    ):
+    if config["VCF_COLUMNS"]["FILTER"] != "" and config["GENERAL"]["origin"] != "AnnotSV":
         raise ValueError(
             "Filters are not implemented yet. "
             'Leave config["COLUMNS_DESCRIPTION"]["FILTER"] empty '
@@ -174,22 +167,16 @@ def create_vcf_header(input_path, config, sample_list, breakpoints=False):
     header += config["GENOME"]["vcf_header"]
     header.append(
         "\t".join(
-            ["#CHROM", "POS", "ID", "REF", "ALT", "QUAL", "FILTER", "INFO", "FORMAT"]
-            + sample_list
+            ["#CHROM", "POS", "ID", "REF", "ALT", "QUAL", "FILTER", "INFO", "FORMAT"] + sample_list
         )
     )
     return header
 
 
 def remove_decimal_or_strip(value):
-    # Due to string value info field
-    if value.isdigit():
-        if value.endswith(".0"):
-            value = str(int(float(value)))
-    # forbidden to have blank space in vcf info field VCF v4.2
+    # To prevent bad format conversions by pandas with INFO field
+    if value.isdigit() and value.endswith(".0"):
+        value = str(int(float(value)))
+    # forbidden to have spaces in INFO fields in VCF v4.2 (for IGV compatibility)
     value = value.replace(" ", "_")
     return value
-
-
-if __name__ == "__main__":
-    pass
