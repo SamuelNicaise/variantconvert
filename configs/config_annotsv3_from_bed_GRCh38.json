@@ -39,6 +39,7 @@
 			"##contig=<ID=X,length=156040895,assembly=GRCh38>",
 			"##contig=<ID=Y,length=57227415,assembly=GRCh38>",
 			"##reference=file:Homo_sapiens_assembly38.fasta"
+		]
 	},
 	"VCF_COLUMNS": {
 		"#CHROM": "SV_chrom",
