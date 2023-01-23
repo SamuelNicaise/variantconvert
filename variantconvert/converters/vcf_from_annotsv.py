@@ -58,6 +58,7 @@ class VcfFromAnnotsv(AbstractConverter):
                 sample_list.append(cell)
         # print(samples_col)
         sample_list = list(set(sample_list))
+        sample_list.sort()  # ensures output is always the same, despite using a set() above
         # print("sample_list:", sample_list)
         if self.config["VCF_COLUMNS"]["FORMAT"] == "FORMAT":
             if not set(sample_list).issubset(self.input_df.columns):
