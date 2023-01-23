@@ -38,7 +38,7 @@
 			"##contig=<ID=chrM,length=16571,assembly=hg19>",
 			"##contig=<ID=chrX,length=155270560,assembly=hg19>",
 			"##contig=<ID=chrY,length=59373566,assembly=hg19>",
-			"##reference=file:///STARK/databases/genomes/current/hg19.fa"
+			"##reference=file:///home1/DB/STARK/genomes/current/hg19.fa"
 		]
 	},
 	"VCF_COLUMNS": {

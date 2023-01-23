@@ -12,7 +12,7 @@
 	},
 	"GENOME": {
 		"assembly": "hg19",
-		"path": "C:\\Users\\Ichtyornis\\Projects\\variantconvert_project\\hg19.fa",
+		"path": "/home1/DB/STARK/genomes/current/hg19.fa",
 		"vcf_header": [
 			"##contig=<ID=chr1,length=249250621,assembly=hg19>",
 			"##contig=<ID=chr2,length=243199373,assembly=hg19>",
@@ -39,7 +39,7 @@
 			"##contig=<ID=chrM,length=16571,assembly=hg19>",
 			"##contig=<ID=chrX,length=155270560,assembly=hg19>",
 			"##contig=<ID=chrY,length=59373566,assembly=hg19>",
-			"##reference=file:///STARK/databases/genomes/current/hg19.fa"
+			"##reference=file:///home1/DB/STARK/genomes/current/hg19.fa"
 		]
 	},
 	"VCF_COLUMNS": {
