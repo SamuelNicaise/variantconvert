@@ -21,11 +21,11 @@ For testing purposes, GENOME["path"] was changed in configs. Normally it is:
 from __future__ import division
 from __future__ import print_function
 
-import filecmp
 import logging as log
 import os
 import pytest
 import sys
+import typing
 
 from os.path import join as osj
 
@@ -33,7 +33,30 @@ sys.path.append(os.path.join(os.path.dirname(__file__), ".."))
 from variantconvert.__main__ import main_convert
 
 
-def remove_if_exists(filepath):
+def identical_except_date_and_genome(vcf_list: typing.List[str]):
+    """
+    Test if all vcf files in the input list are identical, except for 2 fields:
+        - VCF creation date, as this will change all the time
+        - Genome path, as this part of config can need a local change
+    """
+    if len(vcf_list) < 2:
+        raise RuntimeError("Expected a list containing at least 2 VCF paths")
+
+    vcfs_lines = []
+    k = 0
+    for vcf in vcf_list:
+        vcfs_lines.append([])
+        with open(vcf, "r") as f:
+            for l in f:
+                if not l.startswith("##fileDate=") and not l.startswith("##reference="):
+                    vcfs_lines[k].append(l)
+        k += 1
+
+    for i in range(len(vcf_list) - 1):
+        assert vcfs_lines[i] == vcfs_lines[i + 1]
+
+
+def remove_if_exists(filepath: str):
     if os.path.exists(filepath):
         os.remove(filepath)
 
@@ -48,7 +71,7 @@ def test_varank_to_vcf(tmp_path):
                 "data",
                 "fam01_SAMPLE_VARANK_allVariants.rankingByGene.tsv",
             ),
-            "outputFile": osj(tmp_path, "varank_test.vcf"),
+            "outputFile": osj(os.path.dirname(__file__), "varank_test.vcf"),
             "inputFormat": "varank",
             "outputFormat": "vcf",
             "configFile": osj(os.path.dirname(__file__), "..", "configs", "HUS", "varank.json"),
@@ -65,7 +88,7 @@ def test_varank_to_vcf(tmp_path):
     assert os.path.exists(varank_tester.outputFile)
 
     control = osj(os.path.dirname(__file__), "controls", "varank_test.vcf")
-    assert filecmp.cmp(control, varank_tester.outputFile)
+    identical_except_date_and_genome([control, varank_tester.outputFile])
 
 
 def test_decon_to_vcf(tmp_path):
@@ -90,7 +113,7 @@ def test_decon_to_vcf(tmp_path):
     assert os.path.exists(decon_tester.outputFile)
 
     control = osj(os.path.dirname(__file__), "controls", "decon_test.vcf")
-    assert filecmp.cmp(control, decon_tester.outputFile)
+    identical_except_date_and_genome([control, decon_tester.outputFile])
 
 
 def test_annotsv_to_vcf(tmp_path):
@@ -117,7 +140,7 @@ def test_annotsv_to_vcf(tmp_path):
     assert os.path.exists(annotsv_tester.outputFile)
 
     control = osj(os.path.dirname(__file__), "controls", "decon_annotsv_test.vcf")
-    assert filecmp.cmp(control, annotsv_tester.outputFile)
+    identical_except_date_and_genome([control, annotsv_tester.outputFile])
 
 
 def test_bed_to_vcf(tmp_path):
@@ -142,7 +165,7 @@ def test_bed_to_vcf(tmp_path):
     assert os.path.exists(bed_tester.outputFile)
 
     control = osj(os.path.dirname(__file__), "controls", "canoes_bed.vcf")
-    assert filecmp.cmp(control, bed_tester.outputFile)
+    identical_except_date_and_genome([control, bed_tester.outputFile])
 
 
 def test_breakpoints_to_vcf(tmp_path):
@@ -167,7 +190,7 @@ def test_breakpoints_to_vcf(tmp_path):
     assert os.path.exists(breakpoints_tester.outputFile)
 
     control = osj(os.path.dirname(__file__), "controls", "star-fusion.vcf")
-    assert filecmp.cmp(control, breakpoints_tester.outputFile)
+    identical_except_date_and_genome([control, breakpoints_tester.outputFile])
 
 
 def test_arriba_breakpoints_to_vcf(tmp_path):
@@ -192,7 +215,7 @@ def test_arriba_breakpoints_to_vcf(tmp_path):
     assert os.path.exists(breakpoints_tester.outputFile)
 
     control = osj(os.path.dirname(__file__), "controls", "arriba.vcf")
-    assert filecmp.cmp(control, breakpoints_tester.outputFile)
+    identical_except_date_and_genome([control, breakpoints_tester.outputFile])
 
 
 def test_bed_based_annotsv3_to_vcf(tmp_path):
@@ -219,4 +242,4 @@ def test_bed_based_annotsv3_to_vcf(tmp_path):
     assert os.path.exists(breakpoints_tester.outputFile)
 
     control = osj(os.path.dirname(__file__), "controls", "annotsv3_from_bed.vcf")
-    assert filecmp.cmp(control, breakpoints_tester.outputFile)
+    identical_except_date_and_genome([control, breakpoints_tester.outputFile])
