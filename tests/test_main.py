@@ -71,7 +71,7 @@ def test_varank_to_vcf(tmp_path):
                 "data",
                 "fam01_SAMPLE_VARANK_allVariants.rankingByGene.tsv",
             ),
-            "outputFile": osj(os.path.dirname(__file__), "varank_test.vcf"),
+            "outputFile": osj(tmp_path, "varank_test.vcf"),
             "inputFormat": "varank",
             "outputFormat": "vcf",
             "configFile": osj(os.path.dirname(__file__), "..", "configs", "HUS", "varank.json"),
