@@ -845,7 +845,7 @@
 				"Description": "Genotype"
 			},
 			"AD": {
-				"Number": "R",
+				"Number": "1",
 				"Type": "String",
 				"Description": "Allelic depths for the ref and alt alleles in the order listed"
 			},
