@@ -122,7 +122,7 @@ class VcfFromVarank(AbstractConverter):
         known.append("gene_mut_counts")  # GMC ; see add_gene_counts_to_df(self)
 
         # Optionak STARK annotations not to be included
-        known.append("FindByPipeline")
+        known.append("FindByPipelines")
         known.append("BARCODE_2")  # Pool barcode
         known.append("POOL_F_base_counts")
         known.append("POOL_F_Depth")

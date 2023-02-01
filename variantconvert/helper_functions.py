@@ -227,4 +227,6 @@ class HelperFunctions:
 
     @staticmethod
     def get_vaf_from_varank(var_read_percent):
+        if var_read_percent == ".":
+            return var_read_percent
         return str(float(var_read_percent) / 100)
