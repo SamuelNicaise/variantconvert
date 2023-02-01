@@ -18,8 +18,6 @@ project_folder
 For testing purposes, GENOME["path"] was changed in configs. Normally it is:
 "path": "/home1/data/STARK/databases/genomes/current/hg19.fa"
 """
-from __future__ import division
-from __future__ import print_function
 
 import logging as log
 import os

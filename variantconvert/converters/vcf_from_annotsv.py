@@ -1,8 +1,5 @@
 # -*- coding: utf-8 -*-
 
-from __future__ import division
-from __future__ import print_function
-
 import logging as log
 import os
 import pandas as pd
@@ -56,10 +53,9 @@ class VcfFromAnnotsv(AbstractConverter):
                     sample_list.append(sample)
             else:
                 sample_list.append(cell)
-        # print(samples_col)
         sample_list = list(set(sample_list))
         sample_list.sort()  # ensures output is always the same, despite using a set() above
-        # print("sample_list:", sample_list)
+
         if self.config["VCF_COLUMNS"]["FORMAT"] == "FORMAT":
             if not set(sample_list).issubset(self.input_df.columns):
                 raise ValueError(
@@ -181,13 +177,11 @@ class VcfFromAnnotsv(AbstractConverter):
         This will be used to write the INFO field
         """
         input_annot_df = self._build_input_annot_df()
-        # print(input_annot_df)
         annots_dic = {}
         id_col = self.config["VCF_COLUMNS"]["INFO"]["AnnotSV_ID"]
         for variant_id, df_variant in input_annot_df.groupby(id_col):
             merged_annots = self._merge_full_and_split(df_variant)
             annots_dic[variant_id] = merged_annots
-        # print(annots_dic)
         return annots_dic
 
     # TODO: merge this with the other create_vcf_header method if possible
@@ -299,7 +293,6 @@ class VcfFromAnnotsv(AbstractConverter):
             else:
                 col = config_col
             cols.append(col)
-        print("main_cols:", cols)
         return cols
 
     def convert(self, tsv, output_path):

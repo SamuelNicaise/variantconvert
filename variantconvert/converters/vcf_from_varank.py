@@ -1,8 +1,5 @@
 # -*- coding: utf-8 -*-
 
-from __future__ import division
-from __future__ import print_function
-
 import logging as log
 import numpy
 import os
@@ -229,9 +226,7 @@ class VcfFromVarank(AbstractConverter):
 
         # FORMAT
         for key in self.config["COLUMNS_DESCRIPTION"]["FORMAT"]:
-            print("key:", key)
             if key in self.df.columns or key in self.config["VCF_COLUMNS"]["FORMAT"]:
-                print("iamhere")
                 number = self.config["COLUMNS_DESCRIPTION"]["FORMAT"][key]["Number"]
                 description = self.config["COLUMNS_DESCRIPTION"]["FORMAT"][key]["Description"]
                 format_type = self.config["COLUMNS_DESCRIPTION"]["FORMAT"][key]["Type"]

@@ -38,8 +38,6 @@ If you need a place to store variables unrelated to the vcf file (e.g number of 
 #TODO: add argument mode to deal with an entire folder of varank files (or varank files in general)
 #TODO: refactor with a Variant class and a VCF class
 """
-from __future__ import division
-from __future__ import print_function
 
 import argparse
 import os

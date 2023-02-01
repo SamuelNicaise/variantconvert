@@ -1,8 +1,5 @@
 # -*- coding: utf-8 -*-
 
-from __future__ import division
-from __future__ import print_function
-
 import logging as log
 import os
 import pandas as pd
@@ -194,7 +191,6 @@ class VcfFromTsv(AbstractConverter):
                             line += empty + "\t"
                     already_seen_variants.add(data[self.UNIQUE_ID][i])
                     line = line.rstrip("\t")
-                    print("after", line.split("\t"))
 
                 vcf.write(line + "\n")
 

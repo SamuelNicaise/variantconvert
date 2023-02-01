@@ -8,9 +8,6 @@ docker run --rm -ti --entrypoint=bash -v /home1:/home1 tsvconvert
 python /home1/L/NGS/BIO_INFO/BIO_INFO_Sam/scripts/variantconvert_project/variantconvert/variantconvert/__main__.py varankBatch -i /home1/L/NGS/BIO_INFO/BIO_INFO_Sam/scripts/variantconvert_project/examples/TSV/ -o /home1/BAS/nicaises/Tests/variantconvert_batch/new_BBS_from_varank.vcf -c /home1/L/NGS/BIO_INFO/BIO_INFO_Sam/scripts/variantconvert_project/variantconvert/configs/config_varank.json
 """
 
-from __future__ import division
-from __future__ import print_function
-
 import glob
 import logging as log
 import multiprocessing
@@ -100,10 +97,6 @@ def main_varank_batch(args):
         + " --threads "
         + str(args.ncores)
     )
-    print(cmd)
+    log.info(cmd)
     subprocess.run(cmd, shell=True)
     # shutil.rmtree(tmp_dir)
-
-
-if __name__ == "__main__":
-    pass
