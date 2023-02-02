@@ -4,10 +4,10 @@
 		"skip_rows": 2,
 		"comment": "",
 		"varank_filename_ends": [
-			"_allVariants.rankingByVar.tsv",
-			"_allVariants.rankingByGene.tsv",
-			"_filteredVariants.rankingByVar.tsv",
-			"_filteredVariants.rankingByGene.tsv"
+			"_hg19_allVariants.rankingByVar.tsv",
+			"_hg19_allVariants.rankingByGene.tsv",
+			"_hg19_filteredVariants.rankingByVar.tsv",
+			"_hg19_filteredVariants.rankingByGene.tsv"
 		]
 	},
 	"GENOME": {
