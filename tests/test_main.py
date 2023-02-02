@@ -67,7 +67,7 @@ def test_varank_to_vcf(tmp_path):
             "inputFile": osj(
                 os.path.dirname(__file__),
                 "data",
-                "fam01_SAMPLE_VARANK_allVariants.rankingByGene.tsv",
+                "fam01_SAMPLE_VARANK_hg19_allVariants.rankingByGene.tsv",
             ),
             "outputFile": osj(tmp_path, "varank_test.vcf"),
             "inputFormat": "varank",

@@ -1,7 +1,7 @@
 ##fileformat=VCFv4.3
 ##fileDate=01/02/2023
 ##source=VaRank
-##InputFile=/home1/HUB/bin/variantconvert/current/tests/data/fam01_SAMPLE_VARANK_allVariants.rankingByGene.tsv
+##InputFile=/home1/HUB/bin/variantconvert/current/tests/data/fam01_SAMPLE_VARANK_hg19_allVariants.rankingByGene.tsv
 ##FILTER=<ID=PASS,Description="Passed filter">
 ##INFO=<ID=variantID,Number=1,Type=String,Description="Variant identifier [#chr]_[genomicposition]_[RefBase]_[VarBase]">
 ##INFO=<ID=gene,Number=1,Type=String,Description="Gene symbol">
@@ -164,7 +164,7 @@
 ##INFO=<ID=Disease_Acronym,Number=1,Type=String,Description="Extracted from VaRank">
 ##INFO=<ID=Disease_Name_RetNet,Number=1,Type=String,Description="Extracted from VaRank">
 ##FORMAT=<ID=GT,Number=1,Type=String,Description="Genotype">
-##FORMAT=<ID=AD,Number=R,Type=String,Description="Allelic depths for the ref and alt alleles in the order listed">
+##FORMAT=<ID=AD,Number=1,Type=String,Description="Allelic depths for the ref and alt alleles in the order listed">
 ##FORMAT=<ID=DP,Number=1,Type=Integer,Description="Approximate read depth (reads with MQ=255 or with bad mates are filtered)">
 ##FORMAT=<ID=VAF,Number=1,Type=Float,Description="Variant allele fraction">
 ##FORMAT=<ID=FindByPipelines,Number=1,Type=String,Description="How many callers found this variant compared to total callers used">
