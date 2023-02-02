@@ -17,7 +17,7 @@ import time
 
 from os.path import join as osj
 
-from commons import set_log_level
+from commons import run_shell, set_log_level
 from converter_factory import ConverterFactory
 
 
@@ -39,38 +39,45 @@ def conversion_worker(args):
     converter.convert(varank_tsv, sample_output)
     del converter  # otherwise they accumulate in memory until the end of pool.map()
 
-    subprocess.run(
-        bcftools + " sort " + sample_output + " > " + sample_output + ".sorted.vcf",
-        shell=True,
-    )
-    subprocess.run(bgzip + " " + sample_output + ".sorted.vcf", shell=True)
-    subprocess.run(tabix + " -p vcf " + sample_output + ".sorted.vcf.gz", shell=True)
+    run_shell(bcftools + " sort " + sample_output + " > " + sample_output + ".sorted.vcf")
+    run_shell(bgzip + " " + sample_output + ".sorted.vcf")
+    run_shell(tabix + " -p vcf " + sample_output + ".sorted.vcf.gz")
 
 
 def main_varank_batch(args):
     set_log_level(args.verbosity)
     tmp_dir = osj(os.path.dirname(args.outputFile), ".varanktovcf." + str(time.time()))
     os.makedirs(tmp_dir)
-    files_to_convert = glob.glob(
-        osj(args.inputVarankDir, "*_allVariants.rankingByVar.tsv")
-    )
+    files_to_convert = glob.glob(osj(args.inputVarankDir, "*_allVariants.rankingByVar.tsv"))
     if len(files_to_convert) == 0:
         raise ValueError(
             "Expected to find files with pattern '*_allVariants.rankingByVar.tsv' in directory:"
             + args.inputVarankDir
         )
 
-    # Without multiprocessing for easier debugging
-    # for varank_tsv in files_to_convert:
-    #     myargs = (
-    #         varank_tsv,
-    #         args.bcftools,
-    #         args.bgzip,
-    #         args.tabix,
-    #         args.configFile,
-    #         tmp_dir,
-    #     )
-    #     conversion_worker(myargs)
+        # Without multiprocessing for easier debugging
+        # for varank_tsv in files_to_convert:
+        #     myargs = (
+        #         varank_tsv,
+        #         args.bcftools,
+        #         args.bgzip,
+        #         args.tabix,
+        #         args.configFile,
+        #         tmp_dir,
+        #     )
+        #     conversion_worker(myargs)
+
+    worker_args = [
+        (
+            varank_tsv,
+            args.bcftools,
+            args.bgzip,
+            args.tabix,
+            args.configFile,
+            tmp_dir,
+        )
+        for varank_tsv in files_to_convert
+    ]
 
     with multiprocessing.Pool(args.ncores) as pool:
         pool.map(
@@ -88,15 +95,23 @@ def main_varank_batch(args):
             ],
         )
 
-    cmd = (
-        args.bcftools
-        + " merge -m none "
-        + osj(tmp_dir, "*.vcf.gz")
-        + " -o "
-        + args.outputFile
-        + " --threads "
-        + str(args.ncores)
-    )
-    log.info(cmd)
-    subprocess.run(cmd, shell=True)
+    if len(files_to_convert) > args.max_merged:
+        # Issue: bcftools is not able to merge too many files at once (depends on local system)
+        # Solution: merge vcf per subsets of args.max_merged files at once
+        # Then merge the merged vcf subsets
+        commands = [
+            f"ls {osj(tmp_dir, '*.vcf.gz')} | split -l {args.max_merged} - {osj(tmp_dir, 'subset_vcfs')}",
+            f"for s in {osj(tmp_dir, 'subset_vcfs*')}; do {args.bcftools} merge -m none --threads {args.ncores} -l $s -o {osj(tmp_dir, 'merge.$(basename $s).vcf')}; {args.bgzip} {osj(tmp_dir, 'merge.$(basename $s).vcf')}; {args.tabix} -p vcf {osj(tmp_dir, 'merge.$(basename $s).vcf.gz')}; done",
+            f"ls {osj(tmp_dir, 'merge.*.vcf.gz')} > {osj(tmp_dir, 'merge_list.txt')}",
+            f"{args.bcftools} merge --threads {args.ncores} -l {osj(tmp_dir, 'merge_list.txt')} -m none -o {args.outputFile}",
+        ]
+        for cmd in commands:
+            log.info(cmd)
+            run_shell(cmd)
+
+    else:
+        # merge everything at once
+        cmd = f"{args.bcftools} merge -m none {osj(tmp_dir, '*.vcf.gz')} -o {args.outputFile} --threads {args.ncores}"
+        log.info(cmd)
+        run_shell(cmd)
     # shutil.rmtree(tmp_dir)
