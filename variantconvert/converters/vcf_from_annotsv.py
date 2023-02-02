@@ -283,17 +283,28 @@ class VcfFromAnnotsv(AbstractConverter):
         return header
 
     def _get_main_vcf_cols(self):
-        cols = []
-        for col in ["#CHROM", "POS", "ID", "REF", "ALT", "QUAL", "FILTER"]:
-            config_col = self.config["VCF_COLUMNS"][col]
-            if not isinstance(config_col, str):
-                self.input_df[col] = "."
-            elif config_col == "":
-                self.input_df[col] = "."
+        """
+        Some columns (cols_to_init_now) are not directly linked to a Varank TSV column.
+        They can be filled later, usually with a HELPER FUNC, but still have to be initiated in the data frame.
+        """
+        main_cols = []
+        cols_to_init_now = []
+
+        for vcf_col in ["#CHROM", "POS", "ID", "REF", "ALT", "QUAL", "FILTER"]:
+            tsv_col = self.config["VCF_COLUMNS"][vcf_col]
+            if not isinstance(tsv_col, str):
+                cols_to_init_now.append(vcf_col)
+            elif tsv_col == "":
+                cols_to_init_now.append(vcf_col)
             else:
-                col = config_col
-            cols.append(col)
-        return cols
+                vcf_col = tsv_col
+            main_cols.append(vcf_col)
+
+        # adding all missing columns at once to avoid a PerformanceWarning
+        self.input_df = pd.concat([self.input_df, pd.DataFrame(columns=cols_to_init_now)])
+        self.input_df[cols_to_init_now] = ["." for i in range(len(cols_to_init_now))]
+
+        return main_cols
 
     def convert(self, tsv, output_path):
         """
