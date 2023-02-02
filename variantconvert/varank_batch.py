@@ -12,7 +12,7 @@ import glob
 import logging as log
 import multiprocessing
 import os
-import subprocess
+import tqdm
 import time
 
 from os.path import join as osj
@@ -80,20 +80,13 @@ def main_varank_batch(args):
     ]
 
     with multiprocessing.Pool(args.ncores) as pool:
-        pool.map(
-            conversion_worker,
-            [
-                (
-                    varank_tsv,
-                    args.bcftools,
-                    args.bgzip,
-                    args.tabix,
-                    args.configFile,
-                    tmp_dir,
-                )
-                for varank_tsv in files_to_convert
-            ],
-        )
+        if log.root.level <= 20:
+            with tqdm.tqdm(total=len(worker_args), desc="Converting files") as pbar:
+                for _ in pool.imap_unordered(conversion_worker, worker_args):
+                    pbar.update()
+        else:
+            # don't show progress bar if log_level >= WARNING
+            pool.map(conversion_worker, worker_args)
 
     if len(files_to_convert) > args.max_merged:
         # Issue: bcftools is not able to merge too many files at once (depends on local system)
@@ -106,12 +99,14 @@ def main_varank_batch(args):
             f"{args.bcftools} merge --threads {args.ncores} -l {osj(tmp_dir, 'merge_list.txt')} -m none -o {args.outputFile}",
         ]
         for cmd in commands:
-            log.info(cmd)
+            log.info("Merging converted files...")
+            log.debug(cmd)
             run_shell(cmd)
 
     else:
         # merge everything at once
         cmd = f"{args.bcftools} merge -m none {osj(tmp_dir, '*.vcf.gz')} -o {args.outputFile} --threads {args.ncores}"
-        log.info(cmd)
+        log.info("Merging converted files...")
+        log.debug(cmd)
         run_shell(cmd)
     # shutil.rmtree(tmp_dir)

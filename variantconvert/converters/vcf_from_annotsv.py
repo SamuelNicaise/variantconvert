@@ -327,7 +327,7 @@ class VcfFromAnnotsv(AbstractConverter):
         because it only contains Decon annotations and they're useless.
         TODO: make an option to keep the "INFO" field in the annotations dictionary
         """
-        log.info("Converting to vcf from tsv using config: " + self.config_filepath)
+        log.debug("Converting to vcf from tsv using config: " + self.config_filepath)
 
         self.filepath = tsv
         helper = HelperFunctions(self.config)

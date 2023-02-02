@@ -133,7 +133,7 @@ class VcfFromVarank(AbstractConverter):
         return known
 
     def convert(self, varank_tsv, output_path):
-        log.info("Converting to vcf from varank using config: " + self.config_filepath)
+        log.debug("Converting to vcf from varank using config: " + self.config_filepath)
         id_to_coords = varank_to_vcf_coords(self.coord_conversion_file)
         self.sample_name = self.get_sample_name(varank_tsv)
         self._init_dataframe(varank_tsv)
