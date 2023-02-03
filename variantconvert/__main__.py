@@ -43,10 +43,9 @@ import argparse
 import os
 import sys
 
-from os.path import join as osj
-
 sys.path.append(os.path.join(os.path.dirname(__file__), "."))
 from commons import set_log_level
+from config import main_config
 from converter_factory import ConverterFactory
 from varank_batch import main_varank_batch
 
@@ -156,16 +155,21 @@ def main():
         help="maximum files merged at once by bcftools [default: 200]",
     )
 
-    parser_config = subparsers.add_parser(
-        "config", help="change variables in config files [under construction]"
-    )
-    parser_config.add_argument("-g", "--genome", type=str, help="genome path")
+    parser_config = subparsers.add_parser("config", help="Change variables in config files")
     parser_config.add_argument(
         "-c",
-        "--configFile",
+        "--configFiles",
         type=str,
-        required=True,
-        help="JSON config file describing columns. See script's docstring.",
+        default="<script_dir>/configs/*",
+        help="Config file(s) on which changes are applied. Add simple quotes around if you use wildcards. [default: '<script_dir>/configs/*']",
+        nargs="*",
+    )
+    parser_config.add_argument(
+        "-s",
+        "--set",
+        type=str,
+        help="List of variables to set. Example: --set GENOME.assembly=hg19 GENOME.path=/path/hg19.fa",
+        nargs="*",
     )
 
     for myparser in (parser_convert, parser_batch, parser_config):
@@ -176,6 +180,8 @@ def main():
         parser.print_help()
     elif "inputVarankDir" in args:
         main_varank_batch(args)
+    elif "set" in args:
+        main_config(args)
     else:
         main_convert(args)
 
