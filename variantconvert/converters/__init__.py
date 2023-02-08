@@ -4,4 +4,5 @@ __all__ = [
     "vcf_from_bed",
     "vcf_from_tsv",
     "vcf_from_varank",
+    "vcf_from_snp"
 ]
