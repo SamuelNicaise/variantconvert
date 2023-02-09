@@ -20,25 +20,84 @@ class VcfFromSnp(AbstractConverter) :
             )
         self.snp_data.reset_index(drop=True, inplace=True)
 
-        
-
     def _get_sample_id(self):
-        sample_list=[]
+        self.sample_list=[]
+        self.sample_alt={}
         for i in range(self.snp_data.shape[1]):
             string = self.snp_data.columns[i]
          
             found_allele = re.search('Top Alleles', string)
 
             if (found_allele != None):
+                row_alt={}
                 #keep top allele from raw and split them 
                 split_allele = string.split('.')
-                sample_list.append(split_allele[0])
+                self.sample_list.append(split_allele[0])
 
-        return sample_list
+                for a in range(self.snp_data.shape[0]):
+                    row_alt[a]=self.snp_data.iloc[a,i]
 
-    def _add_values(self):
-        #idée ajouter avec un générateur les valeurs qui sont nécéssaire
-        pass
+                self.sample_alt[split_allele[0]]=row_alt
+
+        return self.sample_list
+
+
+    def _define_alt(self, row,ref):
+        alt=""
+        for i in self.sample_alt:
+            values_sample=self.sample_alt.get(i)
+
+            all_1=values_sample.get(row)[0]
+            all_2=values_sample.get(row)[1]
+
+            if alt != "" : 
+                if all_1 != ref and alt.find(all_1) == -1 :
+                    #Cas ou on retrouve nul part l'allele 1
+                    alt = alt + "," + all_1
+                if all_2 != ref and alt.find(all_2) == -1 :
+                    #Cas ou on retrouve nul part l'allele 2
+                    alt = alt + "," + all_2
+                    
+            else :
+                if all_1 != ref and alt.find(all_1) == -1 :
+                    #Cas ou on retrouve nul part l'allele 1
+                    alt = all_1
+                if all_2 != ref and alt.find(all_2) == -1 :
+                    #Cas ou on retrouve nul part l'allele 2
+                    alt = all_2
+
+            #TODO : verifier que ça prend bien en compte si on a pas de valeur est que c'est "-"
+
+        return alt
+
+    def _define_gt(self,row,ref,alt):
+        gt_samples={}
+
+        for i in self.sample_alt:
+            values_sample=self.sample_alt.get(i)
+            gt=""
+
+            for a in range(2) :
+                allele=str(values_sample.get(row)[a])
+
+                if allele == ref and gt == "" :
+                    gt="0"
+                
+                elif allele != ref and gt == "" :
+                    print(alt)
+                    gt = str(int(alt.find(allele) + 1 -(alt.find(allele) / 2)))
+                
+                ##Cas ou on a  gt non vide donc pour allele 2
+                elif allele == ref and gt != "" :
+                    gt=gt+"/0"
+                
+                elif allele != ref and gt != "" :
+                    gt = gt+"/"+str(int(alt.find(allele) + 1 -(alt.find(allele) / 2)))
+
+            gt_samples[i]=gt
+        
+        return gt_samples
+        
         
 
 
@@ -62,7 +121,7 @@ class VcfFromSnp(AbstractConverter) :
 
             for i in range(self.snp_data.shape[0]):
                 line = [] 
-                # Ignorer line et on fait une fonction va afficher à la fin le variant voir pour faire un to strig qui affiche toute les infos du variant à la fin
+                # Ignorer line et on fait une fonction va afficher à la fin le variant voir pour faire un to string qui affiche toute les infos du variant à la fin
                 var = Variant()
 
                 for vcf_col in ["#CHROM", "POS", "ID", "REF", "QUAL"]:
@@ -87,20 +146,31 @@ class VcfFromSnp(AbstractConverter) :
                     else:
                         var.set_column(vcf_col, data[col][i])
 
+                    # var.alt=self._get_alt(i)
 
+                    # self._add_alt(var.ref,i)
+                    # self._add_gt(var.ref)
 
+                    var.ref=var.ref.upper()
+                    var.alt=self._define_alt(1, var.ref),
+                    var.samples_gt=self._define_gt(1,var.ref,var.alt),
 
                     line = [
                         var.chrom,
                         var.pos,
                         # var.get_hash(),
                         # voir pour integrer id
-                        var.ref.upper(),
+                        var.ref,
+                        var.alt,
                         #var.alt à faire
+                        var.samples_gt,
                         var.qual,
-                    ]
+                        ]
 
                     line.append("PASS")
+
+                
+                # print(self.sample_alt.get("ASG132883"))
                 print(line)
 
 

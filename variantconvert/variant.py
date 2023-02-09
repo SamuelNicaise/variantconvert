@@ -17,7 +17,7 @@ class Variant:
         self.qual = ""
         self.filter = ""
         self.info = {}
-        self.samples ={} #{"sample1":{"GT":"1/0"}, "sample2": {"GT":"1/2"}}
+        self.samples_gt = {} #{"sample1":"1/0", "sample2": "1/2"}
 
     def set_column(self, vcf_column, value):
         if vcf_column == "#CHROM":
