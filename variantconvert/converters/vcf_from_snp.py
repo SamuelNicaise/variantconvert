@@ -21,6 +21,14 @@ class VcfFromSnp(AbstractConverter) :
             index_col=0
             )
         self.snp_data.reset_index(drop=True, inplace=True)
+        self.clean_chr()
+
+    def clean_chr(self):
+        for row in range(self.snp_data.shape[0]):
+            chr = self.snp_data.iloc[row,2]
+            if chr == "XY":
+                self.snp_data.iloc[row,2] ="Y"
+
         
 
     def _get_sample_id(self):
@@ -73,7 +81,7 @@ class VcfFromSnp(AbstractConverter) :
             #TODO : verifier que ça prend bien en compte si on a pas de valeur est que c'est "-"
         return alt
 
-    def _define_gt(self,row,ref,alt):
+    def _define_gt(self,row,ref):
         
         gt_samples={}
 
@@ -89,7 +97,7 @@ class VcfFromSnp(AbstractConverter) :
                 
                 elif allele != ref and gt == "" :
                     # print(alt)
-                    gt = str(int(alt.find(allele) + 1 -(alt.find(allele) / 2)))
+                    gt = "1"
                 
                 ##Cas ou on a  gt non vide donc pour allele 2
                 elif allele == ref and gt != "" :
@@ -97,7 +105,7 @@ class VcfFromSnp(AbstractConverter) :
                 
                 elif allele != ref and gt != "" :
                     # print(type(str(int(alt.find(allele) + 1 -(alt.find(allele) / 2)))))
-                    gt = gt + "/" + str(int(alt.find(allele) + 1 -(alt.find(allele) / 2)))
+                    gt = gt + "/1"
 
             gt_samples[i] = gt
             list_gt=list(gt_samples.values())
@@ -127,7 +135,7 @@ class VcfFromSnp(AbstractConverter) :
                 index_natsorted(self.snp_data[self.config["VCF_COLUMNS"]["#CHROM"]])
             ]
 
-            print(self.snp_data)
+            # print(self.snp_data)
             
             data = self.snp_data.astype(str).to_dict()
 
@@ -159,8 +167,8 @@ class VcfFromSnp(AbstractConverter) :
                         var.set_column(vcf_col, data[col][i])
 
                     var.ref=var.ref.upper()
-                    var.alt=self._get_alt(1, var.ref)
-                    var.samples_gt = self._define_gt(1,var.ref,var.alt)
+                    var.alt=self._get_alt(i, var.ref)
+                    var.samples_gt = self._define_gt(i,var.ref)
 
                     line = [
                         var.chrom,
