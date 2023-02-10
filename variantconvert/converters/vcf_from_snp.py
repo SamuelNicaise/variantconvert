@@ -9,6 +9,8 @@ sys.path.append(os.path.join(os.path.dirname(__file__), ".."))
 from helper_functions import HelperFunctions
 from commons import create_vcf_header, is_helper_func
 from variant import Variant
+from natsort import index_natsorted
+
 
 class VcfFromSnp(AbstractConverter) :
 
@@ -19,6 +21,7 @@ class VcfFromSnp(AbstractConverter) :
             index_col=0
             )
         self.snp_data.reset_index(drop=True, inplace=True)
+        
 
     def _get_sample_id(self):
         self.sample_list=[]
@@ -42,7 +45,7 @@ class VcfFromSnp(AbstractConverter) :
         return self.sample_list
 
 
-    def _define_alt(self, row,ref):
+    def _get_alt(self, row,ref):
         alt=""
         for i in self.sample_alt:
             values_sample=self.sample_alt.get(i)
@@ -59,6 +62,7 @@ class VcfFromSnp(AbstractConverter) :
                     alt = alt + "," + all_2
                     
             else :
+                #Cas si le gt n'est pas vide
                 if all_1 != ref and alt.find(all_1) == -1 :
                     #Cas ou on retrouve nul part l'allele 1
                     alt = all_1
@@ -67,10 +71,10 @@ class VcfFromSnp(AbstractConverter) :
                     alt = all_2
 
             #TODO : verifier que ça prend bien en compte si on a pas de valeur est que c'est "-"
-
         return alt
 
     def _define_gt(self,row,ref,alt):
+        
         gt_samples={}
 
         for i in self.sample_alt:
@@ -78,25 +82,26 @@ class VcfFromSnp(AbstractConverter) :
             gt=""
 
             for a in range(2) :
-                allele=str(values_sample.get(row)[a])
+                allele = str(values_sample.get(row)[a])
 
                 if allele == ref and gt == "" :
                     gt="0"
                 
                 elif allele != ref and gt == "" :
-                    print(alt)
+                    # print(alt)
                     gt = str(int(alt.find(allele) + 1 -(alt.find(allele) / 2)))
                 
                 ##Cas ou on a  gt non vide donc pour allele 2
                 elif allele == ref and gt != "" :
-                    gt=gt+"/0"
+                    gt = gt + "/0"
                 
                 elif allele != ref and gt != "" :
-                    gt = gt+"/"+str(int(alt.find(allele) + 1 -(alt.find(allele) / 2)))
+                    # print(type(str(int(alt.find(allele) + 1 -(alt.find(allele) / 2)))))
+                    gt = gt + "/" + str(int(alt.find(allele) + 1 -(alt.find(allele) / 2)))
 
-            gt_samples[i]=gt
-        
-        return gt_samples
+            gt_samples[i] = gt
+            list_gt=list(gt_samples.values())
+        return list_gt
         
         
 
@@ -114,8 +119,15 @@ class VcfFromSnp(AbstractConverter) :
         # # Permet de générer les collones
         with open(output_path, "w") as vcf:
             vcf_header = create_vcf_header(input_path, self.config, sample_list, True)
+
             for l in vcf_header:
                 vcf.write(l + "\n")
+            
+            self.snp_data = self.snp_data.iloc[
+                index_natsorted(self.snp_data[self.config["VCF_COLUMNS"]["#CHROM"]])
+            ]
+
+            print(self.snp_data)
             
             data = self.snp_data.astype(str).to_dict()
 
@@ -146,43 +158,31 @@ class VcfFromSnp(AbstractConverter) :
                     else:
                         var.set_column(vcf_col, data[col][i])
 
-                    # var.alt=self._get_alt(i)
-
-                    # self._add_alt(var.ref,i)
-                    # self._add_gt(var.ref)
-
                     var.ref=var.ref.upper()
-                    var.alt=self._define_alt(1, var.ref),
-                    var.samples_gt=self._define_gt(1,var.ref,var.alt),
+                    var.alt=self._get_alt(1, var.ref)
+                    var.samples_gt = self._define_gt(1,var.ref,var.alt)
 
                     line = [
                         var.chrom,
                         var.pos,
+                        var.id,
                         # var.get_hash(),
                         # voir pour integrer id
                         var.ref,
                         var.alt,
                         #var.alt à faire
-                        var.samples_gt,
                         var.qual,
                         ]
 
                     line.append("PASS")
-
-                
-                # print(self.sample_alt.get("ASG132883"))
-                print(line)
-
+                    line.append(".")
+                    line.append("GT")
+                    line.extend(var.samples_gt)
 
 
+                vcf.write("\t".join(line) + "\n")
 
-
-        
-        
-            
-
-
-        
+      
 
 if __name__ == '__main__':
     convert = VcfFromSnp("/home1/BAS/hameaue/variant_convert/variantconvert/configs/config_snp.json")
