@@ -155,10 +155,12 @@ class VcfFromSnp(AbstractConverter) :
                         args = [data[c][i] for c in col[2:]]
                         result = func(*args) #* permet de deballer tous les arguments qui sont enregistrer dans cette variable 
                         if len(result) != 1:
+
                             raise ValueError(
                                 "HELPER_FUNCTIONS used with vcf_from_snp.py are expected to return a tuple of len 1. Got instead:"
                                 + str(result)
                             )
+                        print(result)
                         var.set_column(vcf_col, result)
 
                     elif col == "":
@@ -194,6 +196,6 @@ class VcfFromSnp(AbstractConverter) :
 
 if __name__ == '__main__':
     convert = VcfFromSnp("/home1/BAS/hameaue/variant_convert/variantconvert/configs/config_snp.json")
-    convert.convert("/home1/BAS/hameaue/TEST02_habibd/cut_data.csv", "/home1/BAS/hameaue/TEST02_habibd/cut_data_unphased.vcf")
+    convert.convert("/home1/BAS/hameaue/TEST02_habibd/Full_data_clean.csv", "/home1/BAS/hameaue/TEST02_habibd/cut_data_unphased.vcf")
 
 
