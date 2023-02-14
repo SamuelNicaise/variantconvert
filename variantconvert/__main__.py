@@ -44,6 +44,7 @@ import os
 import sys
 
 sys.path.append(os.path.join(os.path.dirname(__file__), "."))
+from anonymize import main_anonymize
 from commons import set_log_level
 from config import main_config
 from converter_factory import ConverterFactory
@@ -73,10 +74,13 @@ def main_convert(args):
 
 
 def main():
-    parser = argparse.ArgumentParser(prog="variantconvert")
-    subparsers = parser.add_subparsers(help="sub-command help")
+    parser = argparse.ArgumentParser(
+        prog="variantconvert", formatter_class=argparse.MetavarTypeHelpFormatter
+    )
+    subparsers = parser.add_subparsers(help="sub-command help", dest="subparser")
+
     parser_convert = subparsers.add_parser(
-        "convert", help="convert a file containing genomic variants to an other format"
+        "convert", help="Convert a file containing genomic variants to an other format"
     )
     parser_convert.add_argument("-i", "--inputFile", type=str, required=True, help="Input file")
     parser_convert.add_argument("-o", "--outputFile", type=str, required=True, help="Output file")
@@ -102,7 +106,7 @@ def main():
     )
 
     parser_batch = subparsers.add_parser(
-        "varankBatch", help="convert an entire folder of Varank files"
+        "varankBatch", help="Convert an entire folder of Varank files"
     )
     parser_batch.add_argument(
         "-i",
@@ -172,18 +176,28 @@ def main():
         nargs="*",
     )
 
-    for myparser in (parser_convert, parser_batch, parser_config):
+    parser_anonymize = subparsers.add_parser(
+        "anonymize",
+        help="Anonymize a VCF by shuffling genotypes and renaming samples",
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+    )
+    parser_anonymize.add_argument("-i", "--input", type=str, required=True, help="Input VCF")
+    parser_anonymize.add_argument("-o", "--output", type=str, required=True, help="Output VCF")
+
+    for myparser in (parser_convert, parser_batch, parser_config, parser_anonymize):
         myparser.add_argument("-v", "--verbosity", type=str, default="info", help="Verbosity level")
 
     args = parser.parse_args()
-    if "verbosity" not in args:
-        parser.print_help()
-    elif "inputVarankDir" in args:
-        main_varank_batch(args)
-    elif "set" in args:
-        main_config(args)
-    else:
+    if args.subparser == "convert":
         main_convert(args)
+    elif args.subparser == "varankBatch":
+        main_varank_batch(args)
+    elif args.subparser == "config":
+        main_config(args)
+    elif args.subparser == "anonymize":
+        main_anonymize(args)
+    else:
+        parser.print_help()
 
 
 if __name__ == "__main__":
