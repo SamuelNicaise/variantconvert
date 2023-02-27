@@ -43,7 +43,7 @@
         "ID": "Name",
         "REF": [
             "HELPER_FUNCTION",
-            "get_ref_from_decon",
+            "get_ref_from_snp",
             "Chr",
             "Position"
         ],
