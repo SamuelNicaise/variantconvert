@@ -13,7 +13,7 @@ from natsort import index_natsorted
 
 
 class VcfFromSnp(AbstractConverter) :
-
+    """Attention aux ALT vide, ils ne sont pas gérer pour le moment. C'est surement du à un probleme dans le is helper """
     def _init_dataframe(self):
         self.snp_data=pd.read_csv(
             self.filepath,
@@ -21,14 +21,6 @@ class VcfFromSnp(AbstractConverter) :
             index_col=0
             )
         self.snp_data.reset_index(drop=True, inplace=True)
-        # self.clean_chr()
-
-    # def clean_chr(self):
-    #     for row in range(self.snp_data.shape[0]):
-    #         chr = self.snp_data.iloc[row,2]
-    #         if chr == "XY":
-    #             self.snp_data.iloc[row,2] ="Y"
-
         
 
     def _get_sample_id(self):
@@ -135,7 +127,6 @@ class VcfFromSnp(AbstractConverter) :
 
             error_reff=0
             for i in range(self.snp_data.shape[0]):
-                line = [] 
                 # Ignorer line et on fait une fonction va afficher à la fin le variant voir pour faire un to string qui affiche toute les infos du variant à la fin
                 var = Variant()
 
@@ -150,9 +141,9 @@ class VcfFromSnp(AbstractConverter) :
                         result = func(*args) #* permet de deballer tous les arguments qui sont enregistrer dans cette variable 
                         if result == "empty" :
                             # print("They are not match with reff")
-                            continue
+                            break
 
-                        elif len(result) != 1:
+                        if len(result) != 1:
                             # print("func:", func)
                             # print("args:", args)
                             error_reff=error_reff+1
@@ -173,8 +164,14 @@ class VcfFromSnp(AbstractConverter) :
                     var.alt=self._get_alt(i, var.ref)
                     var.samples_gt = self._define_gt(i,var.ref)
 
+                    if var.alt == "" : 
+                        continue
+                    
+                    if var.ref == "":
+                        continue
+
                     line = [
-                        var.chrom,
+                        "chr"+var.chrom,
                         var.pos,
                         var.id,
                         var.ref,
@@ -188,7 +185,8 @@ class VcfFromSnp(AbstractConverter) :
                     line.extend(var.samples_gt)
 
 
-                vcf.write("\t".join(line) + "\n")
+                    vcf.write("\t".join(line) + "\n")
+
         print(helper.error_value)
 
       
