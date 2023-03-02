@@ -74,10 +74,8 @@ def main_convert(args):
 
 
 def main():
-    parser = argparse.ArgumentParser(
-        prog="variantconvert", formatter_class=argparse.MetavarTypeHelpFormatter
-    )
-    subparsers = parser.add_subparsers(help="sub-command help", dest="subparser")
+    parser = argparse.ArgumentParser(prog="variantconvert")
+    subparsers = parser.add_subparsers(help="sub-command help")
 
     parser_convert = subparsers.add_parser(
         "convert", help="Convert a file containing genomic variants to an other format"
@@ -188,6 +186,7 @@ def main():
         myparser.add_argument("-v", "--verbosity", type=str, default="info", help="Verbosity level")
 
     args = parser.parse_args()
+
     if args.subparser == "convert":
         main_convert(args)
     elif args.subparser == "varankBatch":
