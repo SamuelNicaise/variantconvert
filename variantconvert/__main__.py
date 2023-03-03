@@ -78,7 +78,9 @@ def main():
     subparsers = parser.add_subparsers(help="sub-command help")
 
     parser_convert = subparsers.add_parser(
-        "convert", help="Convert a file containing genomic variants to an other format"
+        "convert",
+        help="Convert a file containing genomic variants to an other format",
+        formatter_class=argparse.MetavarTypeHelpFormatter,
     )
     parser_convert.add_argument("-i", "--inputFile", type=str, required=True, help="Input file")
     parser_convert.add_argument("-o", "--outputFile", type=str, required=True, help="Output file")
@@ -104,7 +106,9 @@ def main():
     )
 
     parser_batch = subparsers.add_parser(
-        "varankBatch", help="Convert an entire folder of Varank files"
+        "varankBatch",
+        help="Convert an entire folder of Varank files",
+        formatter_class=argparse.MetavarTypeHelpFormatter,
     )
     parser_batch.add_argument(
         "-i",
@@ -157,7 +161,11 @@ def main():
         help="maximum files merged at once by bcftools [default: 200]",
     )
 
-    parser_config = subparsers.add_parser("config", help="Change variables in config files")
+    parser_config = subparsers.add_parser(
+        "config",
+        help="Change variables in config files",
+        formatter_class=argparse.MetavarTypeHelpFormatter,
+    )
     parser_config.add_argument(
         "-c",
         "--configFiles",
@@ -177,7 +185,7 @@ def main():
     parser_anonymize = subparsers.add_parser(
         "anonymize",
         help="Anonymize a VCF by shuffling genotypes and renaming samples",
-        formatter_class=argparse.RawDescriptionHelpFormatter,
+        formatter_class=argparse.MetavarTypeHelpFormatter,
     )
     parser_anonymize.add_argument("-i", "--input", type=str, required=True, help="Input VCF")
     parser_anonymize.add_argument("-o", "--output", type=str, required=True, help="Output VCF")
@@ -187,16 +195,17 @@ def main():
 
     args = parser.parse_args()
 
-    if args.subparser == "convert":
-        main_convert(args)
-    elif args.subparser == "varankBatch":
-        main_varank_batch(args)
-    elif args.subparser == "config":
-        main_config(args)
-    elif args.subparser == "anonymize":
-        main_anonymize(args)
-    else:
+    if not hasattr(args, "subparser"):
         parser.print_help()
+    else:
+        if args.subparser == "convert":
+            main_convert(args)
+        elif args.subparser == "varankBatch":
+            main_varank_batch(args)
+        elif args.subparser == "config":
+            main_config(args)
+        elif args.subparser == "anonymize":
+            main_anonymize(args)
 
 
 if __name__ == "__main__":
