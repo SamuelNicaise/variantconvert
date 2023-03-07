@@ -29,6 +29,7 @@ class HelperFunctions:
     """
 
     def __init__(self, config):
+        self.nuc_del=""
         self.config = config
         self.error_value=0
         self.dispatcher = {
@@ -71,12 +72,14 @@ class HelperFunctions:
             chrom = "chr" + str(chrom)
         
         try : 
+            self.nuc_del= f[chrom][int(start) - 2].seq
             return f[chrom][int(start) - 1].seq
         
         except KeyError:
             self.error_value=self.error_value+1
             return "empty"
-
+        
+            
 
     def get_ref_from_canoes_bed(self, chr, start):
         f = get_genome(self.config["GENOME"]["path"])
