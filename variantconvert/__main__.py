@@ -76,6 +76,9 @@ def main_convert(args):
 
 def main():
     parser = argparse.ArgumentParser(prog="variantconvert")
+    parser.add_argument(
+        "--version", action="version", version=f"{parser.prog} {variantconvert.__version__}"
+    )
     subparsers = parser.add_subparsers(help="sub-command help")
 
     parser_convert = subparsers.add_parser(
@@ -190,13 +193,13 @@ def main():
         myparser.add_argument("-v", "--verbosity", type=str, default="info", help="Verbosity level")
 
     args = parser.parse_args()
-    set_log_level(args.verbosity)
-    log.info(f"running variantconvert {variantconvert.__version__}")
-    log.debug(f"Args: {str(args)}")
 
     if not hasattr(args, "subparser"):
         parser.print_help()
     else:
+        set_log_level(args.verbosity)
+        log.info(f"running variantconvert {variantconvert.__version__}")
+        log.debug(f"Args: {str(args)}")
         if args.subparser == "convert":
             main_convert(args)
         elif args.subparser == "varankBatch":
