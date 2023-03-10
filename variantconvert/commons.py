@@ -14,6 +14,7 @@ from pyfaidx import Fasta
 
 
 def set_log_level(verbosity):
+    verbosity = verbosity.lower()
     configs = {
         "debug": log.DEBUG,
         "info": log.INFO,
@@ -23,7 +24,7 @@ def set_log_level(verbosity):
     }
     if verbosity not in configs.keys():
         raise ValueError(
-            "Unknown verbosity level:" + verbosity + "\nPlease use any in:" + configs.keys()
+            f"Unknown verbosity level: {verbosity}\nPlease use any in: {configs.keys()}"
         )
     log.basicConfig(
         format="%(asctime)s [%(levelname)s] %(message)s",
