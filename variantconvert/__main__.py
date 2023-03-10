@@ -44,7 +44,6 @@ import os
 import sys
 
 sys.path.append(os.path.join(os.path.dirname(__file__), "."))
-from anonymize import main_anonymize
 from commons import set_log_level
 from config import main_config
 from converter_factory import ConverterFactory
@@ -82,6 +81,7 @@ def main():
         help="Convert a file containing genomic variants to an other format",
         formatter_class=argparse.MetavarTypeHelpFormatter,
     )
+    parser_convert.set_defaults(subparser="convert")
     parser_convert.add_argument("-i", "--inputFile", type=str, required=True, help="Input file")
     parser_convert.add_argument("-o", "--outputFile", type=str, required=True, help="Output file")
     parser_convert.add_argument(
@@ -110,6 +110,7 @@ def main():
         help="Convert an entire folder of Varank files",
         formatter_class=argparse.MetavarTypeHelpFormatter,
     )
+    parser_batch.set_defaults(subparser="varankBatch")
     parser_batch.add_argument(
         "-i",
         "--inputVarankDir",
@@ -174,6 +175,7 @@ def main():
         help="Config file(s) on which changes are applied. Add simple quotes around if you use wildcards. [default: '<script_dir>/configs/*']",
         nargs="*",
     )
+    parser_config.set_defaults(subparser="config")
     parser_config.add_argument(
         "-s",
         "--set",
@@ -182,15 +184,7 @@ def main():
         nargs="*",
     )
 
-    parser_anonymize = subparsers.add_parser(
-        "anonymize",
-        help="Anonymize a VCF by shuffling genotypes and renaming samples",
-        formatter_class=argparse.MetavarTypeHelpFormatter,
-    )
-    parser_anonymize.add_argument("-i", "--input", type=str, required=True, help="Input VCF")
-    parser_anonymize.add_argument("-o", "--output", type=str, required=True, help="Output VCF")
-
-    for myparser in (parser_convert, parser_batch, parser_config, parser_anonymize):
+    for myparser in (parser_convert, parser_batch, parser_config):
         myparser.add_argument("-v", "--verbosity", type=str, default="info", help="Verbosity level")
 
     args = parser.parse_args()
@@ -204,8 +198,6 @@ def main():
             main_varank_batch(args)
         elif args.subparser == "config":
             main_config(args)
-        elif args.subparser == "anonymize":
-            main_anonymize(args)
 
 
 if __name__ == "__main__":
