@@ -40,7 +40,9 @@ If you need a place to store variables unrelated to the vcf file (e.g number of 
 """
 
 import argparse
+import logging as log
 import os
+import variantconvert
 import sys
 
 sys.path.append(os.path.join(os.path.dirname(__file__), "."))
@@ -188,6 +190,9 @@ def main():
         myparser.add_argument("-v", "--verbosity", type=str, default="info", help="Verbosity level")
 
     args = parser.parse_args()
+    set_log_level(args.verbosity)
+    log.info(f"running variantconvert {variantconvert.__version__}")
+    log.debug(f"Args: {str(args)}")
 
     if not hasattr(args, "subparser"):
         parser.print_help()
@@ -198,6 +203,8 @@ def main():
             main_varank_batch(args)
         elif args.subparser == "config":
             main_config(args)
+
+    log.info("variantconvert finished.")
 
 
 if __name__ == "__main__":
