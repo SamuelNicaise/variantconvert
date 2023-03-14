@@ -40,13 +40,15 @@ def identical_except_date_and_genome(vcf_list: typing.List[str]):
     if len(vcf_list) < 2:
         raise RuntimeError("Expected a list containing at least 2 VCF paths")
 
+    VARIABLE_FIELDS = {"##fileDate=", "##reference=", "##InputFile="}
+
     vcfs_lines = []
     k = 0
     for vcf in vcf_list:
         vcfs_lines.append([])
         with open(vcf, "r") as f:
             for l in f:
-                if not l.startswith("##fileDate=") and not l.startswith("##reference="):
+                if all([not l.startswith(field) for field in VARIABLE_FIELDS]):
                     vcfs_lines[k].append(l)
         k += 1
 
