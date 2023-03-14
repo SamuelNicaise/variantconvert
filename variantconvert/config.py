@@ -20,11 +20,19 @@ def change_config(config_path, new_vars):
     with open(config_path, "r") as config:
         data = json.load(config)
 
-    updated_data = {**data, **new_vars}  # requires Python >= 3.5
+    updated_data = update_nested_dic(data, new_vars)  # requires Python >= 3.5
 
-    raise NotImplementedError("Work in progress")
-    # with open(config_path, "w") as config:
-    #     config.write(json.dumps(updated_data))
+    with open(config_path, "w") as config:
+        config.write(json.dumps(updated_data, indent="\t"))
+
+
+def update_nested_dic(data, new_vars):
+    for k, v in new_vars.items():
+        if isinstance(v, dict):
+            data[k] = update_nested_dic(data.get(k, {}), v)
+        else:
+            data[k] = v
+    return data
 
 
 def get_nested_dic(dictionary, key_tree, sep=".", default_value=""):
