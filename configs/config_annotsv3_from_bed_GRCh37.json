@@ -38,7 +38,7 @@
 			"##contig=<ID=M,length=16571,assembly=GRCh37>",
 			"##contig=<ID=X,length=155270560,assembly=GRCh37>",
 			"##contig=<ID=Y,length=59034049,assembly=GRCh37>",
-			"##reference=file:human_g1k_v37.fasta" 
+			"##reference=file:human_g1k_v37.fasta"
 		]
 	},
 	"VCF_COLUMNS": {
@@ -203,7 +203,7 @@
 			},
 			"B_gain_source": {
 				"Type": "String",
-				"Description": "Origin of the benign gain genomic regions completely overlapping the SV to annotate: gnomAD, ClinVar (CLN), ClinGen (TS40), DGV (dgv, nsv or esv), DDD, 1000 genomes (1000g), Ira M. Hall’s lab (IMH), Children's Mercy Research Institute (CMRI)"
+				"Description": "Origin of the benign gain genomic regions completely overlapping the SV to annotate: gnomAD, ClinVar (CLN), ClinGen (TS40), DGV (dgv, nsv or esv), DDD, 1000 genomes (1000g), Ira M. Hall's lab (IMH), Children's Mercy Research Institute (CMRI)"
 			},
 			"B_gain_coord": {
 				"Type": "String",
@@ -215,7 +215,7 @@
 			},
 			"B_loss_source": {
 				"Type": "String",
-				"Description": "Origin of the benign loss genomic regions completely overlapping the SV to annotate: gnomAD, ClinVar (CLN), ClinGen (HI40), DGV (dgv, nsv or esv), DDD, 1000 genomes (1000g), Ira M. Hall’s lab (IMH), Children's Mercy Research Institute (CMRI)"
+				"Description": "Origin of the benign loss genomic regions completely overlapping the SV to annotate: gnomAD, ClinVar (CLN), ClinGen (HI40), DGV (dgv, nsv or esv), DDD, 1000 genomes (1000g), Ira M. Hall's lab (IMH), Children's Mercy Research Institute (CMRI)"
 			},
 			"B_loss_coord": {
 				"Type": "String",

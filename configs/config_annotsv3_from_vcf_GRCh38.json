@@ -12,32 +12,32 @@
 		"assembly": "GRCh38",
 		"path": "Homo_sapiens_assembly38.fasta",
 		"vcf_header": [
-                        "##contig=<ID=1,length=248956422,assembly=GRCh38>",
-                        "##contig=<ID=2,length=242193529,assembly=GRCh38>",
-                        "##contig=<ID=3,length=198295559,assembly=GRCh38>",
-                        "##contig=<ID=4,length=190214555,assembly=GRCh38>",
-                        "##contig=<ID=5,length=181538259,assembly=GRCh38>",
-                        "##contig=<ID=6,length=170805979,assembly=GRCh38>",
-                        "##contig=<ID=7,length=159345973,assembly=GRCh38>",
-                        "##contig=<ID=8,length=145138636,assembly=GRCh38>",
-                        "##contig=<ID=9,length=138394717,assembly=GRCh38>",
-                        "##contig=<ID=10,length=133797422,assembly=GRCh38>",
-                        "##contig=<ID=11,length=135086622,assembly=GRCh38>",
-                        "##contig=<ID=12,length=133275309,assembly=GRCh38>",
-                        "##contig=<ID=13,length=114364328,assembly=GRCh38>",
-                        "##contig=<ID=14,length=107043718,assembly=GRCh38>",
-                        "##contig=<ID=15,length=101991189,assembly=GRCh38>",
-                        "##contig=<ID=16,length=90338345,assembly=GRCh38>",
-                        "##contig=<ID=17,length=83257441,assembly=GRCh38>",
-                        "##contig=<ID=18,length=80373285,assembly=GRCh38>",
-                        "##contig=<ID=19,length=58617616,assembly=GRCh38>",
-                        "##contig=<ID=20,length=64444167,assembly=GRCh38>",
-                        "##contig=<ID=21,length=46709983,assembly=GRCh38>",
-                        "##contig=<ID=22,length=50818468,assembly=GRCh38>",
-                        "##contig=<ID=M,length=16569,assembly=GRCh38>",
-                        "##contig=<ID=X,length=156040895,assembly=GRCh38>",
-                        "##contig=<ID=Y,length=57227415,assembly=GRCh38>",
-                        "##reference=file:Homo_sapiens_assembly38.fasta"
+			"##contig=<ID=1,length=248956422,assembly=GRCh38>",
+			"##contig=<ID=2,length=242193529,assembly=GRCh38>",
+			"##contig=<ID=3,length=198295559,assembly=GRCh38>",
+			"##contig=<ID=4,length=190214555,assembly=GRCh38>",
+			"##contig=<ID=5,length=181538259,assembly=GRCh38>",
+			"##contig=<ID=6,length=170805979,assembly=GRCh38>",
+			"##contig=<ID=7,length=159345973,assembly=GRCh38>",
+			"##contig=<ID=8,length=145138636,assembly=GRCh38>",
+			"##contig=<ID=9,length=138394717,assembly=GRCh38>",
+			"##contig=<ID=10,length=133797422,assembly=GRCh38>",
+			"##contig=<ID=11,length=135086622,assembly=GRCh38>",
+			"##contig=<ID=12,length=133275309,assembly=GRCh38>",
+			"##contig=<ID=13,length=114364328,assembly=GRCh38>",
+			"##contig=<ID=14,length=107043718,assembly=GRCh38>",
+			"##contig=<ID=15,length=101991189,assembly=GRCh38>",
+			"##contig=<ID=16,length=90338345,assembly=GRCh38>",
+			"##contig=<ID=17,length=83257441,assembly=GRCh38>",
+			"##contig=<ID=18,length=80373285,assembly=GRCh38>",
+			"##contig=<ID=19,length=58617616,assembly=GRCh38>",
+			"##contig=<ID=20,length=64444167,assembly=GRCh38>",
+			"##contig=<ID=21,length=46709983,assembly=GRCh38>",
+			"##contig=<ID=22,length=50818468,assembly=GRCh38>",
+			"##contig=<ID=M,length=16569,assembly=GRCh38>",
+			"##contig=<ID=X,length=156040895,assembly=GRCh38>",
+			"##contig=<ID=Y,length=57227415,assembly=GRCh38>",
+			"##reference=file:Homo_sapiens_assembly38.fasta"
 		]
 	},
 	"VCF_COLUMNS": {
@@ -264,7 +264,7 @@
 			},
 			"B_gain_source": {
 				"Type": "String",
-				"Description": "Origin of the benign gain genomic regions completely overlapping the SV to annotate: gnomAD, ClinVar (CLN), ClinGen (TS40), DGV (dgv, nsv or esv), DDD, 1000 genomes (1000g), Ira M. Hall’s lab (IMH), Children's Mercy Research Institute (CMRI)"
+				"Description": "Origin of the benign gain genomic regions completely overlapping the SV to annotate: gnomAD, ClinVar (CLN), ClinGen (TS40), DGV (dgv, nsv or esv), DDD, 1000 genomes (1000g), Ira M. Hall's lab (IMH), Children's Mercy Research Institute (CMRI)"
 			},
 			"B_gain_coord": {
 				"Type": "String",
@@ -276,7 +276,7 @@
 			},
 			"B_loss_source": {
 				"Type": "String",
-				"Description": "Origin of the benign loss genomic regions completely overlapping the SV to annotate: gnomAD, ClinVar (CLN), ClinGen (HI40), DGV (dgv, nsv or esv), DDD, 1000 genomes (1000g), Ira M. Hall’s lab (IMH), Children's Mercy Research Institute (CMRI)"
+				"Description": "Origin of the benign loss genomic regions completely overlapping the SV to annotate: gnomAD, ClinVar (CLN), ClinGen (HI40), DGV (dgv, nsv or esv), DDD, 1000 genomes (1000g), Ira M. Hall's lab (IMH), Children's Mercy Research Institute (CMRI)"
 			},
 			"B_loss_coord": {
 				"Type": "String",
