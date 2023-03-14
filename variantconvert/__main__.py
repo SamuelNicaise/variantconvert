@@ -188,6 +188,11 @@ def main():
         help="List of variables to set. Example: --set GENOME.assembly=hg19 GENOME.path=/path/hg19.fa",
         nargs="*",
     )
+    parser_config.add_argument(
+        "--fill_genome_header",
+        action="store_true",
+        help="Fill the GENOME['vcf_header'] field based on GENOME['path']",
+    )
 
     for myparser in (parser_convert, parser_batch, parser_config):
         myparser.add_argument("-v", "--verbosity", type=str, default="info", help="Verbosity level")
@@ -198,16 +203,23 @@ def main():
         parser.print_help()
     else:
         set_log_level(args.verbosity)
-        log.info(f"running variantconvert {variantconvert.__version__}")
         log.debug(f"Args: {str(args)}")
         if args.subparser == "convert":
+            log.info(f"running variantconvert {variantconvert.__version__}")
             main_convert(args)
-        elif args.subparser == "varankBatch":
-            main_varank_batch(args)
-        elif args.subparser == "config":
-            main_config(args)
+            log.info("variantconvert finished.")
 
-    log.info("variantconvert finished.")
+        elif args.subparser == "varankBatch":
+            log.info(f"running variantconvert {variantconvert.__version__} (batch mode)")
+            main_varank_batch(args)
+            log.info("variantconvert finished.")
+
+        elif args.subparser == "config":
+            if not (args.set or args.fill_genome_header):
+                raise parser_config.error(
+                    "the following arguments are required: either --set or --fill_genome_header"
+                )
+            main_config(args)
 
 
 if __name__ == "__main__":
