@@ -20,7 +20,9 @@ git clone https://github.com/SamuelNicaise/variantconvert.git
 cd variantconvert
 pip install -e .
 ```
-3) Change the GENOME["path"] variable in configs/*.json to fit your local system. Some converters will require access to a valid reference genome in fasta format. Alternatively, you can create your own config files in another folder.
+3) Change the GENOME["path"] variable in configs/*.json to fit your local system. 
+
+Indeed, some converters will require a valid reference genome in fasta format. This is to fill in the VCF "REF" column in cases where we only have the position without the reference base. Alternatively, you can create your own config files in another folder.
 
 # Usage
 ```
@@ -31,10 +33,45 @@ Or if you did not use the `pip install` command above:
 python variantconvert/__main__.py --help
 ```
 
+___
+# Documentation for AnnotSV users
 
-____ 
+<details> 
+  <summary>Click to read documentation</summary>
 
-# Section for developers
+### Creation of a VCF output file format with AnnotSV
+To convert the output format from tsv to VCF, AnnotSV relies on the variantconvert tool. 
+
+The variantconvert module distributed with AnnotSV can be used by setting the `-vcf` option to 1 in the AnnotSV command line.
+
+### Requirements in the AnnotSV command line:
+Different AnnotSV options are required to access to a VCF output:
+-	From a "BED" or a "VCF" SV input file:
+	- The user needs to define the `-SVinputInfo` option to 1 (to report in the tsv output file the 'ID', 'QUAL', 'FILTER'... fields).
+-	From a "BED" SV input file:
+	- The user needs to define the `-svtBEDcol` option (to report the SV type)
+	- The `-samplesidBEDcol` option is highly recommended to use (else, the sample colum will be named "NA" (Non Attributed))  
+
+### Method
+Each SV from an AnnotSV tsv file is represented with 2 types of lines:
+- An annotation on the “full” length of the SV. Every SV are reported, even those not covering a gene. 
+- An annotation of the SV “split” by gene. This type of annotation gives an opportunity to focus on each gene overlapped by the SV. Thus, when a SV spans over several genes, the output will contain as many annotations lines as genes covered.
+
+In the converted VCF, each SV is represented with only 1 line. All the annotations (full & split) are reported in the INFO field.
+For one SV, all values from a same tsv output column are merged with a "|".
+
+Example of a duplication overlapping 1 gene (1 full line + 1 split line in the tsv). The tsv output columns are represented in the INFO field in this way: 
+```
+AnnotSV_ID=21_35722427_35906593_DUP_1|21_35722427_35906593_DUP_1;SV_chrom=21|21;SV_start=35722427|35722427;SV_end=35906593|35906593;SV_lengt
+h=184166|184166;SV_type=DUP|DUP;Annotation_mode=full&split;CytoBand=q22.12|q22.12;Gene_name=PPP1R2P2|PPP1R2P2;...
+```
+Warning: the AnnotSV > VCF converter uses VCF 4.2 specification, so spaces are replaced with an "_" in the output VCF.
+
+### GT warning
+If the GT is not given in input, the GT is set to "1/." (using the variantconvert distributed by AnnotSV) or "0/1" (using the github variantconvert) for each SV in the VCF output file. Indeed, the considered SV has been called on at least one allele, but we don’t know the status of the second allele. In any case, the user can change this default value in the variantconvert config files. 
+</details>
+
+# Documentation for developers
 
 <details> 
   <summary>Click to read documentation</summary>
