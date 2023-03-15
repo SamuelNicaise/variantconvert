@@ -64,7 +64,7 @@ class VcfFromSnp(AbstractConverter) :
                     if alt != "" :
                         alt_nw = ""
                         if alt == ".":
-                            alt_nw = self.nuc_del
+                            alt = ""
                         for str_alt in alt:
 
                             if str_alt != ',':
@@ -264,6 +264,6 @@ class VcfFromSnp(AbstractConverter) :
 
 if __name__ == '__main__':
     convert = VcfFromSnp("/home1/BAS/hameaue/variant_convert/variantconvert/configs/config_snp.json")
-    convert.convert("/home1/BAS/hameaue/TEST02_habibd/Full_data_clean.csv", "/home1/BAS/hameaue/TEST02_habibd/vcf_unphased.vcf")
+    convert.convert("/home1/BAS/hameaue/TEST02_habibd/file_BBS5/Full_data_clean.csv", "/home1/BAS/hameaue/TEST02_habibd/file_BBS5/vcf_unphased.vcf")
 
 
