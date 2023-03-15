@@ -116,6 +116,37 @@ def test_decon_to_vcf(tmp_path):
     identical_except_date_and_genome([control, decon_tester.outputFile])
 
 
+def test_annotsv_info_to_vcf(tmp_path):
+    annotsv_tester = type(
+        "obj",
+        (object,),
+        {
+            "inputFile": osj(
+                os.path.dirname(__file__),
+                "data",
+                "DECON.results_all.AnnotSV.tsv",
+            ),
+            "outputFile": osj(tmp_path, "decon_annotsv_info_test.vcf"),
+            "inputFormat": "annotsv",
+            "outputFormat": "vcf",
+            "configFile": osj(
+                os.path.dirname(__file__),
+                "..",
+                "configs",
+                "HUS",
+                "annotsv3_info_from_vcf.json",
+            ),
+            "verbosity": "debug",
+        },
+    )
+    remove_if_exists(annotsv_tester.outputFile)
+    main_convert(annotsv_tester)
+    assert os.path.exists(annotsv_tester.outputFile)
+
+    control = osj(os.path.dirname(__file__), "controls", "decon_annotsv_info_test.vcf")
+    identical_except_date_and_genome([control, annotsv_tester.outputFile])
+
+
 def test_annotsv_to_vcf(tmp_path):
     annotsv_tester = type(
         "obj",

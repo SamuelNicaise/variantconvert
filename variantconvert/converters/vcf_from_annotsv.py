@@ -10,7 +10,13 @@ from natsort import index_natsorted
 from converters.abstract_converter import AbstractConverter
 
 sys.path.append("..")
-from commons import create_vcf_header, is_helper_func, remove_decimal_or_strip
+from commons import (
+    create_vcf_header,
+    is_helper_func,
+    remove_decimal_or_strip,
+    vcf_info_annotations,
+    insert_metadata_info,
+)
 from helper_functions import HelperFunctions
 
 
@@ -83,14 +89,25 @@ class VcfFromAnnotsv(AbstractConverter):
         columns_to_drop += [v for v in self.main_vcf_cols]
         columns_to_drop.append(self.config["VCF_COLUMNS"]["SAMPLE"])
         columns_to_drop.append(self.config["VCF_COLUMNS"]["FORMAT"])
-        columns_to_drop.append(self.config["VCF_COLUMNS"]["INFO"]["INFO"])
+        # Explode INFO field comming from vcf, if field not in TSV add annotations in INFO field created
+        if "INFO" in self.config["VCF_COLUMNS"]["INFO"]:
+            self._info = self.input_df.get("INFO")
+            self.info_metadata = [
+                '##INFO=<ID=INFO_keys,Number=.,Type=String,Description="INFO field keys from vcf used as input in AnnotSV">',
+                '##INFO=<ID=INFO_values,Number=.,Type=String,Description="INFO field values from vcf used as input in AnnotSV">',
+            ]
+        else:
+            # If annotated TSV comming from AnnotSV3 with VCF as input
+            columns_to_drop.append("INFO")
         for col in columns_to_drop:
             try:
                 df = self.input_df.drop([col], axis=1)
             except KeyError:
                 log.debug(f"Failed to drop column: {col}")
         df = df.replace(";", ",", regex=True)  # any ';' in annots will ruin the vcf INFO field
-
+        if df.get("INFO") is not None:
+            df["INFO"] = self._info
+            log.debug("INFO field present in configuration")
         # TODO: check if CHROM col is in compliance with config ref genome (chrX or X)
         # if self.config["GENOME"]["vcf_header"][0].startswith("##contig=<ID=chr"):
         #     if not chrom.startswith
@@ -129,7 +146,6 @@ class VcfFromAnnotsv(AbstractConverter):
             if typemode not in ("full", "split"):
                 raise ValueError("Annotation type is assumed to be only 'full' or 'split'")
             dfs[typemode] = df_type
-
         # deal with full
         if "full" not in dfs.keys():
             # still need to init columns
@@ -147,8 +163,14 @@ class VcfFromAnnotsv(AbstractConverter):
                 )
             # remove float decimal full rows
             for ann in dfs["full"].columns:
-                annots[ann] = remove_decimal_or_strip(dfs["full"].loc[df.index[0], ann])
+                # to keep INFO field from annotated TSV comming from original VCF
+                if ann == "INFO":
+                    info_keys, info_values = vcf_info_annotations(dfs["full"].loc[df.index[0], ann])
+                    annots["INFO_keys"] = info_keys
+                    annots["INFO_values"] = info_values
 
+                else:
+                    annots[ann] = remove_decimal_or_strip(dfs["full"].loc[df.index[0], ann])
         # deal with split
         if "split" not in dfs.keys():
             return annots
@@ -158,24 +180,16 @@ class VcfFromAnnotsv(AbstractConverter):
             if ann == self.config["VCF_COLUMNS"]["INFO"]["Annotation_mode"]:
                 annots[ann] = self.config["GENERAL"]["mode"]
                 continue
+            if ann == "INFO":
+                continue
             # if you only keep full annotations split is lost advitam eternam
             # list of all values in each columns
             for splitval in dfs["split"][ann].tolist():
                 transform.append(remove_decimal_or_strip(splitval))
-            # we don't report split infos only if there are ALL equal to full row or they are stack to dot
-            # if all([nq == annots[ann] for nq in transform]) or all(
-            #     eq == "." for eq in transform
-            # ):  # or ann in except_full_list:
-
-            #    continue
-            # In case of full and n split are different we keep values from all (more than 2 differencies)
-            # else:
+            # In case of full and n split we report all annotations in INFO field full|split.....n-split
             values = [annots[ann]]
             values.extend(transform)
             annots[ann] = "|".join(values)
-            # TODO in case of pipe already present in annotations change separator, maybe '+'
-
-        # remove empty annots
         annots = {k: v for k, v in annots.items()}
         return annots
 
@@ -345,16 +359,17 @@ class VcfFromAnnotsv(AbstractConverter):
         # create the vcf
         with open(output_path, "w") as vcf:
             vcf_header = create_vcf_header(tsv, self.config, self.sample_list)
+            # info field metadata
+            if hasattr(self, "info_metadata"):
+                vcf_header = insert_metadata_info(vcf_header, self.info_metadata)
             for l in vcf_header:
                 vcf.write(l + "\n")
-
             id_col = self.config["VCF_COLUMNS"]["INFO"]["AnnotSV_ID"]
             self.input_df = self.input_df.iloc[
                 index_natsorted(self.input_df[self.config["VCF_COLUMNS"]["#CHROM"]])
             ]
 
             for variant_id, df_variant in self.input_df.groupby(id_col, sort=False):
-
                 # fill columns that need a helper func
                 for config_key, config_val in self.config["VCF_COLUMNS"].items():
                     if config_key == "INFO":

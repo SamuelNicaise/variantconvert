@@ -10,6 +10,7 @@ import subprocess
 import time
 
 from functools import lru_cache
+from typing import Tuple
 from pyfaidx import Fasta
 
 
@@ -191,3 +192,30 @@ def remove_decimal_or_strip(value):
     # forbidden to have spaces in INFO fields in VCF v4.2 (for IGV compatibility)
     value = value.replace(" ", "_")
     return value
+
+
+def vcf_info_annotations(vals: str) -> Tuple[list, list]:
+    """
+    from VCF INFO field return annotations same as SnpEff
+    """
+    dico = {}
+    for sep in vals.split(";"):
+        k, *v = sep.split("=", 1)
+        if v:
+            dico[k] = v[0]
+        else:
+            dico[k] = ""
+    return "|".join(dico.keys()), "|".join(dico.values())
+
+
+def insert_metadata_info(header: list, metadata: list) -> list:
+    """
+    for each full row split INFO field by keys and values to store as 2 new fields, INFO_keys, INFO_values
+    """
+    info_index = []
+    for i, rows in enumerate(header):
+        if rows.startswith("##INFO"):
+            info_index.append(i)
+    for j, ann in enumerate(metadata):
+        header.insert(max(info_index) + 1 + j, ann)
+    return header
