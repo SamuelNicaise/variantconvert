@@ -29,9 +29,9 @@ class HelperFunctions:
     """
 
     def __init__(self, config):
-        self.nuc_del=""
+        self.nuc_del = ""
         self.config = config
-        self.error_value=0
+        self.error_value = 0
         self.dispatcher = {
             "get_ref_from_decon": self.get_ref_from_decon,
             "get_alt_from_decon": self.get_alt_from_decon,
@@ -50,7 +50,7 @@ class HelperFunctions:
             "get_gt_from_varank": self.get_gt_from_varank,
             "get_ad_from_varank": self.get_ad_from_varank,
             "get_vaf_from_varank": self.get_vaf_from_varank,
-            "get_ref_from_snp":self.get_ref_from_snp,
+            "get_ref_from_snp": self.get_ref_from_snp,
         }
 
     def get(self, func_name):
@@ -70,16 +70,14 @@ class HelperFunctions:
             "##contig=<ID=chr"
         ) and not chrom.startswith("chr"):
             chrom = "chr" + str(chrom)
-        
-        try : 
-            self.nuc_del= f[chrom][int(start) - 2].seq
+
+        try:
+            self.nuc_del = f[chrom][int(start) - 2].seq
             return f[chrom][int(start) - 1].seq
-        
+
         except KeyError:
-            self.error_value=self.error_value+1
+            self.error_value = self.error_value + 1
             return "empty"
-        
-            
 
     def get_ref_from_canoes_bed(self, chr, start):
         f = get_genome(self.config["GENOME"]["path"])
