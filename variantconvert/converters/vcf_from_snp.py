@@ -14,25 +14,6 @@ from natsort import index_natsorted
 
 
 class VcfFromSnp(AbstractConverter):
-    """This class transform raw data come from SNP analysis into vcf file :
-
-    exemple :
-
-    Raw_data input_file
-
-    Index   Name    Address Chr Position    ... Sample1.Top Alleles ... Sample2.Top Alleles ... n.Top Alleles
-    1       rs0001  3568    5   8759622     ... GG  ... GA  ... n.haplotypes
-    2       rs0002  4567    2   8972124     ... TA  ... CT  ... n.haplotypes
-    3       rs0045  7778    8   2655891     ... C-  ... CC  ... n.haplotypes
-
-    vcf output_file
-
-    ##META_DATAS
-    #CHROM  POS     ID      REF ALT QUAL    FILTER  INFO    FORMAT  Sample1 Sample2 n.Samples
-    chr5    8759622 rs0001  G   A   .       PASS    .       GT      0/0     0/1     n.genotype
-    chr2    8972124 rs0002  T   A,C .       PASS    .       GT      0/1     1/0     n.genotype
-    chr8    2655891 rs0045  GC  G   .       PASS    .       GT      1/1     0/0     n.genotype
-    """
 
     def _init_dataframe(self):
         self.snp_data = pd.read_csv(self.filepath, sep="\t", index_col=0)
@@ -270,6 +251,32 @@ class VcfFromSnp(AbstractConverter):
                 vcf.write("\t".join(line) + "\n")
 
         print("Number of ref don't find in ref file = " + helper.error_value)
+
+    __doc__="""
+    This class transform raw data come from SNP analysis into vcf file :
+
+    exemple :
+
+    Raw_data input_file
+
+    Index   Name    Address Chr Position    ... Sample1.Top Alleles ... Sample2.Top Alleles ... n.Top Alleles
+    1       rs0001  3568    5   8759622     ... GG  ... GA  ... n.haplotypes
+    2       rs0002  4567    2   8972124     ... TA  ... CT  ... n.haplotypes
+    3       rs0045  7778    8   2655891     ... C-  ... CC  ... n.haplotypes
+
+    vcf output_file
+
+    ##META_DATA
+    #CHROM  POS     ID      REF ALT QUAL    FILTER  INFO    FORMAT  Sample1 Sample2 n.Samples
+    chr5    8759622 rs0001  G   A   .       PASS    .       GT      0/0     0/1     n.genotype
+    chr2    8972124 rs0002  T   A,C .       PASS    .       GT      0/1     1/0     n.genotype
+    chr8    2655891 rs0045  GC  G   .       PASS    .       GT      1/1     0/0     n.genotype
+
+    The vcf are unphased but you can use Beagle2.3 for phasing your data
+
+    Developped by HAMEAU Elise 
+
+    """
 
 
 if __name__ == "__main__":
