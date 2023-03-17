@@ -8,7 +8,8 @@
 			"gene2",
 			"breakpoint1",
 			"breakpoint2"
-		]
+		],
+		"default_genotype": "0/1"
 	},
 	"GENOME": {
 		"assembly": "hg19",
