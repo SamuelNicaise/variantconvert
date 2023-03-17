@@ -48,7 +48,10 @@ class VcfFromBreakpoints(AbstractConverter):
                 sample_list.append(sample)
             return sample_list
         else:
-            return [os.path.basename(self.output_path)]
+            default_name = os.path.basename(self.output_path)
+            if default_name.endswith(".vcf"):
+                default_name = default_name[:-4]
+            return [default_name]
 
     def _get_unique_variant_id(self, row):
         variant_id = []

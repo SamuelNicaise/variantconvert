@@ -32,6 +32,6 @@
 ##contig=<ID=chrX,length=155270560,assembly=hg19>
 ##contig=<ID=chrY,length=59373566,assembly=hg19>
 ##reference=file:///STARK/databases/genomes/current/hg19.fa
-#CHROM	POS	ID	REF	ALT	QUAL	FILTER	INFO	FORMAT	chromo.vcf
+#CHROM	POS	ID	REF	ALT	QUAL	FILTER	INFO	FORMAT	chromo
 chrX	138574155	b0e02f8	A	A[chrX:139257216[	.	PASS	SVTYPE=BND;MATEID=5c87e1b	GT	0/1
 chrX	139257216	5c87e1b	T	]chrX:138574155]T	.	PASS	SVTYPE=BND;MATEID=b0e02f8	GT	0/1
