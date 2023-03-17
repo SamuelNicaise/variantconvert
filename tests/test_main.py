@@ -243,3 +243,28 @@ def test_bed_based_annotsv3_to_vcf(tmp_path):
 
     control = osj(os.path.dirname(__file__), "controls", "annotsv3_from_bed.vcf")
     identical_except_date_and_genome([control, breakpoints_tester.outputFile])
+
+
+def test_bedpe_to_vcf(tmp_path):
+    bed_tester = type(
+        "obj",
+        (object,),
+        {
+            "inputFile": osj(
+                os.path.dirname(__file__),
+                "data",
+                "chromothripsis.bedpe",
+            ),
+            "outputFile": osj(tmp_path, "chromo.vcf"),
+            "inputFormat": "bedpe",
+            "outputFormat": "vcf",
+            "configFile": osj(os.path.dirname(__file__), "..", "configs", "HUS", "bedpe.json"),
+            "verbosity": "debug",
+        },
+    )
+    remove_if_exists(bed_tester.outputFile)
+    main_convert(bed_tester)
+    assert os.path.exists(bed_tester.outputFile)
+
+    control = osj(os.path.dirname(__file__), "controls", "chromothripsis.vcf")
+    identical_except_date_and_genome([control, bed_tester.outputFile])
