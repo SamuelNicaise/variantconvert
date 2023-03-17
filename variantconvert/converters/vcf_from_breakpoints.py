@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 import logging as log
+import natsort
 import os
 import pandas as pd
 import sys
@@ -85,6 +86,7 @@ class VcfFromBreakpoints(AbstractConverter):
             already_seen_variants = set()
             unique_id_to_index_list = self._get_unique_id_to_index_list(data)
 
+            final_variants_list = []
             for i in range(len(data[self.unique_variant_id_column])):
                 if data[self.unique_variant_id_column][i] in already_seen_variants:
                     continue
@@ -212,7 +214,10 @@ class VcfFromBreakpoints(AbstractConverter):
                             lines[1].append(empty)
                     already_seen_variants.add(data[self.unique_variant_id_column][i])
 
-                # sort by chr/pos
-                lines = sorted(lines, key=lambda x: (x[0], int(x[1])))
                 for line in lines:
-                    vcf.write("\t".join(line) + "\n")
+                    final_variants_list.append(line)
+
+            # finally, sort variants by chr/pos
+            final_variants_list = natsort.natsorted(final_variants_list)
+            for line in final_variants_list:
+                vcf.write("\t".join(line) + "\n")
