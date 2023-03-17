@@ -176,7 +176,7 @@ class VcfFromBreakpoints(AbstractConverter):
                     sample_field = []
                     for key, val in self.config["VCF_COLUMNS"]["FORMAT"].items():
                         if key == "GT" and val == "":
-                            sample_field.append("0/1")
+                            sample_field.append(self.config["GENERAL"]["default_genotype"])
                             continue
                         sample_field.append(data[val][index])
                     lines[0].append(":".join(sample_field))
@@ -189,7 +189,7 @@ class VcfFromBreakpoints(AbstractConverter):
                         sample_field = []
                         for key, val in self.config["VCF_COLUMNS"]["FORMAT"].items():
                             if key == "GT" and val == "":
-                                sample_field.append("0/1")
+                                sample_field.append(self.config["GENERAL"]["default_genotype"])
                                 continue
                             sample_field.append(data[val][index])
                         sample_field_dic[

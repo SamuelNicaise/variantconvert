@@ -10,7 +10,8 @@
 			"end2"
 		],
 		"defaut_strand_1": "+",
-		"defaut_strand_2": "+"
+		"defaut_strand_2": "+",
+		"default_genotype": "0/1"
 	},
 	"GENOME": {
 		"assembly": "hg19",

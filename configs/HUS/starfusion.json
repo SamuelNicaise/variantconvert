@@ -7,7 +7,8 @@
 			"#FusionName",
 			"LeftBreakpoint",
 			"RightBreakpoint"
-		]
+		],
+		"default_genotype": "0/1"
 	},
 	"GENOME": {
 		"assembly": "hg19",
