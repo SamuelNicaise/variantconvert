@@ -72,7 +72,7 @@ List of all argument combinations for all the conversions currently implemented:
 | DECoN > VCF  | tsv  | vcf  | decon.json  |
 | BED/CANOES > VCF  | tsv  | vcf  | canoes_bed.json  |
 | BEDPE > VCF  | bedpe  | vcf  | bedpe.json  |
-|  VaRank | varank  | vcf  |  varank.json |
+|  VaRank > VCF | varank  | vcf  |  varank.json |
 |  AnnotSV from bed > VCF | annotsv  | vcf  | annotsv3_from_bed  |
 | AnnotSV from VCF > VCF  | annotsv  | vcf  | annotsv3_from_vcf  |
 
