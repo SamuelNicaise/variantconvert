@@ -69,9 +69,9 @@ def fill_genome_header(config_path):
     fasta = Fasta(genome_path)
 
     vcf_header = []
-    for contig in fasta.values():
+    for contig in fasta:
         vcf_header.append(
-            f"##contig=<ID={contig.long_name},length={len(contig)},assembly={assembly}>"
+            f"##contig=<ID={contig.long_name.split()[0]},length={len(contig)},assembly={assembly}>"
         )
     vcf_header.append(f"##reference=file://{genome_path}")
     log.debug(f"Built vcf_header:{vcf_header}")
