@@ -36,7 +36,17 @@ cp -r config/hg19 config/mm10
 variantconvert config -c configs/mm10/* --set GENOME.assembly=mm10 GENOME.path=/path/to/mm10.fa --fill_genome_header
 ```
 
-Indeed, some converters require a reference genome in fasta format. This is to fill in the VCF "REF" column in cases where we only have the position without the reference base. You can create your own config files in any folder.
+Indeed, some converters require a reference genome in fasta format. This is to fill in the VCF "REF" column in cases where we only have the position without the reference base. This implies when converting to a VCF file, you should always use the genome on which the variant was called. 
+
+You can create your own config files to customize not only the genome, but also output columns (see the Developers section).
+
+If you configured the hg19 genome, you can test that variantconvert is properly installed with the following commands:
+```
+cd <this_repository>
+pip install -e .[dev]
+pytest
+```
+
 
 # Usage
 ```
@@ -47,12 +57,13 @@ Or if you did not use the `pip install` command above:
 python variantconvert/__main__.py --help
 ```
 
-Usage example to convert a STAR-Fusion output file to a VCF:
+Example of a common use case: convert a STAR-Fusion output file to a VCF.
 ```
 variantconvert convert -i star-fusions.tsv -o output.vcf -fi breakpoints -fo vcf -c configs/hg19/starfusion.json
 ```
 
-Here is the list of all argument combinations for all the conversions currently implemented: 
+
+List of all argument combinations for all the conversions currently implemented:
 
 | Conversion  | -fi  (input format) | -fo (output format) | Default config  |
 |---|---|---|---|
