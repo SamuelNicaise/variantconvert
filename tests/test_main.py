@@ -245,6 +245,33 @@ def test_bed_based_annotsv3_to_vcf(tmp_path):
     identical_except_date_and_genome([control, breakpoints_tester.outputFile])
 
 
+def test_multisample_bed_based_annotsv3_to_vcf(tmp_path):
+    breakpoints_tester = type(
+        "obj",
+        (object,),
+        {
+            "inputFile": osj(
+                os.path.dirname(__file__),
+                "data",
+                "multisample_from_bed.annotated.tsv",
+            ),
+            "outputFile": osj(tmp_path, "multisample_annotsv3_from_bed.vcf"),
+            "inputFormat": "annotsv",
+            "outputFormat": "vcf",
+            "configFile": osj(
+                os.path.dirname(__file__), "..", "configs", "HUS", "annotsv3_from_bed.json"
+            ),
+            "verbosity": "debug",
+        },
+    )
+    remove_if_exists(breakpoints_tester.outputFile)
+    main_convert(breakpoints_tester)
+    assert os.path.exists(breakpoints_tester.outputFile)
+
+    control = osj(os.path.dirname(__file__), "controls", "multisample_annotsv3_from_bed.vcf")
+    identical_except_date_and_genome([control, breakpoints_tester.outputFile])
+
+
 def test_bedpe_to_vcf(tmp_path):
     bed_tester = type(
         "obj",

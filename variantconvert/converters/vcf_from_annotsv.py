@@ -476,6 +476,8 @@ class VcfFromAnnotsv(AbstractConverter):
                         .to_list()
                     )
                 else:
-                    sample_cols = "GT\t" + self.config["GENERAL"]["default_genotype"]
+                    sample_cols = "GT"
+                    for i in range(len(self.sample_list)):
+                        sample_cols += f"\t{self.config['GENERAL']['default_genotype']}"
                 vcf.write(sample_cols)
                 vcf.write("\n")
