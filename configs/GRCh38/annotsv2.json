@@ -1,18 +1,16 @@
 {
 	"GENERAL": {
-		"origin": "Decon",
+		"origin": "AnnotSV",
 		"skip_rows": 0,
 		"comment": "",
 		"unique_variant_id": [
-			"Chromosome",
-			"Start",
-			"End",
-			"CNV.type"
-		]
+			"AnnotSV_ID"
+		],
+		"keep_info": "true"
 	},
 	"GENOME": {
 		"assembly": "hg19",
-		"path": "C:\\Users\\Ichtyornis\\Projects\\variantconvert_project\\hg19.fa",
+		"path": "hg19.fa",
 		"vcf_header": [
 			"##contig=<ID=chr1,length=249250621,assembly=hg19>",
 			"##contig=<ID=chr2,length=243199373,assembly=hg19>",
@@ -39,35 +37,24 @@
 			"##contig=<ID=chrM,length=16571,assembly=hg19>",
 			"##contig=<ID=chrX,length=155270560,assembly=hg19>",
 			"##contig=<ID=chrY,length=59373566,assembly=hg19>",
-			"##reference=file:///STARK/databases/genomes/current/hg19.fa"
+			"##reference=file:hg19.fa"
 		]
 	},
 	"VCF_COLUMNS": {
-		"#CHROM": "Chromosome",
-		"POS": "Start",
-		"ID": "",
-		"REF": [
-			"HELPER_FUNCTION",
-			"get_ref_from_decon",
-			"Chromosome",
-			"Start"
-		],
-		"ALT": [
-			"HELPER_FUNCTION",
-			"get_alt_from_decon",
-			"CNV.type"
-		],
-		"QUAL": "",
+		"#CHROM": "SV_chrom",
+		"POS": "SV_start",
+		"ID": "ID",
+		"REF": "REF",
+		"ALT": "ALT",
+		"QUAL": "QUAL",
 		"FILTER": "",
 		"INFO": {
-			"SVTYPE": "CNV.type",
-			"SVLEN": [
+			"SVTYPE_ANNOTSV": "SV_TYPE",
+			"INFO": [
 				"HELPER_FUNCTION",
-				"get_svlen_from_decon",
-				"Start",
-				"End"
+				"get_info_from_annotsv",
+				"INFO"
 			],
-			"END": "End",
 			"CNV.ID": "CNV.ID",
 			"N.exons": "N.exons",
 			"Start.b": "Start.b",

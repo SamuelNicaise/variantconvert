@@ -74,7 +74,7 @@ def test_varank_to_vcf(tmp_path):
             "outputFile": osj(tmp_path, "varank_test.vcf"),
             "inputFormat": "varank",
             "outputFormat": "vcf",
-            "configFile": osj(os.path.dirname(__file__), "..", "configs", "HUS", "varank.json"),
+            "configFile": osj(os.path.dirname(__file__), "..", "configs", "hg19", "varank.json"),
             "verbosity": "debug",
             "coordConversionFile": osj(
                 os.path.dirname(__file__),
@@ -104,7 +104,7 @@ def test_decon_to_vcf(tmp_path):
             "outputFile": osj(tmp_path, "decon_test.vcf"),
             "inputFormat": "tsv",
             "outputFormat": "vcf",
-            "configFile": osj(os.path.dirname(__file__), "..", "configs", "HUS", "decon.json"),
+            "configFile": osj(os.path.dirname(__file__), "..", "configs", "hg19", "decon.json"),
             "verbosity": "debug",
         },
     )
@@ -130,7 +130,7 @@ def test_annotsv_to_vcf(tmp_path):
             "inputFormat": "annotsv",
             "outputFormat": "vcf",
             "configFile": osj(
-                os.path.dirname(__file__), "..", "configs", "HUS", "annotsv3_from_vcf.json"
+                os.path.dirname(__file__), "..", "configs", "hg19", "annotsv3_from_vcf.json"
             ),
             "verbosity": "debug",
         },
@@ -156,7 +156,9 @@ def test_bed_to_vcf(tmp_path):
             "outputFile": osj(tmp_path, "canoes_bed.vcf"),
             "inputFormat": "tsv",
             "outputFormat": "vcf",
-            "configFile": osj(os.path.dirname(__file__), "..", "configs", "HUS", "canoes_bed.json"),
+            "configFile": osj(
+                os.path.dirname(__file__), "..", "configs", "hg19", "canoes_bed.json"
+            ),
             "verbosity": "debug",
         },
     )
@@ -181,7 +183,9 @@ def test_breakpoints_to_vcf(tmp_path):
             "outputFile": osj(tmp_path, "star-fusion.vcf"),
             "inputFormat": "breakpoints",
             "outputFormat": "vcf",
-            "configFile": osj(os.path.dirname(__file__), "..", "configs", "HUS", "starfusion.json"),
+            "configFile": osj(
+                os.path.dirname(__file__), "..", "configs", "hg19", "starfusion.json"
+            ),
             "verbosity": "debug",
         },
     )
@@ -206,7 +210,7 @@ def test_arriba_breakpoints_to_vcf(tmp_path):
             "outputFile": osj(tmp_path, "arriba.vcf"),
             "inputFormat": "breakpoints",
             "outputFormat": "vcf",
-            "configFile": osj(os.path.dirname(__file__), "..", "configs", "HUS", "arriba.json"),
+            "configFile": osj(os.path.dirname(__file__), "..", "configs", "hg19", "arriba.json"),
             "verbosity": "debug",
         },
     )
@@ -232,7 +236,7 @@ def test_bed_based_annotsv3_to_vcf(tmp_path):
             "inputFormat": "annotsv",
             "outputFormat": "vcf",
             "configFile": osj(
-                os.path.dirname(__file__), "..", "configs", "HUS", "annotsv3_from_bed.json"
+                os.path.dirname(__file__), "..", "configs", "hg19", "annotsv3_from_bed.json"
             ),
             "verbosity": "debug",
         },
@@ -259,7 +263,7 @@ def test_multisample_bed_based_annotsv3_to_vcf(tmp_path):
             "inputFormat": "annotsv",
             "outputFormat": "vcf",
             "configFile": osj(
-                os.path.dirname(__file__), "..", "configs", "HUS", "annotsv3_from_bed.json"
+                os.path.dirname(__file__), "..", "configs", "hg19", "annotsv3_from_bed.json"
             ),
             "verbosity": "debug",
         },
@@ -285,7 +289,7 @@ def test_bedpe_to_vcf(tmp_path):
             "outputFile": osj(tmp_path, "chromo.vcf"),
             "inputFormat": "bedpe",
             "outputFormat": "vcf",
-            "configFile": osj(os.path.dirname(__file__), "..", "configs", "HUS", "bedpe.json"),
+            "configFile": osj(os.path.dirname(__file__), "..", "configs", "hg19", "bedpe.json"),
             "verbosity": "debug",
         },
     )
