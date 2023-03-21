@@ -92,7 +92,7 @@ class VcfFromAnnotsv(AbstractConverter):
         columns_to_drop.append(self.config["VCF_COLUMNS"]["FORMAT"])
 
         if self.config["GENERAL"].get("keep_info", False) in ("true", "True"):
-            log.warning(
+            log.debug(
                 f"config['GENERAL']['keep_info'] was set to string:'{self.config['GENERAL']['keep_info']}' instead of a boolean. Converting value to True"
             )
             self.config["GENERAL"]["keep_info"] = True

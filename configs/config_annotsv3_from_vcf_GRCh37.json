@@ -6,7 +6,8 @@
 		"unique_variant_id": [
 			"AnnotSV_ID"
 		],
-		"mode": "full&split"
+		"mode": "full&split",
+		"keep_info": "true"
 	},
 	"GENOME": {
 		"assembly": "GRCh37",

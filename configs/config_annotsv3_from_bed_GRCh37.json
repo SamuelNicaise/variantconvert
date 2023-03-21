@@ -7,7 +7,8 @@
 			"AnnotSV_ID"
 		],
 		"default_genotype": "0/1",
-		"mode": "full&split"
+		"mode": "full&split",
+		"keep_info": "true"
 	},
 	"GENOME": {
 		"assembly": "GRCh37",
