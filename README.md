@@ -22,8 +22,21 @@ cd variantconvert
 pip install -e .
 ```
 3) Change the GENOME["path"] variable in configs/*.json to fit your local system. 
+```
+# Do this for each genome you need to use
+variantconvert config -c configs/GRCh37/* --set GENOME.path=/path/to/your/local/GRCh37.fa --fill_genome_header
+variantconvert config -c configs/GRCh38/* --set GENOME.path=/path/to/your/local/GRCh38.fa --fill_genome_header
+variantconvert config -c configs/hg19/* --set GENOME.path=/path/to/your/local/hg19.fa --fill_genome_header
+variantconvert config -c configs/hs1/* --set GENOME.path=/path/to/your/local/hs1.fa --fill_genome_header
+# You're ready to use variantconvert !
 
-Indeed, some converters will require a valid reference genome in fasta format. This is to fill in the VCF "REF" column in cases where we only have the position without the reference base. Alternatively, you can create your own config files in another folder.
+# You can create your own configs, for example to use other genomes
+# For example, let's create a folder for mm10 (Mus musculus)
+cp -r config/hg19 config/mm10
+variantconvert config -c configs/mm10/* --set GENOME.assembly=mm10 GENOME.path=/path/to/mm10.fa --fill_genome_header
+```
+
+Indeed, some converters require a reference genome in fasta format. This is to fill in the VCF "REF" column in cases where we only have the position without the reference base. You can create your own config files in any folder.
 
 # Usage
 ```
@@ -33,6 +46,23 @@ Or if you did not use the `pip install` command above:
 ```
 python variantconvert/__main__.py --help
 ```
+
+Usage example to convert a STAR-Fusion output file to a VCF:
+```
+variantconvert convert -i star-fusions.tsv -o output.vcf -fi breakpoints -fo vcf -c configs/hg19/starfusion.json
+```
+
+Here is the list of all argument combinations for all the conversions currently implemented: 
+
+| Conversion  | -fi  (input format) | -fo (output format) | Default config  |
+|---|---|---|---|
+| STAR-Fusion > VCF  | breakpoints  | vcf  | starfusion.json  |
+| Arriba > VCF  | breakpoints  | vcf  | arriba.json  |
+| DECoN > VCF  | tsv  | vcf  | decon.json  |
+| BED/CANOES > VCF  | tsv  | vcf  | canoes_bed.json  |
+|  VaRank | varank  | vcf  |  varank.json |
+|  AnnotSV from bed > VCF | annotsv  | vcf  | annotsv3_from_bed  |
+| AnnotSV from VCF > VCF  | annotsv  | vcf  | annotsv3_from_vcf  |
 
 ___
 # Documentation for AnnotSV users
