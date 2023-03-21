@@ -116,7 +116,7 @@ def clean_string(s):
     return s
 
 
-def create_vcf_header(input_path, config, sample_list, breakpoints=False):
+def create_vcf_header(input_path, config, sample_list, breakpoints=False, supplemental_header=[]):
     header = []
     header.append("##fileformat=VCFv4.3")
     header.append("##fileDate=%s" % time.strftime("%d/%m/%Y"))
@@ -163,6 +163,10 @@ def create_vcf_header(input_path, config, sample_list, breakpoints=False):
                 + dic["Description"]
                 + '">'
             )
+
+    if supplemental_header != []:
+        header += supplemental_header
+
     if "FORMAT" in config["COLUMNS_DESCRIPTION"]:
         for key, dic in config["COLUMNS_DESCRIPTION"]["FORMAT"].items():
             header.append(
@@ -191,3 +195,46 @@ def remove_decimal_or_strip(value):
     # forbidden to have spaces in INFO fields in VCF v4.2 (for IGV compatibility)
     value = value.replace(" ", "_")
     return value
+
+
+def info_string_to_dict(info):
+    """
+    >>> info_string_to_dict("SVTYPE=duplication;SVLEN=35918771;END=73775259")
+    {"SVTYPE":"duplication, "SVLEN": "35918771", "END": "73775259"}
+    """
+    if ";" in info:
+        data = info.split(";")
+    else:
+        data = [info]
+    # if the INFO field mistakenly finished by a ';' then remove the final empty value from data
+    if data[-1] == "":
+        data = data[:-1]
+    res = {}
+    for pair in data:
+        if pair.count("=") != 1:
+            raise ValueError(
+                f"info_string_to_dict(info) expects info to have the format 'key1=value1;key2=value2'. Got instead: {info}"
+            )
+        pair = pair.split("=")
+        res[pair[0]] = pair[1]
+    return res
+
+
+def is_int(element: any) -> bool:
+    if element == None:
+        return False
+    try:
+        int(element)
+        return True
+    except ValueError:
+        return False
+
+
+def is_float(element: any) -> bool:
+    if element == None:
+        return False
+    try:
+        int(element)
+        return True
+    except ValueError:
+        return False
