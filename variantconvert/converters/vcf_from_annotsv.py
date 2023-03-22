@@ -216,13 +216,6 @@ class VcfFromAnnotsv(AbstractConverter):
             annots_dic[variant_id] = merged_annots
 
             if self.config["GENERAL"].get("keep_info", False) == True:
-                # print(variant_id)
-                # print(df_variant)
-                # print(self.original_info_col)
-                # print(id_col)
-                # print(df_variant.index)
-                # print()
-                # sys.exit()
                 info_dict = info_string_to_dict(
                     self.original_info_col.iloc[df_variant.index].iloc[0]
                 )
@@ -263,17 +256,31 @@ class VcfFromAnnotsv(AbstractConverter):
         """
         supplemental_header = []
         default_description = "Imported from original VCF before AnnotSV annotation"
+
         for field in additional_info_fields:
-            if all([is_int(v[field]) for v in annots_dic.values()]):
+            # infer type
+            if all([is_int(v.get(field, None)) for v in annots_dic.values()]):
                 field_type = "Integer"
-            elif all([is_float(v[field]) for v in annots_dic.values()]):
+            elif all([is_float(v.get(field, None)) for v in annots_dic.values()]):
                 field_type = "Float"
             else:
                 field_type = "String"
+
+            # infer number
+            for info in annots_dic.values():
+                if field in info:
+                    if info[field] == None:
+                        number = 0
+                        field_type = "Flag"
+                    else:
+                        number = info[field].count(",") + 1
+
             supplemental_header.append(
                 "##INFO=<ID="
                 + field
-                + ",Number=1,Type="
+                + ",Number="
+                + str(number)
+                + ",Type="
                 + field_type
                 + ',Description="'
                 + default_description
@@ -467,7 +474,14 @@ class VcfFromAnnotsv(AbstractConverter):
 
                 main_cols = "\t".join(df_variant[self.main_vcf_cols].iloc[0].to_list())
                 vcf.write(main_cols + "\t")
-                vcf.write(";".join([k + "=" + v for k, v in info_dic[variant_id].items()]) + "\t")
+
+                info_list = []
+                for k, v in info_dic[variant_id].items():
+                    if v != None:
+                        info_list.append(k + "=" + v)
+                    else:
+                        info_list.append(k)  # deal with INFO flags
+                vcf.write(";".join(info_list) + "\t")
 
                 if self.config["VCF_COLUMNS"]["FORMAT"] != "":
                     sample_cols = "\t".join(

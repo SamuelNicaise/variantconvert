@@ -199,8 +199,8 @@ def remove_decimal_or_strip(value):
 
 def info_string_to_dict(info):
     """
-    >>> info_string_to_dict("SVTYPE=duplication;SVLEN=35918771;END=73775259")
-    {"SVTYPE":"duplication, "SVLEN": "35918771", "END": "73775259"}
+    >>> info_string_to_dict("SVTYPE=duplication;SVLEN=35918771;END=73775259;SOMATIC;")
+    {"SVTYPE":"duplication, "SVLEN": "35918771", "END": "73775259", "SOMATIC": None}
     """
     if ";" in info:
         data = info.split(";")
@@ -211,12 +211,16 @@ def info_string_to_dict(info):
         data = data[:-1]
     res = {}
     for pair in data:
-        if pair.count("=") != 1:
+        if pair.count("=") == 1:
+            pair = pair.split("=")
+            res[pair[0]] = pair[1]
+        elif pair.count("=") == 0:
+            res[pair] = None
+        else:
             raise ValueError(
                 f"info_string_to_dict(info) expects info to have the format 'key1=value1;key2=value2'. Got instead: {info}"
             )
-        pair = pair.split("=")
-        res[pair[0]] = pair[1]
+
     return res
 
 
