@@ -73,8 +73,8 @@ List of all argument combinations for all the conversions currently implemented:
 | BED/CANOES > VCF  | tsv  | vcf  | canoes_bed.json  |
 | BEDPE > VCF  | bedpe  | vcf  | bedpe.json  |
 |  VaRank > VCF | varank  | vcf  |  varank.json |
-|  AnnotSV from bed > VCF | annotsv  | vcf  | annotsv3_from_bed  |
-| AnnotSV from VCF > VCF  | annotsv  | vcf  | annotsv3_from_vcf  |
+|  AnnotSV from BED > VCF | annotsv  | vcf  | annotsv3_from_bed.json  |
+| AnnotSV from VCF > VCF  | annotsv  | vcf  | annotsv3_from_vcf.json  |
 
 ___
 # Documentation for AnnotSV users
