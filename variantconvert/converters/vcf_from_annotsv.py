@@ -263,7 +263,6 @@ class VcfFromAnnotsv(AbstractConverter):
         supplemental_header = []
         default_description = "Imported from AnnotSV"
         known_descriptions = set(self.config["COLUMNS_DESCRIPTION"]["INFO"].keys())
-        log.error(f"known desc:{known_descriptions}")
         missing_annots = []
 
         # this function was originally made to rebuild the lost header of VCF annotations in "INFO" column in VCF>AnnotSV>VCF conversions.
@@ -277,6 +276,7 @@ class VcfFromAnnotsv(AbstractConverter):
         missing_annots = additional_info_fields + [
             v for v in missing_annots if v not in additional_info_fields
         ]
+        log.debug(f"known desc:{missing_annots}")
 
         for field in missing_annots:
             # infer type

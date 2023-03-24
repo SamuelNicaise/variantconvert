@@ -13,7 +13,7 @@
 ##INFO=<ID=Start.b,Number=1,Type=Integer,Description="The number of the first exon in the call from the analyzed BED file">
 ##INFO=<ID=End.b,Number=1,Type=Integer,Description="The number of the last exon in the call from the analyzed BED file">
 ##INFO=<ID=Genomic.ID,Number=1,Type=String,Description="DECoN genomic identifier">
-##INFO=<ID=Genes,Number=1,Type=String,Description="The affected genes from the analyzed bed file (from DECoN)">
+##INFO=<ID=Genes,Number=.,Type=String,Description="The affected genes from the analyzed bed file (from DECoN)">
 ##FORMAT=<ID=GT,Number=1,Type=String,Description="Genotype">
 ##FORMAT=<ID=RE,Number=1,Type=Integer,Description="Reads Expected: the number of expected reads under the probabilistic model">
 ##FORMAT=<ID=RO,Number=1,Type=Integer,Description="Reads observed: the number of observed reads">

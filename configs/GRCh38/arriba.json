@@ -276,100 +276,124 @@
 		"INFO": {
 			"Fusion_Gene1": {
 				"Type": "String",
+				"Number": "1",
 				"Description": "Fusion gene 1"
 			},
 			"Fusion_Gene2": {
 				"Type": "String",
+				"Number": "1",
 				"Description": "Fusion gene 2"
 			},
 			"Fusion_Site1": {
 				"Type": "String",
+				"Number": "1",
 				"Description": "information about the location of breakpoint 1. Possible values are: 5' UTR, 3' UTR, UTR (overlapping with a 5' UTR as well as a 3' UTR), CDS (coding sequence), exon, intron, and intergenic. The keyword exon is used for non-coding genes or for ambiguous situations where the breakpoint overlaps with both a coding exon and a UTR. If the breakpoint coincides with an exon boundary, the additional keyword splice-site is appended."
 			},
 			"Fusion_Site2": {
 				"Type": "String",
+				"Number": "1",
 				"Description": "information about the location of breakpoint 2. Possible values are: 5' UTR, 3' UTR, UTR (overlapping with a 5' UTR as well as a 3' UTR), CDS (coding sequence), exon, intron, and intergenic. The keyword exon is used for non-coding genes or for ambiguous situations where the breakpoint overlaps with both a coding exon and a UTR. If the breakpoint coincides with an exon boundary, the additional keyword splice-site is appended."
 			},
 			"Fusion_Type": {
 				"Type": "String",
+				"Number": "1",
 				"Description": "Based on the orientation of the supporting reads and the coordinates of breakpoints, the type of event can be inferred. Possible values are: translocation (between different chromosomes), duplication, inversion, and deletion. If genes are fused head-to-head or tail-to-tail, this is indicated as 5'-5' or 3'-3' respectively. Genes fused in such an orientation cannot yield a chimeric protein, since one of the genes is transcribed from the wrong strand. This type of event is equivalent to the truncation of the genes. The following types of events are flagged with an extra keyword, because they are frequent types of false positives and/or it is not clear if they are somatic or germline variants: Deletions with a size in the range of introns (<400kb) are flagged as read-through, because there is a high chance that the fusion arises from read-through transcription rather than an underlying genomic deletion. Intragenic duplications with both breakpoints at splice-sites are flagged as non-canonical-splicing, because the supporting reads might originate from circular RNAs, which are very abundant even in normal tissue, but manifest as duplications in RNA-Seq data. Internal tandem duplications are flagged as ITD. It is not always clear whether the ITDs observable in RNA-Seq data are somatic or germline variants, because ITDs are abundant in the germline and germline variants cannot be filtered effectively due to lack of a normal control."
 			},
 			"Split_Reads1": {
 				"Type": "Integer",
+				"Number": "1",
 				"Description": "Total split reads supporting the fusion on breakpoint 1"
 			},
 			"Split_Reads2": {
 				"Type": "Integer",
+				"Number": "1",
 				"Description": "Total split reads supporting the fusion on breakpoint 2"
 			},
 			"DiscordantReadPairs": {
 				"Type": "Integer",
+				"Number": "1",
 				"Description": "Total discordant read pairs supporting the fusion"
 			},
 			"Fusion_Coverage1": {
 				"Type": "Integer",
+				"Number": "1",
 				"Description": "Total discordant read pairs supporting the fusion"
 			},
 			"Fusion_Coverage2": {
 				"Type": "Integer",
+				"Number": "1",
 				"Description": "Total discordant read pairs supporting the fusion"
 			},
 			"Fusion_Confidence": {
 				"Type": "String",
+				"Number": "1",
 				"Description": "Each Arriba prediction is assigned one of the confidences 'low', 'medium', or 'high'. Several characteristics are taken into account, including: the number of supporting reads, the balance of split reads and discordant mates, the distance between the breakpoints, the type of event, whether the breakpoints are intragenic or not, and whether there are other events which corroborate the prediction, e.g. multiple isoforms or balanced translocations."
 			},
 			"Reading_Frame": {
 				"Type": "String",
+				"Number": "1",
 				"Description": "States whether the gene at the 3' end of the fusion is fused in-frame or out-of-frame. 'stop-codon' indicates that there is a stop codon prior to the fusion junction, such that the 3' end is not translated, even if the reading frame is preserved across the junction. The prediction of the reading frame builds on the prediction of the peptide sequence. A dot (.) indicates that the peptide sequence cannot be predicted"
 			},
 			"Arriba_tags": {
 				"Type": "String",
+				"Number": "1",
 				"Description": "User-defined list of tags provided to Arriba via the parameter -t, this column is populated with the provided tag whenever a fusion matches the coordinates specified for the respective tag"
 			},
 			"Retained_Protein_Domains": {
 				"Type": "String",
+				"Number": "1",
 				"Description": " If Arriba is provided with protein domain annotation using the parameter -p, then this column is populated with protein domains retained in the fusion. Redundant protein domains are only listed once. After every domain the fraction that is retained is stated as a percentage value in parentheses. The protein domains of the 5' and 3' genes are separated by a pipe symbol (|)."
 			},
 			"Closest_Genomic_Breakpoint1": {
 				"Type": "String",
+				"Number": "1",
 				"Description": " If Arriba is provided with protein domain annotation using the parameter -p, then this column is populated with protein domains retained in the fusion. Redundant protein domains are only listed once. After every domain the fraction that is retained is stated as a percentage value in parentheses. The protein domains of the 5' and 3' genes are separated by a pipe symbol (|)."
 			},
 			"Closest_Genomic_Breakpoint2": {
 				"Type": "String",
+				"Number": "1",
 				"Description": " If Arriba is provided with protein domain annotation using the parameter -p, then this column is populated with protein domains retained in the fusion. Redundant protein domains are only listed once. After every domain the fraction that is retained is stated as a percentage value in parentheses. The protein domains of the 5' and 3' genes are separated by a pipe symbol (|)."
 			},
 			"Fusion_Gene_ID1": {
 				"Type": "String",
+				"Number": "1",
 				"Description": " If Arriba is provided with protein domain annotation using the parameter -p, then this column is populated with protein domains retained in the fusion. Redundant protein domains are only listed once. After every domain the fraction that is retained is stated as a percentage value in parentheses. The protein domains of the 5' and 3' genes are separated by a pipe symbol (|)."
 			},
 			"Fusion_Gene_ID2": {
 				"Type": "String",
+				"Number": "1",
 				"Description": " If Arriba is provided with protein domain annotation using the parameter -p, then this column is populated with protein domains retained in the fusion. Redundant protein domains are only listed once. After every domain the fraction that is retained is stated as a percentage value in parentheses. The protein domains of the 5' and 3' genes are separated by a pipe symbol (|)."
 			},
 			"Arriba_Transcript_ID1": {
 				"Type": "String",
+				"Number": "1",
 				"Description": " If Arriba is provided with protein domain annotation using the parameter -p, then this column is populated with protein domains retained in the fusion. Redundant protein domains are only listed once. After every domain the fraction that is retained is stated as a percentage value in parentheses. The protein domains of the 5' and 3' genes are separated by a pipe symbol (|)."
 			},
 			"Arriba_Transcript_ID2": {
 				"Type": "String",
+				"Number": "1",
 				"Description": " If Arriba is provided with protein domain annotation using the parameter -p, then this column is populated with protein domains retained in the fusion. Redundant protein domains are only listed once. After every domain the fraction that is retained is stated as a percentage value in parentheses. The protein domains of the 5' and 3' genes are separated by a pipe symbol (|)."
 			},
 			"Fusion_Direction1": {
 				"Type": "String",
+				"Number": "1",
 				"Description": "Fusion_Direction1 and Fusion_Direction2 indicate the orientation of the fusion. A value of downstream means that the partner is fused downstream of the breakpoint, i.e. at a coordinate higher than the breakpoint. A value of upstream means the partner is fused at a coordinate lower than the breakpoint. When the prediction of the strands or of the 5' gene fails, this information gives insight into which parts of the fused genes are retained in the fusion."
 			},
 			"Fusion_Direction2": {
 				"Type": "String",
+				"Number": "1",
 				"Description": "Fusion_Direction1 and Fusion_Direction2 indicate the orientation of the fusion. A value of downstream means that the partner is fused downstream of the breakpoint, i.e. at a coordinate higher than the breakpoint. A value of upstream means the partner is fused at a coordinate lower than the breakpoint. When the prediction of the strands or of the 5' gene fails, this information gives insight into which parts of the fused genes are retained in the fusion."
 			},
 			"Arriba_Filters": {
 				"Type": "String",
+				"Number": "1",
 				"Description": "Lists the filters which removed one or more of the supporting reads. https://arriba.readthedocs.io/en/latest/internal-algorithm/ describes all filters in detail. The number of filtered reads is given in parentheses after the name of the filter. The total number of supporting reads can be obtained by summing up the reads given in the columns split_reads1, split_reads2, discordant_mates, and filters. If a filter discarded the event as a whole (all reads), the number of filtered reads is not stated."
 			}
 		},
 		"FORMAT": {
 			"GT": {
 				"Type": "String",
+				"Number": "1",
 				"Description": "Genotype"
 			}
 		}

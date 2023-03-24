@@ -102,76 +102,94 @@
 		"INFO": {
 			"FusionName": {
 				"Type": "String",
+				"Number": "1",
 				"Description": "Fusion name"
 			},
 			"JunctionReadCount": {
 				"Type": "Integer",
+				"Number": "1",
 				"Description": "Number of RNA-Seq fragments containing a read that aligns as a split read at the site of the putative fusion junction"
 			},
 			"SpanningFragCount": {
 				"Type": "Integer",
+				"Number": "1",
 				"Description": "Number of RNA-Seq fragments that encompass the fusion junction such that one read of the pair aligns to a different gene than the other paired-end read of that fragment"
 			},
 			"est_J": {
 				"Type": "Float",
+				"Number": "1",
 				"Description": "Estimated read counts for junction reads, taking into account multiple-mappings and multiple candidate fusion isoforms where read evidence is shared among them (involving read-to-fusion-isoform mapping uncertainty). Fusion expression levels (FFPM) are based on est_J and est_S values"
 			},
 			"est_S": {
 				"Type": "Float",
+				"Number": "1",
 				"Description": "Estimated read counts for split reads, taking into account multiple-mappings and multiple candidate fusion isoforms where read evidence is shared among them (involving read-to-fusion-isoform mapping uncertainty). Fusion expression levels (FFPM) are based on est_J and est_S values"
 			},
 			"SpliceType": {
 				"Type": "String",
+				"Number": "1",
 				"Description": "Indicates whether the proposed breakpoint occurs at reference exon junctions as provided by the reference transcript structure annotations (ex. gencode)"
 			},
 			"LeftGene": {
 				"Type": "String",
+				"Number": "1",
 				"Description": "Left gene name"
 			},
 			"LeftBreakpoint": {
 				"Type": "String",
+				"Number": "1",
 				"Description": "Left breakpoint"
 			},
 			"RightGene": {
 				"Type": "String",
+				"Number": "1",
 				"Description": "Right gene name"
 			},
 			"RightBreakpoint": {
 				"Type": "String",
+				"Number": "1",
 				"Description": "Right breakpoint"
 			},
 			"LargeAnchorSupport": {
 				"Type": "String",
+				"Number": "1",
 				"Description": " Indicates whether there are split reads that provide 'long' (set to length of 25 bases) alignments on both sides of the putative breakpoint. Those fusions supported only by split reads (no spanning fragments) and lack LargeAnchorSupport are often highly suspicious and tend to be false positives. Those with LargeAnchorSupport are labeled as 'YES_LDAS' (where LDAS = long double anchor support)"
 			},
 			"FFPM": {
 				"Type": "Float",
+				"Number": "1",
 				"Description": " FFPM (fusion fragments per million total reads) are a normalized measure of the fusion-supporting rna-seq fragments. The number of fusion-supporting reads depends on the expression of the fusion transcript and the number of reads sequenced. The deeper the sequenced data set, the greater the number of artifactual fusions. The default filter, which tends to be effective at excluding artifacts, is 0.1 sum FFPM (meaning at least 1 fusion-supporting rna-seq fragment per 10M total reads)."
 			},
 			"LeftBreakDinuc": {
 				"Type": "String",
+				"Number": "1",
 				"Description": "LeftBreakDinuc"
 			},
 			"LeftBreakEntropy": {
 				"Type": "Float",
+				"Number": "1",
 				"Description": "Represents the Shannon entropy of the 15 exonic bases flanking the breakpoint. The maximum entropy is 2, representing highest complexity. The lowest would be zero (involving a 15 base mononucleotide run). Low entropy sites should generally be treated as less confident breakpoints."
 			},
 			"RightBreakDinuc": {
 				"Type": "String",
+				"Number": "1",
 				"Description": "RightBreakDinuc"
 			},
 			"RightBreakEntropy": {
 				"Type": "Float",
+				"Number": "1",
 				"Description": "Represents the Shannon entropy of the 15 exonic bases flanking the breakpoint. The maximum entropy is 2, representing highest complexity. The lowest would be zero (involving a 15 base mononucleotide run). Low entropy sites should generally be treated as less confident breakpoints."
 			},
 			"Annots": {
 				"Type": "String",
+				"Number": ".",
 				"Description": "Provides a simplified annotation using FusionAnnotator and based on CTAT_HumanFusionLib, which includes many popular resources for annotating fusions known to be relevant to cancer. It also allows to filter out fusions based on known 'red herring' categories (described here: https://github.com/FusionAnnotator/CTAT_HumanFusionLib/wiki ) in addition to fusions involving mitochondrial genes or HLA loci (common artifacts)."
 			}
 		},
 		"FORMAT": {
 			"GT": {
 				"Type": "String",
+				"Number": "1",
 				"Description": "Genotype"
 			}
 		}

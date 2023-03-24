@@ -82,20 +82,24 @@
 		"INFO": {
 			"SVTYPE": {
 				"Type": "String",
+				"Number": "1",
 				"Description": "Type of structural variant"
 			},
 			"SVLEN": {
 				"Type": "Integer",
+				"Number": "1",
 				"Description": "Difference in length between REF and ALT positions"
 			},
 			"END": {
 				"Type": "Integer",
+				"Number": "1",
 				"Description": "Second breakpoint of the SV, for SVs given in a single record"
 			}
 		},
 		"FORMAT": {
 			"GT": {
 				"Type": "String",
+				"Number": "1",
 				"Description": "Genotype"
 			}
 		}

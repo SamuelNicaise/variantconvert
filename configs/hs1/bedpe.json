@@ -89,12 +89,14 @@
 		"INFO": {
 			"SVTYPE": {
 				"Type": "String",
+				"Number": "1",
 				"Description": "Type of structural variant"
 			}
 		},
 		"FORMAT": {
 			"GT": {
 				"Type": "String",
+				"Number": "1",
 				"Description": "Genotype"
 			}
 		}
