@@ -10,11 +10,8 @@ sys.path.append(os.path.join(os.path.dirname(__file__), ".."))
 from helper_functions import HelperFunctions
 from commons import create_vcf_header, is_helper_func
 from variant import Variant
-from natsort import index_natsorted
-
 
 class VcfFromSnp(AbstractConverter):
-
     def _init_dataframe(self):
         self.snp_data = pd.read_csv(self.filepath, sep="\t", index_col=0)
         self.snp_data.reset_index(drop=True, inplace=True)
@@ -144,33 +141,31 @@ class VcfFromSnp(AbstractConverter):
                 return True
         return False
 
-    def _define_gt(self, row, ref):
+    def _define_gt(self, row, ref, sample):
         """If the nucleotide from the haplotype are find in REF we have a 0 and if it's find in alt it's 1. "/" correspond unphased genotype"""
         gt_samples = {}
 
-        for i in self.sample_alt:
-            values_sample = self.sample_alt.get(i)
-            gt = ""
+        gt = ""
+        value_sample = self.sample_alt[sample][row]
 
-            for a in range(2):
-                allele = str(values_sample.get(row)[a])
+        for a in range(2):
+            allele = str(value_sample[a])
 
-                if allele == ref and gt == "":
-                    gt = "0"
+            if allele == ref and gt == "":
+                gt = "0"
 
-                elif allele != ref and gt == "":
-                    gt = "1"
+            elif allele != ref and gt == "":
+                gt = "1"
 
-                elif allele == ref and gt != "":
-                    gt = gt + "/0"
+            elif allele == ref and gt != "":
+                gt = gt + "/0"
 
-                elif allele != ref and gt != "":
-                    gt = gt + "/1"
+            elif allele != ref and gt != "":
+                gt = gt + "/1"
 
-            gt_samples[i] = gt
-            list_gt = list(gt_samples.values())
+        gt_samples["GT"] = gt
 
-        return list_gt
+        return gt_samples
 
     def convert(self, input_path, output_path):
         log.debug("Converting to vcf from SNP using config: " + self.config_filepath)
@@ -199,7 +194,7 @@ class VcfFromSnp(AbstractConverter):
                     col = self.config["VCF_COLUMNS"][vcf_col]
 
                     if is_helper_func(col):
-                        func = helper.get(col[1])  # transformation du string en fonction python
+                        func = helper.get(col[1])
                         args = [data[c][i] for c in col[2:]]
                         result = func(*args)
                         self.nuc_del = helper.nuc_del.upper()
@@ -223,7 +218,8 @@ class VcfFromSnp(AbstractConverter):
 
                 var.ref = var.ref.upper()
                 var.alt = self.manage_alt(i, var.ref)
-                var.samples_gt = self._define_gt(i, var.ref)
+                for sample in self.sample_list:
+                    var.samples[sample] = self._define_gt(i, var.ref, sample)
 
                 if var.ref == "":
                     continue
@@ -243,7 +239,8 @@ class VcfFromSnp(AbstractConverter):
                 line.append("PASS")
                 line.append(".")
                 line.append("GT")
-                line.extend(var.samples_gt)
+                for sample in self.sample_list:
+                    line.append(var.samples[sample]["GT"])
 
                 if var.ref == "":
                     raise ValueError("They are no reff for variant", var.chrom, " ", var.pos)
@@ -252,7 +249,7 @@ class VcfFromSnp(AbstractConverter):
 
         print("Number of ref don't find in ref file = " + str(helper.error_value))
 
-    __doc__="""
+    __doc__ = """
     This class transform raw data come from SNP analysis into vcf file :
 
     exemple :
@@ -277,13 +274,3 @@ class VcfFromSnp(AbstractConverter):
     Developped by HAMEAU Elise 
 
     """
-
-
-# if __name__ == "__main__":
-#     convert = VcfFromSnp(
-#         "/home1/BAS/hameaue/variant_convert/variantconvert/configs/config_snp.json"
-#     )
-#     convert.convert(
-#         "/home1/BAS/hameaue/TEST02_habibd/file_BBS5/Full_data_clean.csv",
-#         "/home1/BAS/hameaue/TEST02_habibd/file_BBS5/vcf_unphased.vcf",
-#     )
