@@ -11,6 +11,7 @@ import os
 import sys
 
 from os.path import join as osj
+from pyfaidx import Fasta
 
 sys.path.append(os.path.join(os.path.dirname(__file__), "."))
 from commons import set_log_level
@@ -20,11 +21,19 @@ def change_config(config_path, new_vars):
     with open(config_path, "r") as config:
         data = json.load(config)
 
-    updated_data = {**data, **new_vars}  # requires Python >= 3.5
+    updated_data = update_nested_dic(data, new_vars)  # requires Python >= 3.5
 
-    raise NotImplementedError("Work in progress")
-    # with open(config_path, "w") as config:
-    #     config.write(json.dumps(updated_data))
+    with open(config_path, "w") as config:
+        config.write(json.dumps(updated_data, indent="\t"))
+
+
+def update_nested_dic(data, new_vars):
+    for k, v in new_vars.items():
+        if isinstance(v, dict):
+            data[k] = update_nested_dic(data.get(k, {}), v)
+        else:
+            data[k] = v
+    return data
 
 
 def get_nested_dic(dictionary, key_tree, sep=".", default_value=""):
@@ -49,6 +58,28 @@ def get_nested_dic(dictionary, key_tree, sep=".", default_value=""):
     return dictionary
 
 
+def fill_genome_header(config_path):
+    """
+    Using GENOME["assembly"] and GENOME["path"] from config_path, update GENOME["vcf_header"] in config_path.
+    """
+    with open(config_path, "r") as f:
+        config = json.load(f)
+    assembly = config["GENOME"]["assembly"]
+    genome_path = config["GENOME"]["path"]
+    fasta = Fasta(genome_path)
+
+    vcf_header = []
+    for contig in fasta:
+        vcf_header.append(
+            f"##contig=<ID={contig.long_name.split()[0]},length={len(contig)},assembly={assembly}>"
+        )
+    vcf_header.append(f"##reference=file://{genome_path}")
+    log.debug(f"Built vcf_header:{vcf_header}")
+
+    new_vars = {"GENOME": {"vcf_header": vcf_header}}
+    change_config(config_path, new_vars)
+
+
 def main_config(args):
     set_log_level(args.verbosity)
 
@@ -62,17 +93,22 @@ def main_config(args):
     log.debug(f"Config will be applied to files: {target_files}")
 
     new_vars = {}
-    for key_val in args.set:
-        if key_val.count("=") != 1:
-            raise RuntimeError(
-                "Use the following format: --set key1=value1 key2=value2 key3=value3"
-            )
-        items = key_val.split("=")
-        key = items[0]
-        val = items[1]
-        new_vars = get_nested_dic(new_vars, key, default_value=val)
+    if args.set != None:
+        for key_val in args.set:
+            if key_val.count("=") != 1:
+                raise RuntimeError(
+                    "Use the following format: --set key1=value1 key2=value2 key3=value3"
+                )
+            items = key_val.split("=")
+            key = items[0]
+            val = items[1]
+            new_vars = get_nested_dic(new_vars, key, default_value=val)
 
     log.debug(f"Config new_vars: {new_vars}")
 
     for config in target_files:
-        change_config(config, new_vars)
+        if new_vars != {}:
+            change_config(config, new_vars)
+
+        if args.fill_genome_header == True:
+            fill_genome_header(config)
