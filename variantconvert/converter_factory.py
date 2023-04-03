@@ -10,7 +10,7 @@ from converters.vcf_from_bedpe import VcfFromBedpe
 from converters.vcf_from_breakpoints import VcfFromBreakpoints
 from converters.vcf_from_tsv import VcfFromTsv
 from converters.vcf_from_varank import VcfFromVarank
-
+from converters.vcf_from_snp import VcfFromSnp
 
 class ConverterFactory:
     """
@@ -25,6 +25,7 @@ class ConverterFactory:
         self._converters["bed>vcf"] = VcfFromBed
         self._converters["tsv>vcf"] = VcfFromTsv
         self._converters["breakpoints>vcf"] = VcfFromBreakpoints
+        self._converters["snp>vcf"] = VcfFromSnp
         self._converters["bedpe>vcf"] = VcfFromBedpe
 
     def register_converter(self, source_format, dest_format, converter):

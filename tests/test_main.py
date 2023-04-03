@@ -299,3 +299,30 @@ def test_bedpe_to_vcf(tmp_path):
 
     control = osj(os.path.dirname(__file__), "controls", "chromothripsis.vcf")
     identical_except_date_and_genome([control, bed_tester.outputFile])
+
+def test_snp_to_vcf(tmp_path):
+    breakpoints_tester = type(
+        "obj",
+        (object,),
+        {
+            "inputFile": osj(
+                os.path.dirname(__file__),
+                "data",
+                "snp_test.tsv",
+            ),
+            "outputFile": osj(tmp_path, "snp_test.vcf"),
+            "inputFormat": "snp",
+            "outputFormat": "vcf",
+            "configFile": osj(
+                os.path.dirname(__file__), "..", "configs", "hg19", "snp.json"
+            ),
+            "verbosity": "debug",
+        },
+    )
+    remove_if_exists(breakpoints_tester.outputFile)
+    main_convert(breakpoints_tester)
+    assert os.path.exists(breakpoints_tester.outputFile)
+
+    control = osj(os.path.dirname(__file__), "controls", "snp_test.vcf")
+    identical_except_date_and_genome([control, breakpoints_tester.outputFile])
+
