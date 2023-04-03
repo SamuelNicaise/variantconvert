@@ -4,7 +4,7 @@ import os
 import sys
 import re
 
-from abstract_converter import AbstractConverter
+from converters.abstract_converter import AbstractConverter
 
 sys.path.append(os.path.join(os.path.dirname(__file__), ".."))
 from helper_functions import HelperFunctions
@@ -101,7 +101,7 @@ class VcfFromSnp(AbstractConverter):
         return alt
 
     def generate_alt(self, alt, all_1, all_2, ref):
-        """For each allele we compare what contains refd and alt"""
+        """For each allele we compare what contains ref and alt"""
 
         if alt == "":
             if all_1 == ref and all_2 == ref and alt.find(all_1) == -1 and alt.find(all_2) == -1:
@@ -250,7 +250,7 @@ class VcfFromSnp(AbstractConverter):
 
                 vcf.write("\t".join(line) + "\n")
 
-        print("Number of ref don't find in ref file = " + helper.error_value)
+        print("Number of ref don't find in ref file = " + str(helper.error_value))
 
     __doc__="""
     This class transform raw data come from SNP analysis into vcf file :
@@ -279,11 +279,11 @@ class VcfFromSnp(AbstractConverter):
     """
 
 
-if __name__ == "__main__":
-    convert = VcfFromSnp(
-        "/home1/BAS/hameaue/variant_convert/variantconvert/configs/config_snp.json"
-    )
-    convert.convert(
-        "/home1/BAS/hameaue/TEST02_habibd/file_BBS5/Full_data_clean.csv",
-        "/home1/BAS/hameaue/TEST02_habibd/file_BBS5/vcf_unphased.vcf",
-    )
+# if __name__ == "__main__":
+#     convert = VcfFromSnp(
+#         "/home1/BAS/hameaue/variant_convert/variantconvert/configs/config_snp.json"
+#     )
+#     convert.convert(
+#         "/home1/BAS/hameaue/TEST02_habibd/file_BBS5/Full_data_clean.csv",
+#         "/home1/BAS/hameaue/TEST02_habibd/file_BBS5/vcf_unphased.vcf",
+#     )
