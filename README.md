@@ -9,6 +9,7 @@ The variantconvert module is an extendable command-line tool for converting betw
 - BED (including [CANOES](https://github.com/bioinfo-chru-strasbourg/STARK-modules/tree/master/services/structuralvariation/canoes)) > VCF
 - [VaRank](https://www.lbgi.fr/VaRank/) (single file or entire folder with varankBatch mode) > VCF
 - [BEDPE](https://bedtools.readthedocs.io/en/latest/content/general-usage.html#bedpe-format) > VCF
+- Illumina microarray > VCF
 
 The project is still being developed and maintained. If you encounter any bug or wish to see new features added, please [open an issue](https://github.com/SamuelNicaise/variantconvert/issues).
 
