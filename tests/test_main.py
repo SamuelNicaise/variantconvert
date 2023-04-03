@@ -314,7 +314,7 @@ def test_snp_to_vcf(tmp_path):
             "inputFormat": "snp",
             "outputFormat": "vcf",
             "configFile": osj(
-                os.path.dirname(__file__), "..", "configs", "config_snp.json"
+                os.path.dirname(__file__), "..", "configs", "hg19", "snp.json"
             ),
             "verbosity": "debug",
         },

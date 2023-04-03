@@ -1,3 +1,28 @@
+"""
+This class transforms raw data coming from SNP analysis into a vcf file:
+
+exemple:
+
+Raw_data input_file
+
+Index   Name    Address Chr Position    ... Sample1.Top Alleles ... Sample2.Top Alleles ... n.Top Alleles
+1       rs0001  3568    5   8759622     ... GG  ... GA  ... n.haplotypes
+2       rs0002  4567    2   8972124     ... TA  ... CT  ... n.haplotypes
+3       rs0045  7778    8   2655891     ... C-  ... CC  ... n.haplotypes
+
+vcf output_file
+
+##META_DATA
+#CHROM  POS     ID      REF ALT QUAL    FILTER  INFO    FORMAT  Sample1 Sample2 n.Samples
+chr5    8759622 rs0001  G   A   .       PASS    .       GT      0/0     0/1     n.genotype
+chr2    8972124 rs0002  T   A,C .       PASS    .       GT      0/1     1/0     n.genotype
+chr8    2655891 rs0045  GC  G   .       PASS    .       GT      1/1     0/0     n.genotype
+
+The vcf are unphased but you can use Beagle2.3 to phase your data
+
+@Author: Elise Verin
+"""
+
 import logging as log
 import pandas as pd
 import os
@@ -27,12 +52,12 @@ class VcfFromSnp(AbstractConverter):
 
             if found_allele != None:
                 row_alt = {}
-                """keep top allele from raw and split them """
+                # keep top allele from raw and split them
                 split_allele = string.split(".")
                 self.sample_list.append(split_allele[0])
 
                 for a in range(self.snp_data.shape[0]):
-                    """For each id find we keep all haplotype"""
+                    # For each id find we keep all haplotype
                     row_alt[a] = self.snp_data.iloc[a, i]
 
                 self.sample_alt[split_allele[0]] = row_alt
@@ -40,9 +65,9 @@ class VcfFromSnp(AbstractConverter):
         return self.sample_list
 
     def manage_alt(self, row, ref):
-
-        """The alt are generate based on ref and haplotype contains.
-        When we detected an deletion we transform ref, all alleles and alt (if alt is not empty)
+        """
+        The alt are generated based on ref and haplotype contained in row.
+        When we detect a deletion we transform ref, all alleles and alt (if alt is not empty)
 
         Before deletion
         ref = A
@@ -57,7 +82,6 @@ class VcfFromSnp(AbstractConverter):
         alt = TT,TC,T
         allele_1 = TT
         allele_2 = TC
-
         """
 
         alt = ""
@@ -98,7 +122,7 @@ class VcfFromSnp(AbstractConverter):
         return alt
 
     def generate_alt(self, alt, all_1, all_2, ref):
-        """For each allele we compare what contains ref and alt"""
+        """For each allele we compare what ref and alt contain"""
 
         if alt == "":
             if all_1 == ref and all_2 == ref and alt.find(all_1) == -1 and alt.find(all_2) == -1:
@@ -142,7 +166,7 @@ class VcfFromSnp(AbstractConverter):
         return False
 
     def _define_gt(self, row, ref, sample):
-        """If the nucleotide from the haplotype are find in REF we have a 0 and if it's find in alt it's 1. "/" correspond unphased genotype"""
+        """If the nucleotide from the haplotype are found in REF we have a 0 and if it's found in alt it's 1. "/" correspond unphased genotype"""
         gt_samples = {}
 
         gt = ""
@@ -220,6 +244,7 @@ class VcfFromSnp(AbstractConverter):
                 var.alt = self.manage_alt(i, var.ref)
                 for sample in self.sample_list:
                     var.samples[sample] = self._define_gt(i, var.ref, sample)
+                log.debug(f"GT for each sample in variant: {var.samples}")
 
                 if var.ref == "":
                     continue
@@ -243,34 +268,10 @@ class VcfFromSnp(AbstractConverter):
                     line.append(var.samples[sample]["GT"])
 
                 if var.ref == "":
-                    raise ValueError("They are no reff for variant", var.chrom, " ", var.pos)
+                    raise ValueError("There are no ref for variant", var.chrom, " ", var.pos)
 
                 vcf.write("\t".join(line) + "\n")
 
-        print("Number of ref don't find in ref file = " + str(helper.error_value))
+        if helper.error_value > 0 :
+            log.warning(f"{helper.error_value} variant positions not found in ref genome")
 
-    __doc__ = """
-    This class transform raw data come from SNP analysis into vcf file :
-
-    exemple :
-
-    Raw_data input_file
-
-    Index   Name    Address Chr Position    ... Sample1.Top Alleles ... Sample2.Top Alleles ... n.Top Alleles
-    1       rs0001  3568    5   8759622     ... GG  ... GA  ... n.haplotypes
-    2       rs0002  4567    2   8972124     ... TA  ... CT  ... n.haplotypes
-    3       rs0045  7778    8   2655891     ... C-  ... CC  ... n.haplotypes
-
-    vcf output_file
-
-    ##META_DATA
-    #CHROM  POS     ID      REF ALT QUAL    FILTER  INFO    FORMAT  Sample1 Sample2 n.Samples
-    chr5    8759622 rs0001  G   A   .       PASS    .       GT      0/0     0/1     n.genotype
-    chr2    8972124 rs0002  T   A,C .       PASS    .       GT      0/1     1/0     n.genotype
-    chr8    2655891 rs0045  GC  G   .       PASS    .       GT      1/1     0/0     n.genotype
-
-    The vcf are unphased but you can use Beagle2.3 for phasing your data
-
-    Developped by HAMEAU Elise 
-
-    """
