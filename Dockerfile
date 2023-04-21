@@ -1,5 +1,5 @@
 FROM centos:7
-MAINTAINER Samuel Nicaise
+LABEL "https://github.com/SamuelNicaise/variantconvert"
 LABEL Software="variantconvert"
 
 RUN yum -y install sudo make wget bzip2 gcc git
