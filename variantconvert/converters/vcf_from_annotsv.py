@@ -74,11 +74,8 @@ class VcfFromAnnotsv(AbstractConverter):
         if self.config["VCF_COLUMNS"]["FORMAT"] == "FORMAT":
             if not set(sample_list).issubset(self.input_df.columns):
                 raise ValueError(
-                    "When using an AnnotSV file generated from a VCF, all samples in '"
-                    + samples_col
-                    + "' column are expected to "
-                    "have their own column in the input AnnotSV file"
-                )
+                    f"When using an AnnotSV file generated from a VCF, all samples in {self.config['VCF_COLUMNS']['SAMPLE']} column are expected to have their own column in the input AnnotSV file"
+                    )
         return sample_list
 
     def _build_input_annot_df(self):
