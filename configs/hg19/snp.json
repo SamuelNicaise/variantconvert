@@ -7,7 +7,7 @@
     },
     "GENOME": {
         "assembly": "hg19",
-        "path": "/home1/BAS/DOCKER_STARK_MAIN_FOLDER/databases/genomes/current/hg19.fa",
+        "path": "/home1/DB/STARK/genomes/current/hg19.fa",
         "vcf_header": [
             "##contig=<ID=chr1,length=249250621,assembly=hg19>",
             "##contig=<ID=chr2,length=243199373,assembly=hg19>",
