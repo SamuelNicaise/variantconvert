@@ -1,4 +1,4 @@
-<img src="./images/variantconvert_large.png" alt="variantconvert logo">
+<img src="https://raw.githubusercontent.com/SamuelNicaise/variantconvert/master/images/variantconvert_large.png" alt="variantconvert logo">
 
 The variantconvert module is an extendable command-line tool for converting between different file formats used to store genetic variant data. Currently, the following conversions are supported : 
 
