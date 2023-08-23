@@ -49,6 +49,7 @@ sys.path.append(os.path.join(os.path.dirname(__file__), "."))
 from commons import set_log_level
 from config import main_config
 from converter_factory import ConverterFactory
+from initialize import main_init
 from varank_batch import main_varank_batch
 
 
@@ -176,7 +177,7 @@ def main():
         "-c",
         "--configFiles",
         type=str,
-        default="<script_dir>/configs/*",
+        default="<default user dir>",
         help="Config file(s) on which changes are applied. Add simple quotes around if you use wildcards. [default: '<script_dir>/configs/*']",
         nargs="*",
     )
@@ -193,8 +194,24 @@ def main():
         action="store_true",
         help="Fill the GENOME['vcf_header'] field based on GENOME['path']",
     )
+    parser_config.add_argument(
+        "--show_config_dir", action="store_true", help="Prints current local config directory"
+    )
 
-    for myparser in (parser_convert, parser_batch, parser_config):
+    parser_init = subparsers.add_parser(
+        "init",
+        help="Use this first after installing variantconvert. It copies default configs in your user directory so you can edit them",
+        formatter_class=argparse.MetavarTypeHelpFormatter,
+    )
+    parser_init.set_defaults(subparser="init")
+    parser_init.add_argument(
+        "-d",
+        "--dir",
+        type=str,
+        help="By default, your standard user config directory is detected and INIT will write there. This option allows you to choose another directory. You then have to set yourself an environment variable VARIANTCONVERT_CONFIG containing this path.",
+    )
+
+    for myparser in (parser_convert, parser_batch, parser_config, parser_init):
         myparser.add_argument("-v", "--verbosity", type=str, default="info", help="Verbosity level")
 
     args = parser.parse_args()
@@ -215,11 +232,14 @@ def main():
             log.info("variantconvert finished.")
 
         elif args.subparser == "config":
-            if not (args.set or args.fill_genome_header):
+            if not (args.set or args.fill_genome_header or args.show_config_dir):
                 raise parser_config.error(
-                    "the following arguments are required: either --set or --fill_genome_header"
+                    "one flag is required: --set or --fill_genome_header or --show_config_dir"
                 )
             main_config(args)
+
+        elif args.subparser == "init":
+            main_init(args)
 
 
 if __name__ == "__main__":

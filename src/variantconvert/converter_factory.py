@@ -12,6 +12,11 @@ from converters.vcf_from_tsv import VcfFromTsv
 from converters.vcf_from_varank import VcfFromVarank
 from converters.vcf_from_snp import VcfFromSnp
 
+from config import get_full_path
+
+import logging as log
+
+
 class ConverterFactory:
     """
     Factory pattern implementation
@@ -35,4 +40,6 @@ class ConverterFactory:
         converter = self._converters.get(source_format + ">" + dest_format)
         if not converter:
             raise ValueError("Unknown converter: " + source_format + ">" + dest_format)
+        config = get_full_path(config)
+        log.debug(f"Using config: {config}")
         return converter(config)

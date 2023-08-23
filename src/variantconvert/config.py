@@ -8,6 +8,7 @@ import glob
 import json
 import logging as log
 import os
+import variantconvert
 import sys
 
 from os.path import join as osj
@@ -15,6 +16,18 @@ from pyfaidx import Fasta
 
 sys.path.append(os.path.join(os.path.dirname(__file__), "."))
 from commons import set_log_level
+
+
+def get_full_path(config_path):
+    if os.path.exists(config_path):
+        return config_path
+    else:
+        full_path = osj(variantconvert.__local_config__, config_path)
+        if os.path.exists(full_path):
+            return full_path
+        raise FileNotFoundError(
+            f"{config_path}\nYou have 2 possibilities with config files:\n - Give a full path\n - Give a shortened path: <assembly>/<configfile.json>\n Shortened paths are searched in: {variantconvert.__local_config__}"
+        )
 
 
 def change_config(config_path, new_vars):
@@ -83,8 +96,16 @@ def fill_genome_header(config_path):
 def main_config(args):
     set_log_level(args.verbosity)
 
-    if args.configFiles == "<script_dir>/configs/*":  # default value
-        target_files = glob.glob(osj(os.path.dirname(__file__), "..", "configs", "*.json"))
+    if args.show_config_dir:
+        print(variantconvert.__local_config__)
+        return
+
+    if args.configFiles == "<default user dir>":  # default value
+        if not os.path.isdir(variantconvert.__local_config__):
+            raise RuntimeError(
+                f"Couldn't find local config at:{variantconvert.__local_config__}. Use 'variantconvert init' first."
+            )
+        target_files = glob.glob(osj(variantconvert.__local_config__, "**", "*.json"))
     else:
         target_files = [v for v in args.configFiles]
     for target in target_files:
