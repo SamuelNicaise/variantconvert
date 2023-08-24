@@ -106,11 +106,21 @@ def main_config(args):
                 f"Couldn't find local config at:{variantconvert.__local_config__}. Use 'variantconvert init' first."
             )
         target_files = glob.glob(osj(variantconvert.__local_config__, "**", "*.json"))
+
     else:
-        target_files = [v for v in args.configFiles]
-    for target in target_files:
-        if not os.path.exists(target):
-            raise FileNotFoundError(target)
+        target_files = []
+        for path in args.configFiles:
+            if not os.path.exists(path):
+                # check if path exists in local config dir
+                full_paths = glob.glob(osj(variantconvert.__local_config__, path))
+                for target in full_paths:
+                    if os.path.exists(target):
+                        target_files.append(target)
+                    else:
+                        raise FileNotFoundError(path)
+            else:
+                target_files.append(path)
+
     log.debug(f"Config will be applied to files: {target_files}")
 
     new_vars = {}

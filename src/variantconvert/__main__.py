@@ -178,7 +178,7 @@ def main():
         "--configFiles",
         type=str,
         default="<default user dir>",
-        help="Config file(s) on which changes are applied. Add simple quotes around if you use wildcards. [default: '<script_dir>/configs/*']",
+        help="Config file(s) on which changes are applied. Wildcards are accepted. [default: '<script_dir>/configs/*']",
         nargs="*",
     )
     parser_config.set_defaults(subparser="config")
