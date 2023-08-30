@@ -60,6 +60,12 @@ class VcfFromAnnotsv(AbstractConverter):
         return df
 
     def _get_sample_list(self):
+        if self.config["VCF_COLUMNS"]["FORMAT"] == "FORMAT":
+            return self._get_sample_list_with_vcf_input()
+        else:
+            return self._get_sample_list_with_bed_input()
+
+    def _get_sample_list_with_bed_input(self):
         samples_col = self.input_df[self.config["VCF_COLUMNS"]["SAMPLE"]]
         sample_list = []
         for cell in samples_col:
@@ -70,13 +76,52 @@ class VcfFromAnnotsv(AbstractConverter):
                 sample_list.append(cell)
         sample_list = list(set(sample_list))
         sample_list.sort()  # ensures output is always the same, despite using a set() above
-
-        if self.config["VCF_COLUMNS"]["FORMAT"] == "FORMAT":
-            if not set(sample_list).issubset(self.input_df.columns):
-                raise ValueError(
-                    f"When using an AnnotSV file generated from a VCF, all samples in {self.config['VCF_COLUMNS']['SAMPLE']} column are expected to have their own column in the input AnnotSV file"
-                    )
         return sample_list
+
+    def _get_sample_list_with_vcf_input(self):
+        sample_list = []
+        format_index = self.input_df.columns.to_list().index("FORMAT")
+
+        for i in range(format_index + 1, self.input_df.columns.size):
+            potential_sample_col = self.input_df[self.input_df.columns[i]]
+            first_valid_index = potential_sample_col.first_valid_index()
+            if self.is_sample_column(
+                self.input_df.iloc[first_valid_index, i],
+                self.input_df.iloc[first_valid_index, format_index],
+            ):
+                sample_list.append(self.input_df.columns[i])
+            else:
+                break
+
+        log.debug(f"sample_list:{sample_list}")
+        if not set(sample_list).issubset(self.input_df.columns):
+            raise ValueError(
+                f"When using an AnnotSV file generated from a VCF, all samples in {self.config['VCF_COLUMNS']['SAMPLE']} column are expected to have their own column in the input AnnotSV file"
+            )
+        return sample_list
+
+    @staticmethod
+    def is_sample_column(value, format):
+        """
+        Unperfect identification of sample columns. Assumed to be good enough within the context of AnnotSV files. Made to be used on columns directly after the FORMAT columns, knowing after sample columns should come the "Annotation" column (=full/split designation).
+        Sample columns are arbitrarily identified because the "Samples" column
+        """
+        count = format.count(":")
+        if count == 0:
+            if format == "GT":
+                # (.([|/].)+)  --> match if value is for example 0/1 or 1/0 or 1/2 or 0|1 or 0/1/2 etc...
+                res = re.match(r"(.([|/].)+)", value)
+                if res:
+                    return True
+                return False
+            else:
+                raise RuntimeError(
+                    f"Unable to determine which columns are sample columns.\nPlease verify that your input files are correct, then contact the developers at https://github.com/SamuelNicaise/variantconvert/issues"
+                )
+        else:
+            if value.count(":") == count:
+                return True
+            return False
 
     def _build_input_annot_df(self):
         """
@@ -480,7 +525,6 @@ class VcfFromAnnotsv(AbstractConverter):
             ]
 
             for variant_id, df_variant in self.input_df.groupby(id_col, sort=False):
-
                 # fill columns that need a helper func
                 for config_key, config_val in self.config["VCF_COLUMNS"].items():
                     if config_key == "INFO":
