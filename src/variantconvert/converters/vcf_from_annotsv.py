@@ -3,6 +3,7 @@
 import logging as log
 import os
 import pandas as pd
+import re
 import sys
 import time
 from natsort import index_natsorted
@@ -80,7 +81,13 @@ class VcfFromAnnotsv(AbstractConverter):
 
     def _get_sample_list_with_vcf_input(self):
         sample_list = []
-        format_index = self.input_df.columns.to_list().index("FORMAT")
+        try:
+            format_index = self.input_df.columns.to_list().index("FORMAT")
+        except ValueError:
+            print(
+                "ERROR: No FORMAT column detected. Variantconvert assumes you used a bed file as input for AnnotSV in that case. You should use the 'annotsv3_from_bed.json' config, not 'annotsv3_from_vcf.json'"
+            )
+            raise
 
         for i in range(format_index + 1, self.input_df.columns.size):
             potential_sample_col = self.input_df[self.input_df.columns[i]]
@@ -116,7 +123,7 @@ class VcfFromAnnotsv(AbstractConverter):
                 return False
             else:
                 raise RuntimeError(
-                    f"Unable to determine which columns are sample columns.\nPlease verify that your input files are correct, then contact the developers at https://github.com/SamuelNicaise/variantconvert/issues"
+                    "Unable to determine which columns are sample columns.\nPlease verify that your input files are correct, then contact the developers at https://github.com/SamuelNicaise/variantconvert/issues"
                 )
         else:
             if value.count(":") == count:
@@ -303,7 +310,6 @@ class VcfFromAnnotsv(AbstractConverter):
             Doesn't include newlines, as expected by commons.create_vcf_header(args)
         """
         supplemental_header = []
-        default_description = "Imported from AnnotSV"
         known_descriptions = set(self.config["COLUMNS_DESCRIPTION"]["INFO"].keys())
         missing_annots = []
 
@@ -560,7 +566,13 @@ class VcfFromAnnotsv(AbstractConverter):
                     )
                 else:
                     sample_cols = "GT"
-                    for i in range(len(self.sample_list)):
-                        sample_cols += f"\t{self.config['GENERAL']['default_genotype']}"
+                    samples_with_variant = (
+                        df_variant[self.config["VCF_COLUMNS"]["SAMPLE"]].iloc[0].split(",")
+                    )
+                    for sample in self.sample_list:
+                        if sample in samples_with_variant:
+                            sample_cols += f"\t{self.config['GENERAL']['default_present_genotype']}"
+                        else:
+                            sample_cols += f"\t{self.config['GENERAL']['default_absent_genotype']}"
                 vcf.write(sample_cols)
                 vcf.write("\n")
