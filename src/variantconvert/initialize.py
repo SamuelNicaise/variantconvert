@@ -27,5 +27,7 @@ def main_init(args):
     for genome in glob.glob(osj(variantconvert.__default_config__, "**")):
         basename = os.path.basename(genome)
         if basename not in ("__init__.py", "__pycache__"):
-            shutil.copytree(genome, osj(local_dir, basename))
+            shutil.copytree(
+                genome, osj(local_dir, basename), ignore=shutil.ignore_patterns("__init__.py")
+            )
     log.info("Done.")
