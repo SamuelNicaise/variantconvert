@@ -19,7 +19,8 @@ from commons import (
     is_float,
     remove_decimal_or_strip,
 )
-from helper_functions import HelperFunctions
+
+from helpers.annotsv_helper import AnnotSvHelper
 
 
 class VcfFromAnnotsv(AbstractConverter):
@@ -43,7 +44,7 @@ class VcfFromAnnotsv(AbstractConverter):
             low_memory=False,
         )
         df.sort_values(
-            [self.config["VCF_COLUMNS"]["#CHROM"], self.config["VCF_COLUMNS"]["POS"]],
+            [self.config["VCF_COLUMNS"]["#CHROM"], self.config["VCF_COLUMNS"]["INFO"]["SV_start"]],
             inplace=True,
         )
         df.reset_index(drop=True, inplace=True)
@@ -84,10 +85,9 @@ class VcfFromAnnotsv(AbstractConverter):
         try:
             format_index = self.input_df.columns.to_list().index("FORMAT")
         except ValueError:
-            print(
-                "ERROR: No FORMAT column detected. Variantconvert assumes you used a bed file as input for AnnotSV in that case. You should use the 'annotsv3_from_bed.json' config, not 'annotsv3_from_vcf.json'"
+            raise ValueError(
+                "ERROR: No FORMAT column detected. Variantconvert assumes you used a bed file as input for AnnotSV in that case. \nYou should use the 'annotsv3_from_bed.json' config, not 'annotsv3_from_vcf.json'"
             )
-            raise
 
         for i in range(format_index + 1, self.input_df.columns.size):
             potential_sample_col = self.input_df[self.input_df.columns[i]]
@@ -167,8 +167,8 @@ class VcfFromAnnotsv(AbstractConverter):
         #     if not chrom.startswith
 
         if (
-            self.config["VCF_COLUMNS"]["INFO"]["SV_type"] == ""
-            or self.config["VCF_COLUMNS"]["INFO"]["SV_type"] not in df.columns
+            self.config["VCF_COLUMNS"]["INFO"]["SVTYPE"] == ""
+            or self.config["VCF_COLUMNS"]["INFO"]["SVTYPE"] not in df.columns
         ):
             raise ValueError(
                 "SV_type column is required to turn an AnnotSV file into a VCF. Check if SV_type col is set in config or missing in your file.\n"
@@ -183,10 +183,10 @@ class VcfFromAnnotsv(AbstractConverter):
 
         returns a single line dataframe with all annotations merged properly
         """
-        if self.config["GENERAL"]["mode"] != "full&split":
+        if self.config["GENERAL"]["mode"] not in ("full&split", "full"):
             raise ValueError(
                 "Unexpected value in json config['GENERAL']['mode']: "
-                "only 'full&split' mode is implemented yet."
+                "only 'full&split' and 'full' mode are implemented."
             )
         # Do not keep 'base vcf col' in info field
         df = df.loc[
@@ -223,6 +223,9 @@ class VcfFromAnnotsv(AbstractConverter):
             # remove float decimal full rows
             for ann in dfs["full"].columns:
                 annots[ann] = remove_decimal_or_strip(dfs["full"].loc[df.index[0], ann])
+
+        if self.config["GENERAL"]["mode"] == "full":
+            return annots
 
         # deal with split
         if "split" not in dfs.keys():
@@ -486,6 +489,30 @@ class VcfFromAnnotsv(AbstractConverter):
 
         return main_cols
 
+    def _get_info_dict(self, df_variant, helper):
+        # END, SVLEN and SVTYPE are reserved INFO keywords for SVs per VCF 4.3 specification
+        # They are the only INFO field that have to be renamed
+        ignored_cols = (
+            self.main_vcf_cols + ["INFO", "SV_end", "SV_length", "SV_type"] + self.sample_list
+        )
+
+        for config_key, config_val in self.config["VCF_COLUMNS"]["INFO"].items():
+            if is_helper_func(config_val):
+                func = helper.get(config_val[1])
+                args = [df_variant.get(c, None) for c in config_val[2:]]
+                result = func(*args)
+                df_variant[config_key] = result
+        # TODO: helper func for the 3 info fields and done
+
+        info_dic = {}
+        for k, v in df_variant.items():
+            if k not in ignored_cols:
+                # if v == ".":
+                #     info_dic[k] = None
+                # else:
+                info_dic[k] = remove_decimal_or_strip(v)
+        return info_dic
+
     def convert(self, tsv, output_path):
         """
         Creates and fill the output file.
@@ -494,15 +521,11 @@ class VcfFromAnnotsv(AbstractConverter):
         A function identifies and merges the annotations.
         then we build a dictionary with 1 dictionary per annotSV_ID containing all the annotations
         This is then used to make the header and fill the INFO field.
-
-        Note: the "INFO" field from annotSV is discarded for now,
-        because it only contains Decon annotations and they're useless.
-        TODO: make an option to keep the "INFO" field in the annotations dictionary
         """
         log.debug("Converting to vcf from tsv using config: " + self.config_filepath)
 
         self.filepath = tsv
-        helper = HelperFunctions(self.config)
+        helper = AnnotSvHelper(self.config)
 
         self.input_df = self._build_input_dataframe()
         self.sample_list = self._get_sample_list()
@@ -521,6 +544,7 @@ class VcfFromAnnotsv(AbstractConverter):
                 self.config,
                 self.sample_list,
                 supplemental_header=self.supplemental_header,
+                fileformat="VCFv4.2",  # because no spaces in INFO fields for IGV support
             )
             for l in vcf_header:
                 vcf.write(l + "\n")
@@ -530,28 +554,33 @@ class VcfFromAnnotsv(AbstractConverter):
                 index_natsorted(self.input_df[self.config["VCF_COLUMNS"]["#CHROM"]])
             ]
 
-            for variant_id, df_variant in self.input_df.groupby(id_col, sort=False):
+            for df_variant in self.input_df.itertuples():
+                # print(getattr(df_variant, "AnnotSV_ID"))
+                df_variant = df_variant._asdict()  # for ease of dev
+
+                if (
+                    self.config["GENERAL"]["mode"] == "full"
+                    and df_variant[self.config["VCF_COLUMNS"]["INFO"]["Annotation_mode"]] != "full"
+                ):
+                    continue
+
                 # fill columns that need a helper func
                 for config_key, config_val in self.config["VCF_COLUMNS"].items():
                     if config_key == "INFO":
-                        for info_col in self.config["VCF_COLUMNS"][config_key].values():
-                            if is_helper_func(info_col):
-                                raise ValueError(
-                                    "HELPER_FUNCTIONS for INFO fields are not implemented yet for AnnotSV converter"
-                                )
+                        continue  # dealt with by _get_info_dict()
                     elif config_key == "FILTER" and config_val == "":
                         df_variant[config_key] = "PASS"
                     elif is_helper_func(config_val):
                         func = helper.get(config_val[1])
-                        args = [df_variant.iloc[0][c] for c in config_val[2:]]
+                        args = [df_variant.get(c, None) for c in config_val[2:]]
                         result = func(*args)
                         df_variant[config_key] = result
 
-                main_cols = "\t".join(df_variant[self.main_vcf_cols].iloc[0].to_list())
+                main_cols = "\t".join([df_variant[c] for c in self.main_vcf_cols])
                 vcf.write(main_cols + "\t")
 
                 info_list = []
-                for k, v in info_dic[variant_id].items():
+                for k, v in self._get_info_dict(df_variant, helper).items():
                     if v != None:
                         info_list.append(k + "=" + v)
                     else:
@@ -560,14 +589,13 @@ class VcfFromAnnotsv(AbstractConverter):
 
                 if self.config["VCF_COLUMNS"]["FORMAT"] != "":
                     sample_cols = "\t".join(
-                        df_variant[[self.config["VCF_COLUMNS"]["FORMAT"]] + self.sample_list]
-                        .iloc[0]
-                        .to_list()
+                        df_variant[self.config["VCF_COLUMNS"]["FORMAT"]]
+                        + [df_variant[c] for c in self.main_vcf_cols]
                     )
                 else:
                     sample_cols = "GT"
-                    samples_with_variant = (
-                        df_variant[self.config["VCF_COLUMNS"]["SAMPLE"]].iloc[0].split(",")
+                    samples_with_variant = df_variant[self.config["VCF_COLUMNS"]["SAMPLE"]].split(
+                        ","
                     )
                     for sample in self.sample_list:
                         if sample in samples_with_variant:
@@ -576,3 +604,7 @@ class VcfFromAnnotsv(AbstractConverter):
                             sample_cols += f"\t{self.config['GENERAL']['default_absent_genotype']}"
                 vcf.write(sample_cols)
                 vcf.write("\n")
+
+
+# TODO: refonte de la gestion des full/split
+# Si mode "full&split", au lieu d'ajouter des annotations, ajouter un variant par ligne avec la région correspondante

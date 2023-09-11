@@ -44,16 +44,22 @@
 	},
 	"VCF_COLUMNS": {
 		"#CHROM": "SV_chrom",
-		"POS": "SV_start",
+		"POS": [
+			"HELPER_FUNCTION",
+			"get_pos_annotsv",
+			"SV_start",
+			"Tx_start",
+			"Annotation_mode"
+		],
 		"ID": [
 			"HELPER_FUNCTION",
 			"get_undefined_value"
 		],
 		"REF": [
 			"HELPER_FUNCTION",
-			"get_ref_from_decon",
+			"get_ref_annotsv",
 			"SV_chrom",
-			"SV_start"
+			"POS"
 		],
 		"ALT": [
 			"HELPER_FUNCTION",
@@ -67,13 +73,24 @@
 		"FILTER": "",
 		"INFO": {
 			"AnnotSV_ID": "AnnotSV_ID",
-			"SVTYPE_ANNOTSV": "SV_type",
 			"INFO": "INFO",
 			"ID": "ID",
 			"SV_start": "SV_start",
-			"SV_end": "SV_end",
-			"SV_length": "SV_length",
-			"SV_type": "SV_type",
+			"END": [
+				"HELPER_FUNCTION",
+				"get_end_annotsv",
+				"Annotation_mode",
+				"SV_end",
+				"Tx_end"
+			],
+			"SVLEN": [
+				"HELPER_FUNCTION",
+				"get_svlen_annotsv",
+				"Annotation_mode",
+				"SV_length",
+				"Overlapped_tx_length"
+			],
+			"SVTYPE": "SV_type",
 			"Annotation_mode": "Annotation_mode"
 		},
 		"FORMAT": "",

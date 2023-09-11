@@ -9,20 +9,27 @@ from commons import get_genome
 
 class HelperFunctions:
     """
-    For when you can't just convert columns by changing column names
-    Steps needed:
-    - define the helper function
+    Helper functions are a collection of functions that can be called from a config file.
+    They translate one or multiple columns from the input Dataframe into one output column.
+
+    The simplest file conversions only require a config structure such as:
+    <output column>: <input column>
+    But some outputs will require multiple input columns or more complex transformations.
+    Helper functions allows abstractions in config files such as:
+    <output column> : [HELPER_FUNCTION, <function name>, <input column 1>, <input column 2>, ...]
+
+    To create your own functions:
+    - define the helper function in this class or a specific subclass used by the converter (both will work)
     - update self.dispatcher so this class can redirect to the proper function
-    - tell the config file you want to use a HELPER_FUNCTION with the following pattern:
-            [HELPER_FUNCTION, <name of your function>, <arg1>, <arg2>, ..., <argN>]
+    - tell the config file you want to use a HELPER_FUNCTION with the [HELPER_FUNCTION] pattern mentioned above
 
     Example: I need a LENGTH value in my destination format,
     but my source file only has START and END columns.
     You would need:
-    # somewhere in the module
+    # in this class
             def get_length(start, end):
                     return str(end - start)
-    #in this class __init__():
+    # in this class __init__():
             self.dispatcher["get_length_from_special_format"]: get_length
     # in the JSON configfile
             LENGTH: [HELPER_FUNCTION, "get_length_from_special_format", START, END]
@@ -37,7 +44,6 @@ class HelperFunctions:
             "get_alt_from_decon": self.get_alt_from_decon,
             "get_svlen_from_decon": self.get_svlen_from_decon,
             "get_info_from_annotsv": self.get_info_from_annotsv,
-            "get_alt_for_bed_based_annotsv": self.get_alt_for_bed_based_annotsv,
             "get_ref_from_canoes_bed": self.get_ref_from_canoes_bed,
             "get_alt_from_canoes_bed": self.get_alt_from_canoes_bed,
             "get_chr_from_breakpoint": self.get_chr_from_breakpoint,
@@ -213,10 +219,6 @@ class HelperFunctions:
         as if they were generic TSV (not recommended)
         """
         return "."
-
-    @staticmethod
-    def get_alt_for_bed_based_annotsv(sv_type):
-        return "<" + sv_type + ">"
 
     @staticmethod
     def get_chr_from_breakpoint(left_breakpoint, right_breakpoint):

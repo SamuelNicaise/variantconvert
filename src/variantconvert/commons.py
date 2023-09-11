@@ -116,9 +116,11 @@ def clean_string(s):
     return s
 
 
-def create_vcf_header(input_path, config, sample_list, breakpoints=False, supplemental_header=[]):
+def create_vcf_header(
+    input_path, config, sample_list, breakpoints=False, supplemental_header=[], fileformat="VCFv4.3"
+):
     header = []
-    header.append("##fileformat=VCFv4.3")
+    header.append("##fileformat=%s" % fileformat)
     header.append("##fileDate=%s" % time.strftime("%d/%m/%Y"))
     header.append("##source=" + config["GENERAL"]["origin"])
     header.append("##InputFile=%s" % os.path.abspath(input_path))
@@ -194,8 +196,10 @@ def create_vcf_header(input_path, config, sample_list, breakpoints=False, supple
 
 def remove_decimal_or_strip(value):
     # To prevent bad format conversions by pandas with INFO field
-    if value.isdigit() and value.endswith(".0"):
+    if is_float(value):
         value = str(int(float(value)))
+    elif is_int(value):
+        value = str(value)
     # forbidden to have spaces in INFO fields in VCF v4.2 (for IGV compatibility)
     value = value.replace(" ", "_")
     return value
@@ -242,7 +246,7 @@ def is_float(element: any) -> bool:
     if element == None:
         return False
     try:
-        int(element)
+        float(element)
         return True
     except ValueError:
         return False
