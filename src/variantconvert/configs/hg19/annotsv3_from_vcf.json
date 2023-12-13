@@ -6,8 +6,9 @@
 		"unique_variant_id": [
 			"AnnotSV_ID"
 		],
-		"mode": "full&split",
-		"keep_info": "true"
+		"mode": "full",
+		"keep_info": "true",
+		"keep_empty_info": "true"
 	},
 	"GENOME": {
 		"assembly": "hg19",
@@ -43,9 +44,20 @@
 	},
 	"VCF_COLUMNS": {
 		"#CHROM": "SV_chrom",
-		"POS": "SV_start",
+		"POS": [
+			"HELPER_FUNCTION",
+			"get_pos_annotsv",
+			"SV_start",
+			"Tx_start",
+			"Annotation_mode"
+		],
 		"ID": "ID",
-		"REF": "REF",
+		"REF": [
+			"HELPER_FUNCTION",
+			"get_ref_annotsv",
+			"SV_chrom",
+			"POS"
+		],
 		"ALT": "ALT",
 		"QUAL": "QUAL",
 		"FILTER": "FILTER",
@@ -55,9 +67,21 @@
 			"INFO": "INFO",
 			"ID": "ID",
 			"SV_start": "SV_start",
-			"SV_end": "SV_end",
-			"SV_length": "SV_length",
-			"SV_type": "SV_type",
+			"END": [
+				"HELPER_FUNCTION",
+				"get_end_annotsv",
+				"Annotation_mode",
+				"SV_end",
+				"Tx_end"
+			],
+			"SVLEN": [
+				"HELPER_FUNCTION",
+				"get_svlen_annotsv",
+				"Annotation_mode",
+				"SV_length",
+				"Overlapped_tx_length"
+			],
+			"SVTYPE": "SV_type",
 			"Annotation_mode": "Annotation_mode",
 			"Tx": "Tx",
 			"Tx_start": "Tx_start",

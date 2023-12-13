@@ -4,6 +4,7 @@ Helper functions are functions that can be called from config files.
 See the docstring of helper_functions.HelperFunctions() for more info.
 """
 
+import logging as log
 import os
 import sys
 
@@ -20,6 +21,11 @@ def remove_decimal(func):
 
     def wrapper(*args, **kwargs):
         result = func(*args, **kwargs)
+        print(*args)
+        print(result)
+        if result == None:
+            log.warning(f"Helper with params '{args}' returned None (should be '.')")
+            return result
         if result.endswith(".0"):
             return str(int(float(result)))
         return result
@@ -80,6 +86,8 @@ class AnnotSvHelper(HelperFunctions):
         if annotation_mode == self.FULL:
             return sv_length
         elif annotation_mode == self.SPLIT:
-            if float(sv_length) < 0:
+            if sv_length == ".":
+                return sv_length
+            elif float(sv_length) < 0:
                 return str(-int(float(overlapped_tx_length)))
             return overlapped_tx_length

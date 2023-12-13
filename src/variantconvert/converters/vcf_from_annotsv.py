@@ -589,8 +589,8 @@ class VcfFromAnnotsv(AbstractConverter):
 
                 if self.config["VCF_COLUMNS"]["FORMAT"] != "":
                     sample_cols = "\t".join(
-                        df_variant[self.config["VCF_COLUMNS"]["FORMAT"]]
-                        + [df_variant[c] for c in self.main_vcf_cols]
+                        [df_variant[self.config["VCF_COLUMNS"]["FORMAT"]]]
+                        + [df_variant[c] for c in self.sample_list]
                     )
                 else:
                     sample_cols = "GT"
@@ -608,3 +608,4 @@ class VcfFromAnnotsv(AbstractConverter):
 
 # TODO: refonte de la gestion des full/split
 # Si mode "full&split", au lieu d'ajouter des annotations, ajouter un variant par ligne avec la région correspondante
+# TODO: deal with the particular case of INS where 1 full = 1 split --> regroup all annotations instead?

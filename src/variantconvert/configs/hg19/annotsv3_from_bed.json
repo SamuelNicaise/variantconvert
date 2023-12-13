@@ -118,17 +118,17 @@
 				"Number": ".",
 				"Description": "Starting position of the SV in the chromosome"
 			},
-			"SV_end": {
+			"END": {
 				"Type": "String",
 				"Number": ".",
 				"Description": "Ending position of the SV in the chromosome"
 			},
-			"SV_length": {
+			"SVLEN": {
 				"Type": "String",
 				"Number": ".",
 				"Description": "Length of the SV (bp) (deletions have negative values)"
 			},
-			"SV_type": {
+			"SVTYPE": {
 				"Type": "String",
 				"Number": ".",
 				"Description": "Type of the SV (DEL, DUP, ...)"
