@@ -8,7 +8,7 @@
 		],
 		"keep_info": "true",
 		"keep_empty_info": "false",
-		"mode": "full"
+		"mode": "full&split"
 	},
 	"GENOME": {
 		"assembly": "GRCh38",
