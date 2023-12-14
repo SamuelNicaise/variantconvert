@@ -6,7 +6,9 @@
 		"unique_variant_id": [
 			"AnnotSV_ID"
 		],
-		"keep_info": "true"
+		"keep_info": "true",
+		"keep_empty_info": "false",
+		"mode": "full"
 	},
 	"GENOME": {
 		"assembly": "hs1",

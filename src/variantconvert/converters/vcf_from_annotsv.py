@@ -191,11 +191,7 @@ class VcfFromAnnotsv(AbstractConverter):
         # Do not keep 'base vcf col' in info field
         df = df.loc[
             :,
-            [
-                cols
-                for cols in df.columns
-                if cols not in ["ID", "REF", "ALT", "QUAL", "FILTER"] + self.sample_list
-            ],
+            [cols for cols in df.columns if cols not in self.main_vcf_cols + self.sample_list],
         ]
 
         annots = {}
@@ -289,7 +285,7 @@ class VcfFromAnnotsv(AbstractConverter):
                 annots_dic, supplemental_info_fields
             )
         else:
-            self.supplemental_header = []
+            self.supplemental_header = self._build_supplemental_header(annots_dic, [])
 
         return annots_dic
 
@@ -321,7 +317,11 @@ class VcfFromAnnotsv(AbstractConverter):
         # if not, add a default header for them too.
         for variant, dic in annots_dic.items():
             for annot in dic:
-                if annot not in known_descriptions and annot not in missing_annots:
+                if (
+                    annot not in known_descriptions
+                    and annot not in missing_annots
+                    and annot not in ["SV_end", "SV_length", "SV_type"]
+                ):
                     missing_annots.append(annot)
 
         missing_annots = additional_info_fields + [
@@ -490,11 +490,15 @@ class VcfFromAnnotsv(AbstractConverter):
         return main_cols
 
     def _get_info_dict(self, df_variant, helper):
+        # not info fields
+        ignored_cols = self.main_vcf_cols + self.sample_list
+        # special case handled separately
+        ignored_cols.append("INFO")
         # END, SVLEN and SVTYPE are reserved INFO keywords for SVs per VCF 4.3 specification
-        # They are the only INFO field that have to be renamed
-        ignored_cols = (
-            self.main_vcf_cols + ["INFO", "SV_end", "SV_length", "SV_type"] + self.sample_list
-        )
+        # They are renamed by creating new columns through config, and deleting the old ones
+        ignored_cols += ["SV_end", "SV_length", "SV_type"]
+        # ignore the "Index" col that is created when converting df to dict
+        ignored_cols.append("Index")
 
         for config_key, config_val in self.config["VCF_COLUMNS"]["INFO"].items():
             if is_helper_func(config_val):
@@ -502,14 +506,17 @@ class VcfFromAnnotsv(AbstractConverter):
                 args = [df_variant.get(c, None) for c in config_val[2:]]
                 result = func(*args)
                 df_variant[config_key] = result
-        # TODO: helper func for the 3 info fields and done
 
         info_dic = {}
         for k, v in df_variant.items():
             if k not in ignored_cols:
-                # if v == ".":
-                #     info_dic[k] = None
-                # else:
+                if (
+                    self.config["GENERAL"]["keep_empty_info"] in (False, "false", "False")
+                    and v == "."
+                ):
+                    continue
+                if isinstance(v, str):
+                    v = v.replace(";", ",")
                 info_dic[k] = remove_decimal_or_strip(v)
         return info_dic
 
@@ -532,10 +539,11 @@ class VcfFromAnnotsv(AbstractConverter):
         self.main_vcf_cols = self._get_main_vcf_cols()
 
         info_dic = self._build_info_dic()
-        info_keys = set()
-        for id, dic in info_dic.items():
-            for k in dic:
-                info_keys.add(k)
+        # info_keys = set()
+        # for id, dic in info_dic.items():
+        #     for k in dic:
+        #         info_keys.add(k)
+        # print(info_dic)
 
         # create the vcf
         with open(output_path, "w") as vcf:
@@ -555,7 +563,6 @@ class VcfFromAnnotsv(AbstractConverter):
             ]
 
             for df_variant in self.input_df.itertuples():
-                # print(getattr(df_variant, "AnnotSV_ID"))
                 df_variant = df_variant._asdict()  # for ease of dev
 
                 if (
@@ -606,6 +613,4 @@ class VcfFromAnnotsv(AbstractConverter):
                 vcf.write("\n")
 
 
-# TODO: refonte de la gestion des full/split
-# Si mode "full&split", au lieu d'ajouter des annotations, ajouter un variant par ligne avec la région correspondante
-# TODO: deal with the particular case of INS where 1 full = 1 split --> regroup all annotations instead?
+# TODO: keep_info:true doesnt keep info

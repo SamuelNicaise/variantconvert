@@ -8,7 +8,8 @@
 		],
 		"default_present_genotype": "0/1",
 		"default_absent_genotype": "./.",
-		"mode": "full&split"
+		"mode": "full&split",
+		"keep_empty_info": "false"
 	},
 	"GENOME": {
 		"assembly": "GRCh37",

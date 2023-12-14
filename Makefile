@@ -20,4 +20,4 @@ install:
 
 #a current issue I'm trying to fix
 debug:
-	python src/variantconvert/__main__.py convert -i tests/data/mini.tsv -o debugmini.vcf -fi annotsv -fo vcf -c src/variantconvert/configs/hg19/annotsv3_from_vcf.json
+	python src/variantconvert/__main__.py convert -i tests/data/mini_annotsv.tsv -o debugmini.vcf -fi annotsv -fo vcf -c src/variantconvert/configs/hg19/annotsv3_from_vcf.json

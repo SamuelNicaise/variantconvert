@@ -21,8 +21,6 @@ def remove_decimal(func):
 
     def wrapper(*args, **kwargs):
         result = func(*args, **kwargs)
-        print(*args)
-        print(result)
         if result == None:
             log.warning(f"Helper with params '{args}' returned None (should be '.')")
             return result

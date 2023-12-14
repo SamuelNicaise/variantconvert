@@ -6,9 +6,9 @@
 		"unique_variant_id": [
 			"AnnotSV_ID"
 		],
-		"mode": "full",
+		"mode": "full&split",
 		"keep_info": "true",
-		"keep_empty_info": "true"
+		"keep_empty_info": "false"
 	},
 	"GENOME": {
 		"assembly": "hg19",
