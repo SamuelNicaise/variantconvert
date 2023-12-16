@@ -497,8 +497,6 @@ class VcfFromAnnotsv(AbstractConverter):
         # END, SVLEN and SVTYPE are reserved INFO keywords for SVs per VCF 4.3 specification
         # They are renamed by creating new columns through config, and deleting the old ones
         ignored_cols += ["SV_end", "SV_length", "SV_type"]
-        # ignore the "Index" col that is created when converting df to dict
-        ignored_cols.append("Index")
 
         for config_key, config_val in self.config["VCF_COLUMNS"]["INFO"].items():
             if is_helper_func(config_val):
@@ -562,8 +560,8 @@ class VcfFromAnnotsv(AbstractConverter):
                 index_natsorted(self.input_df[self.config["VCF_COLUMNS"]["#CHROM"]])
             ]
 
-            for df_variant in self.input_df.itertuples():
-                df_variant = df_variant._asdict()  # for ease of dev
+            for idx, row in self.input_df.iterrows():
+                df_variant = row.to_dict()  # for ease of dev
 
                 if (
                     self.config["GENERAL"]["mode"] == "full"
