@@ -12,7 +12,7 @@ from converters.abstract_converter import AbstractConverter
 
 sys.path.append("..")
 from commons import clean_string, is_helper_func, rename_duplicates_in_list, varank_to_vcf_coords
-from helper_functions import HelperFunctions
+from variantconvert.helpers.helper_functions import HelperFunctions
 
 
 class VcfFromVarank(AbstractConverter):

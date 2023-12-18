@@ -12,7 +12,7 @@ import pandas as pd
 from converters.abstract_converter import AbstractConverter
 
 sys.path.append("..")
-from helper_functions import HelperFunctions
+from variantconvert.helpers.helper_functions import HelperFunctions
 
 
 class VcfFromBed:

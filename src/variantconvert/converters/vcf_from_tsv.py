@@ -9,7 +9,7 @@ from converters.abstract_converter import AbstractConverter
 
 sys.path.append("..")
 from commons import create_vcf_header, is_helper_func, clean_string
-from helper_functions import HelperFunctions
+from variantconvert.helpers.helper_functions import HelperFunctions
 
 
 class VcfFromTsv(AbstractConverter):

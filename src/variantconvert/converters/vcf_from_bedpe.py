@@ -9,7 +9,7 @@ from converters.vcf_from_breakpoints import VcfFromBreakpoints
 
 sys.path.append("..")
 from commons import create_vcf_header, is_helper_func, clean_string
-from helper_functions import HelperFunctions
+from variantconvert.helpers.helper_functions import HelperFunctions
 from variant import Variant
 
 

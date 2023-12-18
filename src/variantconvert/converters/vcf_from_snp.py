@@ -32,7 +32,7 @@ import re
 from converters.abstract_converter import AbstractConverter
 
 sys.path.append(os.path.join(os.path.dirname(__file__), ".."))
-from helper_functions import HelperFunctions
+from variantconvert.helpers.helper_functions import HelperFunctions
 from commons import create_vcf_header, is_helper_func
 from variant import Variant
 
