@@ -132,34 +132,30 @@ class VcfFromAnnotsv(AbstractConverter):
 
     def _build_input_annot_df(self):
         """
-        remove FORMAT, Samples_ID, and each <sample> column
-        TODO: remove vcf base cols ; INFO field
+        remove vcf base cols, FORMAT, Samples_ID, and each <sample> column
+        expand 'INFO' field from origin vcf into new annotation columns
+        perform some checks
         """
         columns_to_drop = [v for v in self.sample_list]
         columns_to_drop += [v for v in self.main_vcf_cols]
         columns_to_drop.append(self.config["VCF_COLUMNS"]["SAMPLE"])
         columns_to_drop.append(self.config["VCF_COLUMNS"]["FORMAT"])
 
-        if self.config["GENERAL"].get("keep_info", False) in ("true", "True"):
-            log.debug(
-                f"config['GENERAL']['keep_info'] was set to string:'{self.config['GENERAL']['keep_info']}' instead of a boolean. Converting value to True"
-            )
-            self.config["GENERAL"]["keep_info"] = True
-        if self.config["GENERAL"].get("keep_info", False) == True:
+        #TODO: properly verify all booleans on config load
+        if self.config["GENERAL"].get("keep_info", False) in (True, "true", "True"):
+            self.keep_info = True
             self.original_info_col = self.input_df[self.config["VCF_COLUMNS"]["INFO"]["INFO"]]
+        else:
+            self.keep_info = False
         columns_to_drop.append(self.config["VCF_COLUMNS"]["INFO"]["INFO"])
+        
+        df = self.input_df.copy()
         for col in columns_to_drop:
             try:
-                df = self.input_df.drop([col], axis=1)
+                df = df.drop([col], axis=1)
             except KeyError:
                 log.debug(f"Failed to drop column: {col}")
 
-        # if self.config["GENERAL"].get("keep_info", False) == True:
-        #     cols_without_info = df.columns.difference(["INFO"])
-        #     df[cols_without_info] = df[cols_without_info].replace(
-        #         ";", ",", regex=True
-        #     )  # any ';' in annots will ruin the vcf INFO field
-        # else:
         df = df.replace(";", ",", regex=True)  # any ';' in annots will ruin the vcf INFO field
 
         # TODO: check if CHROM col is in compliance with config ref genome (chrX or X)
@@ -176,116 +172,45 @@ class VcfFromAnnotsv(AbstractConverter):
             )
         return df
 
-    def _merge_full_and_split(self, df):
-        """
-        input: df of a single annotSV_ID ; containing only annotations (no sample/FORMAT data)
-        it can contain full and/or split annotations
-
-        returns a single line dataframe with all annotations merged properly
-        """
-        if self.config["GENERAL"]["mode"] not in ("full&split", "full"):
-            raise ValueError(
-                "Unexpected value in json config['GENERAL']['mode']: "
-                "only 'full&split' and 'full' mode are implemented."
-            )
-        # Do not keep 'base vcf col' in info field
-        df = df.loc[
-            :,
-            [cols for cols in df.columns if cols not in self.main_vcf_cols + self.sample_list],
-        ]
-
-        annots = {}
-        dfs = {}
-        for typemode, df_type in df.groupby(self.config["VCF_COLUMNS"]["INFO"]["Annotation_mode"]):
-            if typemode not in ("full", "split"):
-                raise ValueError("Annotation type is assumed to be only 'full' or 'split'")
-            dfs[typemode] = df_type
-
-        # deal with full
-        if "full" not in dfs.keys():
-            # still need to init columns
-            if "split" not in dfs.keys():
-                log.warning(
-                    "Input does not include AnnotSV's 'Annotation_mode' column. This is necessary to know how to deal with annotations. The INFO field will be empty."
-                )
-                return {}
-            for ann in dfs["split"].columns:
-                annots[ann] = "."
-        else:
-            if len(dfs["full"].index) > 1:
-                raise ValueError(
-                    "Each variant is assumed to only have one single line of 'full' annotation"
-                )
-            # remove float decimal full rows
-            for ann in dfs["full"].columns:
-                annots[ann] = remove_decimal_or_strip(dfs["full"].loc[df.index[0], ann])
-
-        if self.config["GENERAL"]["mode"] == "full":
-            return annots
-
-        # deal with split
-        if "split" not in dfs.keys():
-            return annots
-        # each info field split
-        for ann in dfs["split"].columns:
-            transform = []
-            if ann == self.config["VCF_COLUMNS"]["INFO"]["Annotation_mode"]:
-                annots[ann] = self.config["GENERAL"]["mode"]
-                continue
-            # if you only keep full annotations split is lost advitam eternam
-            # list of all values in each columns
-            for splitval in dfs["split"][ann].tolist():
-                transform.append(remove_decimal_or_strip(splitval))
-            # we don't report split infos only if there are ALL equal to full row or they are stack to dot
-            # if all([nq == annots[ann] for nq in transform]) or all(
-            #     eq == "." for eq in transform
-            # ):  # or ann in except_full_list:
-
-            #    continue
-            # In case of full and n split are different we keep values from all (more than 2 differencies)
-            # else:
-            values = [annots[ann]]
-            values.extend(transform)
-            annots[ann] = "|".join(values)
-            # TODO in case of pipe already present in annotations change separator, maybe '+'
-
-        # remove empty annots
-        annots = {k: v for k, v in annots.items()}
-        return annots
-
     def _build_info_dic(self):
         """
         Output: dictionary with key: annotsv_ID ; value: a key-value dictionary of all annotations
         This will be used to write the INFO field
         """
-        input_annot_df = self._build_input_annot_df()
+        self.input_annot_df = self._build_input_annot_df()
         annots_dic = {}
-        id_col = self.config["VCF_COLUMNS"]["INFO"]["AnnotSV_ID"]
         supplemental_info_fields = []
 
-        for variant_id, df_variant in input_annot_df.groupby(id_col):
-            merged_annots = self._merge_full_and_split(df_variant)
-            annots_dic[variant_id] = merged_annots
+        # method of versions < 2.0.0: merge full and split annotations into one variant
+        # id_col = self.config["VCF_COLUMNS"]["INFO"]["AnnotSV_ID"]
+        # for variant_id, df_variant in self.input_annot_df.groupby(id_col):
+        #     merged_annots = self._merge_full_and_split(df_variant)
+        #     annots_dic[variant_id] = merged_annots
+        
+        for variant_idx, df_variant in self.input_annot_df.iterrows():
+            annots_dic[variant_idx] = df_variant.to_dict()
 
-            if self.config["GENERAL"].get("keep_info", False) == True:
+            if variant_idx == 0:
+                log.debug(f"annots dic first variant before adding INFO: {annots_dic[0]}")
+
+            if self.keep_info:
                 info_dict = info_string_to_dict(
-                    self.original_info_col.iloc[df_variant.index].iloc[0]
+                    self.original_info_col.iloc[variant_idx]
                 )
-                log.debug(f"info_dict before adding INFO: {info_dict}")
                 for annot in info_dict:
-                    if annot not in annots_dic[variant_id]:
-                        annots_dic[variant_id][annot] = info_dict[annot]
+                    if annot not in annots_dic[variant_idx]:
+                        annots_dic[variant_idx][annot] = info_dict[annot]
                         if annot not in supplemental_info_fields:
                             supplemental_info_fields.append(annot)
 
-                log.debug(f"info_dict after: {info_dict}")
-
-        if self.config["GENERAL"].get("keep_info", False) == True:
+        if self.keep_info:
             self.supplemental_header = self._build_supplemental_header(
                 annots_dic, supplemental_info_fields
             )
         else:
             self.supplemental_header = self._build_supplemental_header(annots_dic, [])
+
+        log.debug(f"annots dic first variant after adding info: {annots_dic[0]}")
 
         return annots_dic
 
@@ -311,6 +236,7 @@ class VcfFromAnnotsv(AbstractConverter):
         supplemental_header = []
         known_descriptions = set(self.config["COLUMNS_DESCRIPTION"]["INFO"].keys())
         missing_annots = []
+        print(known_descriptions)
 
         # this function was originally made to rebuild the lost header of VCF annotations in "INFO" column in VCF>AnnotSV>VCF conversions.
         # at this point, we check if all INFO fields were defined in config.
@@ -327,6 +253,8 @@ class VcfFromAnnotsv(AbstractConverter):
         missing_annots = additional_info_fields + [
             v for v in missing_annots if v not in additional_info_fields
         ]
+        #filter a second time because additional info fields may be have duplicates with known descriptions
+        missing_annots = [v for v in missing_annots if v not in known_descriptions]
         log.debug(f"known desc:{missing_annots}")
 
         for field in missing_annots:
@@ -367,104 +295,6 @@ class VcfFromAnnotsv(AbstractConverter):
             )
         return supplemental_header
 
-    # TODO: merge this with the other create_vcf_header method if possible
-    # Making this method static is an attempt at making it possible to kick it out of the class
-    @staticmethod
-    def _create_vcf_header(input_path, config, sample_list, input_df, info_keys):
-        header = []
-        header.append("##fileformat=VCFv4.2")
-        header.append("##fileDate=%s" % time.strftime("%d/%m/%Y"))
-        header.append("##source=" + config["GENERAL"]["origin"])
-        header.append("##InputFile=%s" % os.path.abspath(input_path))
-
-        if config["VCF_COLUMNS"]["FILTER"] in input_df.columns:
-            for filter in set(input_df[config["VCF_COLUMNS"]["FILTER"]].to_list()):
-                header.append("##FILTER=<ID=" + str(filter) + ',Description=".">')
-        else:
-            header.append('##FILTER=<ID=PASS,Description="Passed filter">')
-
-        # identify existing values in header_dic...
-        header_dic = {}
-        header_dic["REF"] = set(input_df[config["VCF_COLUMNS"]["REF"]].to_list())
-        header_dic["ALT"] = set(input_df[config["VCF_COLUMNS"]["ALT"]].to_list())
-        # ... then for each of them, check if a description was given in the config
-        for section in header_dic:
-            for key in header_dic[section]:
-                if key in config["COLUMNS_DESCRIPTION"][section]:
-                    info_config = config["COLUMNS_DESCRIPTION"][section][key]
-                    header.append(
-                        "##"
-                        + section
-                        + "=<ID="
-                        + key
-                        + ',Description="'
-                        + info_config["Description"]
-                        + '">'
-                    )
-                else:
-                    header.append(
-                        "##"
-                        + section
-                        + "=<ID="
-                        + key
-                        + ',Description="Imported from '
-                        + config["GENERAL"]["origin"]
-                        + '">'
-                    )
-
-        # same as before, but for header elements that also have a type...
-        header_dic = {}
-        header_dic["INFO"] = info_keys
-        header_dic["FORMAT"] = set()
-        for format_field in input_df[config["VCF_COLUMNS"]["FORMAT"]].to_list():
-            for format in format_field.split(":"):
-                header_dic["FORMAT"].add(format)
-        # ... then for each of them, check if a description was given in the config
-        for section in header_dic:
-            for key in header_dic[section]:
-                if key in config["COLUMNS_DESCRIPTION"][section]:
-                    info_config = config["COLUMNS_DESCRIPTION"][section][key]
-                    header.append(
-                        "##"
-                        + section
-                        + "=<ID="
-                        + key
-                        + ",Number=.,Type="
-                        + info_config["Type"]
-                        + ',Description="'
-                        + info_config["Description"]
-                        + '">'
-                    )
-                else:
-                    header.append(
-                        "##"
-                        + section
-                        + "=<ID="
-                        + key
-                        + ',Number=.,Type=String,Description="Imported from '
-                        + config["GENERAL"]["origin"]
-                        + '">'
-                    )
-
-        header += config["GENOME"]["vcf_header"]
-        header.append(
-            "\t".join(
-                [
-                    "#CHROM",
-                    "POS",
-                    "ID",
-                    "REF",
-                    "ALT",
-                    "QUAL",
-                    "FILTER",
-                    "INFO",
-                    "FORMAT",
-                ]
-                + sample_list
-            )
-        )
-        return header
-
     def _get_main_vcf_cols(self):
         """
         Some columns (cols_to_init_now) are not directly linked to a Varank TSV column.
@@ -489,34 +319,40 @@ class VcfFromAnnotsv(AbstractConverter):
 
         return main_cols
 
-    def _get_info_dict(self, df_variant, helper):
+    def _get_variant_info_dict(self, input_dic, helper):
+        """
+        input_dic is the info_dict entry corresponding to the current line being written
+        It has already some modifications done such as transforming the "INFO" column into separate annotations 
+
+        Returns the final annotations dict that will be written into the output vcf for the current line
+        """
         # not info fields
         ignored_cols = self.main_vcf_cols + self.sample_list
-        # special case handled separately
-        ignored_cols.append("INFO")
         # END, SVLEN and SVTYPE are reserved INFO keywords for SVs per VCF 4.3 specification
         # They are renamed by creating new columns through config, and deleting the old ones
         ignored_cols += ["SV_end", "SV_length", "SV_type"]
-
         for config_key, config_val in self.config["VCF_COLUMNS"]["INFO"].items():
             if is_helper_func(config_val):
                 func = helper.get(config_val[1])
-                args = [df_variant.get(c, None) for c in config_val[2:]]
+                args = [input_dic.get(c, None) for c in config_val[2:]]
                 result = func(*args)
-                df_variant[config_key] = result
+                input_dic[config_key] = result
 
-        info_dic = {}
-        for k, v in df_variant.items():
+        cleaned_info_dic = {}
+        for k, v in input_dic.items():
             if k not in ignored_cols:
                 if (
                     self.config["GENERAL"]["keep_empty_info"] in (False, "false", "False")
                     and v == "."
                 ):
                     continue
-                if isinstance(v, str):
-                    v = v.replace(";", ",")
-                info_dic[k] = remove_decimal_or_strip(v)
-        return info_dic
+                if v != None:
+                    if isinstance(v, str):
+                        v = v.replace(";", ",")
+                    cleaned_info_dic[k] = remove_decimal_or_strip(v)
+                else:
+                    cleaned_info_dic[k] = None
+        return cleaned_info_dic
 
     def convert(self, tsv, output_path):
         """
@@ -536,12 +372,7 @@ class VcfFromAnnotsv(AbstractConverter):
         self.sample_list = self._get_sample_list()
         self.main_vcf_cols = self._get_main_vcf_cols()
 
-        info_dic = self._build_info_dic()
-        # info_keys = set()
-        # for id, dic in info_dic.items():
-        #     for k in dic:
-        #         info_keys.add(k)
-        # print(info_dic)
+        info_input_dic = self._build_info_dic()
 
         # create the vcf
         with open(output_path, "w") as vcf:
@@ -555,13 +386,13 @@ class VcfFromAnnotsv(AbstractConverter):
             for l in vcf_header:
                 vcf.write(l + "\n")
 
-            id_col = self.config["VCF_COLUMNS"]["INFO"]["AnnotSV_ID"]
+            # id_col = self.config["VCF_COLUMNS"]["INFO"]["AnnotSV_ID"]
             self.input_df = self.input_df.iloc[
                 index_natsorted(self.input_df[self.config["VCF_COLUMNS"]["#CHROM"]])
             ]
 
-            for idx, row in self.input_df.iterrows():
-                df_variant = row.to_dict()  # for ease of dev
+            for row_idx, row_data in self.input_df.iterrows():
+                df_variant = row_data.to_dict()  # for ease of dev
 
                 if (
                     self.config["GENERAL"]["mode"] == "full"
@@ -572,7 +403,7 @@ class VcfFromAnnotsv(AbstractConverter):
                 # fill columns that need a helper func
                 for config_key, config_val in self.config["VCF_COLUMNS"].items():
                     if config_key == "INFO":
-                        continue  # dealt with by _get_info_dict()
+                        continue  # dealt with by _get_variant_info_dict()
                     elif config_key == "FILTER" and config_val == "":
                         df_variant[config_key] = "PASS"
                     elif is_helper_func(config_val):
@@ -585,7 +416,7 @@ class VcfFromAnnotsv(AbstractConverter):
                 vcf.write(main_cols + "\t")
 
                 info_list = []
-                for k, v in self._get_info_dict(df_variant, helper).items():
+                for k, v in self._get_variant_info_dict(info_input_dic[row_idx], helper).items():
                     if v != None:
                         info_list.append(k + "=" + v)
                     else:
@@ -610,5 +441,3 @@ class VcfFromAnnotsv(AbstractConverter):
                 vcf.write(sample_cols)
                 vcf.write("\n")
 
-
-# TODO: keep_info:true doesnt keep info
