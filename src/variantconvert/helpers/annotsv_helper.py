@@ -10,7 +10,7 @@ import sys
 
 sys.path.append(os.path.join(os.path.dirname(__file__), ".."))
 from commons import get_genome
-from helper_functions import HelperFunctions
+from variantconvert.helpers.helper_functions import HelperFunctions
 
 
 def remove_decimal(func):
@@ -52,11 +52,13 @@ class AnnotSvHelper(HelperFunctions):
             )
 
     def get_pos_annotsv(self, sv_start, tx_start, annotation_mode):
-        self._check_annotation_mode(annotation_mode)
-        # tx_start won't cast as int directly. Compare as floats to do 1 less cast.
-        if annotation_mode == self.SPLIT and float(tx_start) > float(sv_start):
-            return str(int(float(tx_start)))
+        """Unsure if this is a good idea. For now I'll return the original value and let users use tx_start by themselves"""
         return sv_start
+        # self._check_annotation_mode(annotation_mode)
+        # # tx_start won't cast as int directly. Compare as floats to do 1 less cast.
+        # if annotation_mode == self.SPLIT and float(tx_start) > float(sv_start):
+        #     return str(int(float(tx_start)))
+        # return sv_start
 
     def get_ref_annotsv(self, chrom, start):
         f = get_genome(self.config["GENOME"]["path"])
@@ -72,20 +74,24 @@ class AnnotSvHelper(HelperFunctions):
 
     @remove_decimal
     def get_end_annotsv(self, annotation_mode, sv_end, tx_end):
-        if annotation_mode == self.FULL:
-            return sv_end
-        elif annotation_mode == self.SPLIT:
-            if sv_end < tx_end:
-                return sv_end
-            return tx_end
+        """Unsure if this is a good idea. For now I'll return the original value and let users use tx_end by themselves"""
+        return sv_end
+        # if annotation_mode == self.FULL:
+        #     return sv_end
+        # elif annotation_mode == self.SPLIT:
+        #     if sv_end < tx_end:
+        #         return sv_end
+        #     return tx_end
 
     @remove_decimal
     def get_svlen_annotsv(self, annotation_mode, sv_length, overlapped_tx_length):
-        if annotation_mode == self.FULL:
-            return sv_length
-        elif annotation_mode == self.SPLIT:
-            if sv_length == ".":
-                return sv_length
-            elif float(sv_length) < 0:
-                return str(-int(float(overlapped_tx_length)))
-            return overlapped_tx_length
+        """Unsure if this is a good idea. For now I'll return the original value and let users use overlapped_tx_length by themselves"""
+        return sv_length
+        # if annotation_mode == self.FULL:
+        #     return sv_length
+        # elif annotation_mode == self.SPLIT:
+        #     if sv_length == ".":
+        #         return sv_length
+        #     elif float(sv_length) < 0:
+        #         return str(-int(float(overlapped_tx_length)))
+        #     return overlapped_tx_length
