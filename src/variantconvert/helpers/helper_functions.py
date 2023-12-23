@@ -72,7 +72,7 @@ class HelperFunctions:
             "##contig=<ID=chr"
         ) and not chrom.startswith("chr"):
             chrom = "chr" + str(chrom)
-        return f[chrom][int(start) - 1].seq
+        return f[chrom][int(start) - 1].seq.upper()
 
     def get_ref_from_snp(self, chrom, start):
         f = get_genome(self.config["GENOME"]["path"])
@@ -91,7 +91,7 @@ class HelperFunctions:
 
     def get_ref_from_canoes_bed(self, chr, start):
         f = get_genome(self.config["GENOME"]["path"])
-        return f["chr" + str(chr)][int(start) - 1].seq
+        return f["chr" + str(chr)][int(start) - 1].seq.upper()
 
     def get_ref_from_breakpoint(self, left_breakpoint, right_breakpoint):
         f = get_genome(self.config["GENOME"]["path"])
@@ -107,8 +107,8 @@ class HelperFunctions:
         right_start = right_breakpoint.split(":")[1]
 
         return (
-            f[left_chr][int(left_start) - 1].seq,
-            f[right_chr][int(right_start) - 1].seq,
+            f[left_chr][int(left_start) - 1].seq.upper(),
+            f[right_chr][int(right_start) - 1].seq.upper(),
         )
 
     def get_alt_with_breakpoints(self, chr1, pos1, strand1, ref1, chr2, pos2, strand2, ref2):

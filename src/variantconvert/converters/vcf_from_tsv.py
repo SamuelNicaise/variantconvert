@@ -77,6 +77,7 @@ class VcfFromTsv(AbstractConverter):
         self.output_path = output_path
         self._init_dataframe()
         sample_list = self._get_sample_list()
+        print(f"sample_list:{sample_list}")
         helper = HelperFunctions(self.config)
 
         with open(output_path, "w") as vcf:
@@ -133,12 +134,14 @@ class VcfFromTsv(AbstractConverter):
                 # monosample input
                 if len(sample_list) == 1:
                     sample_field = []
-                    for key, val in self.config["VCF_COLUMNS"]["FORMAT"].items():
-                        if key == "GT" and val == "":
-                            sample_field.append("0/1")
-                            continue
-                        sample_field.append(data[val][index])
-                    line += ":".join(sample_field)
+                    for index in unique_id_to_index_list[data[self.UNIQUE_ID][i]]:
+                        for key, val in self.config["VCF_COLUMNS"]["FORMAT"].items():
+                            if key == "GT" and val == "":
+                                sample_field.append("0/1")
+                                continue
+                            sample_field.append(data[val][index])
+                        line += ":".join(sample_field)
+                    #TODO: deal with monosample files with variants that are not associated to any sample
 
                 # multisample input
                 else:

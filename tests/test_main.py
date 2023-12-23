@@ -118,6 +118,32 @@ def test_decon_to_vcf(tmp_path):
     identical_except_date_and_genome([control, decon_tester.outputFile])
 
 
+def test_decon_one_sample_to_vcf(tmp_path):
+    decon_tester = type(
+        "obj",
+        (object,),
+        {
+            "inputFile": osj(
+                os.path.dirname(__file__),
+                "data",
+                "DECON.one_sample.all.tsv",
+            ),
+            "outputFile": osj(tmp_path, "decon_one_sample.vcf"),
+            "inputFormat": "tsv",
+            "outputFormat": "vcf",
+            "configFile": osj(variantconvert.__default_config__, "hg19", "decon.json"),
+            "verbosity": "debug",
+        },
+    )
+    remove_if_exists(decon_tester.outputFile)
+    main_convert(decon_tester)
+    assert os.path.exists(decon_tester.outputFile)
+
+    control = osj(os.path.dirname(__file__), "controls", "decon_one_sample.vcf")
+    identical_except_date_and_genome([control, decon_tester.outputFile])
+
+
+
 def test_annotsv_to_vcf(tmp_path):
     annotsv_tester = type(
         "obj",
