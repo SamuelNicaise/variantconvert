@@ -1,7 +1,7 @@
 VERSION=$$(grep '__version__ =' src/variantconvert/__init__.py | cut -d '"' -f2)
 
 # use run like this:
-# ($make run) -args -for --variantconvert
+# $(make run) -args -for --variantconvert
 # otherwise makefile thinks args are for itself
 run:
 	@echo python src/variantconvert/__main__.py
@@ -20,4 +20,4 @@ install:
 
 #a current issue I'm trying to fix
 debug:
-	python src/variantconvert/__main__.py convert -i tests/data/mini_annotsv.tsv -o debugmini.vcf -fi annotsv -fo vcf -c src/variantconvert/configs/hg19/annotsv3_from_vcf.json
+	python src/variantconvert/__main__.py convert -i tests/data/annotsv_wt_samples.tsv -o annotsv_wt_samples.vcf -fi annotsv -fo vcf -c src/variantconvert/configs/hg19/annotsv3_from_vcf.json

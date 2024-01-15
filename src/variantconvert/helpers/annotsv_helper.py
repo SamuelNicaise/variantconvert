@@ -25,7 +25,7 @@ def remove_decimal(func):
             log.warning(f"Helper with params '{args}' returned None (should be '.')")
             return result
         if result.endswith(".0"):
-            return str(int(float(result)))
+            return result[:-2]
         return result
 
     return wrapper

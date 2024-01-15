@@ -197,9 +197,11 @@ def create_vcf_header(
 def remove_decimal_or_strip(value):
     # To prevent bad format conversions by pandas with INFO field
     if is_float(value):
-        value = str(int(float(value)))
+        value = str(float(value))
     elif is_int(value):
         value = str(value)
+    if value.endswith(".0"):
+        value = value[:-2]
     # forbidden to have spaces in INFO fields in VCF v4.2 (for IGV compatibility)
     value = value.replace(" ", "_")
     return value
