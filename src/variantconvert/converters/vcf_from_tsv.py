@@ -141,7 +141,7 @@ class VcfFromTsv(AbstractConverter):
                                 continue
                             sample_field.append(data[val][index])
                         line += ":".join(sample_field)
-                    #TODO: deal with monosample files with variants that are not associated to any sample
+                    # TODO: deal with monosample files with variants that are not associated to any sample
 
                 # multisample input
                 else:

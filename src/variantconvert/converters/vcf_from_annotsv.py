@@ -141,14 +141,14 @@ class VcfFromAnnotsv(AbstractConverter):
         columns_to_drop.append(self.config["VCF_COLUMNS"]["SAMPLE"])
         columns_to_drop.append(self.config["VCF_COLUMNS"]["FORMAT"])
 
-        #TODO: properly verify all booleans on config load
+        # TODO: properly verify all booleans on config load
         if self.config["GENERAL"].get("keep_info", False) in (True, "true", "True"):
             self.keep_info = True
             self.original_info_col = self.input_df[self.config["VCF_COLUMNS"]["INFO"]["INFO"]]
         else:
             self.keep_info = False
         columns_to_drop.append(self.config["VCF_COLUMNS"]["INFO"]["INFO"])
-        
+
         df = self.input_df.copy()
         for col in columns_to_drop:
             try:
@@ -186,7 +186,7 @@ class VcfFromAnnotsv(AbstractConverter):
         # for variant_id, df_variant in self.input_annot_df.groupby(id_col):
         #     merged_annots = self._merge_full_and_split(df_variant)
         #     annots_dic[variant_id] = merged_annots
-        
+
         for variant_idx, df_variant in self.input_annot_df.iterrows():
             annots_dic[variant_idx] = df_variant.to_dict()
 
@@ -194,9 +194,7 @@ class VcfFromAnnotsv(AbstractConverter):
                 log.debug(f"annots dic first variant before adding INFO: {annots_dic[0]}")
 
             if self.keep_info:
-                info_dict = info_string_to_dict(
-                    self.original_info_col.iloc[variant_idx]
-                )
+                info_dict = info_string_to_dict(self.original_info_col.iloc[variant_idx])
                 for annot in info_dict:
                     if annot not in annots_dic[variant_idx]:
                         annots_dic[variant_idx][annot] = info_dict[annot]
@@ -252,7 +250,7 @@ class VcfFromAnnotsv(AbstractConverter):
         missing_annots = additional_info_fields + [
             v for v in missing_annots if v not in additional_info_fields
         ]
-        #filter a second time because additional info fields may be have duplicates with known descriptions
+        # filter a second time because additional info fields may be have duplicates with known descriptions
         missing_annots = [v for v in missing_annots if v not in known_descriptions]
         log.debug(f"known desc:{missing_annots}")
 
@@ -321,7 +319,7 @@ class VcfFromAnnotsv(AbstractConverter):
     def _get_variant_info_dict(self, input_dic, helper):
         """
         input_dic is the info_dict entry corresponding to the current line being written
-        It has already some modifications done such as transforming the "INFO" column into separate annotations 
+        It has already some modifications done such as transforming the "INFO" column into separate annotations
 
         Returns the final annotations dict that will be written into the output vcf for the current line
         """
@@ -439,4 +437,3 @@ class VcfFromAnnotsv(AbstractConverter):
                             sample_cols += f"\t{self.config['GENERAL']['default_absent_genotype']}"
                 vcf.write(sample_cols)
                 vcf.write("\n")
-

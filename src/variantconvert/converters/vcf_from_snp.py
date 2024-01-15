@@ -36,13 +36,13 @@ from variantconvert.helpers.helper_functions import HelperFunctions
 from commons import create_vcf_header, is_helper_func
 from variant import Variant
 
+
 class VcfFromSnp(AbstractConverter):
     def _init_dataframe(self):
         self.snp_data = pd.read_csv(self.filepath, sep="\t", index_col=0)
         self.snp_data.reset_index(drop=True, inplace=True)
 
     def _get_sample_id(self):
-
         self.sample_list = []
         self.sample_alt = {}
         for i in range(self.snp_data.shape[1]):
@@ -102,7 +102,6 @@ class VcfFromSnp(AbstractConverter):
                         if alt == ".":
                             alt = ""
                         for str_alt in alt:
-
                             if str_alt != ",":
                                 alt_nw = alt_nw + self.nuc_del + str_alt
                             else:
@@ -135,7 +134,6 @@ class VcfFromSnp(AbstractConverter):
                 alt = all_2
 
         elif alt != "":
-
             if all_1 != ref and alt.find(all_1) == -1:
                 if alt.find(".") == 0:
                     alt = all_1
@@ -272,6 +270,5 @@ class VcfFromSnp(AbstractConverter):
 
                 vcf.write("\t".join(line) + "\n")
 
-        if helper.error_value > 0 :
+        if helper.error_value > 0:
             log.warning(f"{helper.error_value} variant positions not found in ref genome")
-
