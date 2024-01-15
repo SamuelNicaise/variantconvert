@@ -40,6 +40,7 @@ If you need a place to store variables unrelated to the vcf file (e.g number of 
 """
 
 import argparse
+import json
 import logging as log
 import os
 import variantconvert
@@ -47,7 +48,7 @@ import sys
 
 sys.path.append(os.path.join(os.path.dirname(__file__), "."))
 from commons import set_log_level
-from config import main_config
+from config import get_full_path, main_config
 from converter_factory import ConverterFactory
 from initialize import main_init
 from varank_batch import main_varank_batch
@@ -55,15 +56,23 @@ from varank_batch import main_varank_batch
 
 def main_convert(args):
     set_log_level(args.verbosity)
-    if args.inputFormat.lower() == "decon":
+
+    config_path = get_full_path(args.configFile)
+    log.debug(f"Using config: {config_path}")
+    with open(config_path, "r") as f:
+        config = json.load(f)
+    input_format = config["GENERAL"].get("input_format", "").lower()
+    output_format = config["GENERAL"].get("output_format", "").lower()
+
+    if input_format == "decon":
         raise ValueError("DECON is handled as a TSV conversion. Use 'tsv' as input format")
 
     factory = ConverterFactory()
     converter = factory.get_converter(
-        args.inputFormat.lower(), args.outputFormat.lower(), args.configFile
+        input_format, output_format, config_path
     )
 
-    if args.inputFormat == "varank":
+    if input_format == "varank":
         if args.coordConversionFile == "":
             raise ValueError(
                 "Converting from a Varank file requires setting the --coordConversionFile argument to an existing file"
@@ -90,12 +99,6 @@ def main():
     parser_convert.set_defaults(subparser="convert")
     parser_convert.add_argument("-i", "--inputFile", type=str, required=True, help="Input file")
     parser_convert.add_argument("-o", "--outputFile", type=str, required=True, help="Output file")
-    parser_convert.add_argument(
-        "-fi", "--inputFormat", type=str, required=True, help="Input file format"
-    )
-    parser_convert.add_argument(
-        "-fo", "--outputFormat", type=str, required=True, help="Output file format"
-    )
     parser_convert.add_argument(
         "-c",
         "--configFile",

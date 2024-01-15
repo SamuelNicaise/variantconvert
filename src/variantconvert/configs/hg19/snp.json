@@ -1,6 +1,8 @@
 {
     "GENERAL": {
         "origin": "SNP array",
+        "input_format": "snp",
+        "output_format": "vcf",
         "skip_rows": 0,
         "comment": "",
         "unique_variant_id": ""

@@ -20,4 +20,4 @@ install:
 
 #a current issue I'm trying to fix
 debug:
-	python src/variantconvert/__main__.py convert -i tests/data/annotsv_wt_samples.tsv -o annotsv_wt_samples.vcf -fi annotsv -fo vcf -c src/variantconvert/configs/hg19/annotsv3_from_vcf.json
+	python src/variantconvert/__main__.py convert -i tests/data/annotsv_wt_samples.tsv -o annotsv_wt_samples.vcf -c src/variantconvert/configs/hg19/annotsv3_from_vcf.json
