@@ -1,6 +1,6 @@
-<img src="https://raw.githubusercontent.com/SamuelNicaise/variantconvert/master/images/variantconvert_large.png" alt="variantconvert logo">
+<img src="https://raw.githubusercontent.com/SamuelNicaise/variantconvert/master/images/variantconvert_large.png" alt="variantconvert logo"/>
 
-The variantconvert module is an extendable command-line tool for converting between different file formats used to store genetic variant data. Currently, the following conversions are supported : 
+The variantconvert module is an extendable command-line tool for converting between different file formats used to store genetic variant data. Currently, the following conversions are supported :
 
 - [AnnotSV](https://lbgi.fr/AnnotSV/) > VCF
 - [STAR-Fusion](https://github.com/STAR-Fusion/STAR-Fusion) > VCF
@@ -22,26 +22,43 @@ git clone https://github.com/SamuelNicaise/variantconvert.git
 cd variantconvert
 pip install -e .
 ```
-3) Change the GENOME["path"] variable in configs/*.json to fit your local system. 
-```
-# Do this for each genome you need to use
-variantconvert config -c configs/GRCh37/* --set GENOME.path=/path/to/your/local/GRCh37.fa --fill_genome_header
-variantconvert config -c configs/GRCh38/* --set GENOME.path=/path/to/your/local/GRCh38.fa --fill_genome_header
-variantconvert config -c configs/hg19/* --set GENOME.path=/path/to/your/local/hg19.fa --fill_genome_header
-variantconvert config -c configs/hs1/* --set GENOME.path=/path/to/your/local/hs1.fa --fill_genome_header
-# You're ready to use variantconvert !
+3) Create a config folder
+```bash
+# Create a config folder in the default location for your OS.  
+variantconvert init
 
+# To see where the folder is: 
+variantconvert config --show_config_dir
+# All variantconvert commands automatically find this folder without writing the full path (see example in step 4). 
+
+# If you wish, you can move config files to another location and use it instead. 
+```
+4) Change the GENOME["path"] variable in configs/*.json to fit your local system.
+```bash
+# Do this for each genome you need to use
+# GRCh37
+variantconvert config -c GRCh37/* --set GENOME.path=/path/to/your/local/GRCh37.fa --fill_genome_header
+# GRCh38
+variantconvert config -c GRCh38/* --set GENOME.path=/path/to/your/local/GRCh38.fa --fill_genome_header
+# hg19
+variantconvert config -c hg19/* --set GENOME.path=/path/to/your/local/hg19.fa --fill_genome_header
+# hs1 (T2T)
+variantconvert config -c hs1/* --set GENOME.path=/path/to/your/local/hs1.fa --fill_genome_header
+# You're ready to use variantconvert !
+```
+
+```bash
 # You can create your own configs, for example to use other genomes
-# For example, let's create a folder for mm10 (Mus musculus)
-cp -r config/hg19 config/mm10
-variantconvert config -c configs/mm10/* --set GENOME.assembly=mm10 GENOME.path=/path/to/mm10.fa --fill_genome_header
+# Let's create a folder for mm10 (Mus musculus)
+cp -r path/to/config/hg19 path/to/config/mm10
+variantconvert config -c path/to/config/mm10/* --set GENOME.assembly=mm10 GENOME.path=/path/to/mm10.fa --fill_genome_header
 ```
 
 Indeed, some converters require a reference genome in fasta format. This is to fill in the VCF "REF" column in cases where we only have the position without the reference base. This implies when converting to a VCF file, you should always use the genome on which the variant was called. 
 
 You can create your own config files to customize not only the genome, but also output columns (see the Developers section).
 
-If you configured the hg19 genome, you can test that variantconvert is properly installed with the following commands:
+If you installed from source and configured the hg19 genome, you can test that variantconvert is properly installed with the following commands:
 ```
 cd <this_repository>
 pip install -e .[dev]
@@ -60,11 +77,34 @@ python variantconvert/__main__.py --help
 
 Example of a common use case: convert a STAR-Fusion output file to a VCF.
 ```
-variantconvert convert -i star-fusions.tsv -o output.vcf -fi breakpoints -fo vcf -c configs/hg19/starfusion.json
+variantconvert convert -i star-fusions.tsv -o output.vcf -c hg19/starfusion.json
 ```
 
 
-List of all argument combinations for all the conversions currently implemented:
+
+
+<center>
+
+| Conversion  | Default config |
+|---|---|
+| STAR-Fusion > VCF | starfusion.json  |
+| Arriba > VCF | arriba.json  |
+| DECoN > VCF | decon.json  |
+| BED/CANOES > VCF | canoes_bed.json  |
+| BEDPE > VCF | bedpe.json  |
+| Illumina microarray > VCF | snp.json  |
+|  VaRank > VCF |  varank.json |
+|  AnnotSV from BED > VCF | annotsv3_from_bed.json  |
+| AnnotSV from VCF > VCF | annotsv3_from_vcf.json  |
+
+</center>
+
+<details> 
+  <summary>Usage for versions < 2.0.0</summary>
+
+In older versions, input and output format also had to be specified in command line args. Today this is included in config files.
+
+<center>
 
 | Conversion  | -fi  (input format) | -fo (output format) | Default config  |
 |---|---|---|---|
@@ -77,6 +117,10 @@ List of all argument combinations for all the conversions currently implemented:
 |  VaRank > VCF | varank  | vcf  |  varank.json |
 |  AnnotSV from BED > VCF | annotsv  | vcf  | annotsv3_from_bed.json  |
 | AnnotSV from VCF > VCF  | annotsv  | vcf  | annotsv3_from_vcf.json  |
+
+</center>
+
+</details>
 
 ___
 # Documentation for AnnotSV users
@@ -99,8 +143,8 @@ Different AnnotSV options are required to access to a VCF output:
 
 ### Method
 Each SV from an AnnotSV tsv file is represented with 2 types of lines:
-- An annotation on the “full” length of the SV. Every SV are reported, even those not covering a gene. 
-- An annotation of the SV “split” by gene. This type of annotation gives an opportunity to focus on each gene overlapped by the SV. Thus, when a SV spans over several genes, the output will contain as many annotations lines as genes covered.
+- An annotation on the "full" length of the SV. Every SV are reported, even those not covering a gene. 
+- An annotation of the SV "split" by gene. This type of annotation gives an opportunity to focus on each gene overlapped by the SV. Thus, when a SV spans over several genes, the output will contain as many annotations lines as genes covered.
 
 In the converted VCF, each SV is represented with only 1 line. All the annotations (full & split) are reported in the INFO field.
 For one SV, all values from a same tsv output column are merged with a "|".
@@ -127,9 +171,9 @@ An intended goal of the project is to make it easy to add new formats to the con
 
 Each conversion is described by a JSON config file with the following sections: 
 - [GENERAL]
-	- skip_rows: how many rows to skip before column indexes
-	- unique_variant_id: A list of columns that are needed to uniquely identify a variant. Important for input files where a same variant can be on multiple lines. 
-
+  - input_format and output_format: Determine which converter module will be returned by ConverterFactory
+  - skip_rows: how many rows to skip before column indexes
+  - unique_variant_id: A list of columns that are needed to uniquely identify a variant. Important for input files where a same variant can be on multiple lines. 
 - [VCF_COLUMNS] maps input TSV columns to their corresponding VCF fields. 
   - Add or remove INFO fields at will to customize your output
   - When the equivalence is more complex than 1 input column = 1 VCF field ; you can create advanced HELPER_FUNCTION (explained below).
@@ -139,7 +183,7 @@ Each conversion is described by a JSON config file with the following sections:
 
 ## HELPER_FUNCTION
 
-They're defined in variantconvert/helperfunctions.py and called in your converter's config .json file. 
+They're defined in variantconvert/helpers and called in your converter's config .json file. 
 
 ### To call a HELPER_FUNCTION
 
@@ -150,12 +194,12 @@ Use the following syntax in your .json:
 
 ### To define a HELPER_FUNCTION
 
-1. In HelperFunctions.__init__() , add *<function_name>* to the self.dispatcher dictionary
+1. In HelperFunctions.\_\_init\_\_() , add *<function_name>* to the self.dispatcher dictionary
 2. Add a new method in HelperFunctions class named as *<function_name>*, taking as parameters *<tsv column 1>, <tsv column 2>*... in the same order. Then you can use the full power of Python to do any data transformation you wish.
 
 ## If customizing a config file is not enough
 
-variantconvert relies on Converter classes that are called by a ConverterFactory depending on the --inputFormat and --outputFormat parameters. 
+variantconvert relies on Converter classes that are called by a ConverterFactory depending on the --inputFormat and --outputFormat parameters (in config file if version >= 2.0.0)
 
 You can create new Converter classes that will apply different transformations than the existing ones in variantconvert/converters/
 
