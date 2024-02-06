@@ -33,10 +33,6 @@ Configfile guidelines (JSON)
 4) read HelperFunctions docstring
 
 If you need a place to store variables unrelated to the vcf file (e.g number of CPUs) put them in [GENERAL]
-
-#TODO: add argument mode to change config files (particularly genome)
-#TODO: add argument mode to deal with an entire folder of varank files (or varank files in general)
-#TODO: refactor with a Variant class and a VCF class
 """
 
 import argparse
@@ -68,9 +64,7 @@ def main_convert(args):
         raise ValueError("DECON is handled as a TSV conversion. Use 'tsv' as input format")
 
     factory = ConverterFactory()
-    converter = factory.get_converter(
-        input_format, output_format, config_path
-    )
+    converter = factory.get_converter(input_format, output_format, config_path)
 
     if input_format == "varank":
         if args.coordConversionFile == "":
