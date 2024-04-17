@@ -42,12 +42,11 @@ import os
 import variantconvert
 import sys
 
-sys.path.append(os.path.join(os.path.dirname(__file__), "."))
-from commons import set_log_level
-from config import get_full_path, main_config
-from converter_factory import ConverterFactory
-from initialize import main_init
-from varank_batch import main_varank_batch
+from variantconvert.commons import set_log_level
+from variantconvert.config import get_full_path, main_config
+from variantconvert.converter_factory import ConverterFactory
+from variantconvert.initialize import main_init
+from variantconvert.varank_batch import main_varank_batch
 
 
 def main_convert(args):

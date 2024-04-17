@@ -8,11 +8,10 @@ import sys
 import time
 from natsort import index_natsorted
 
-from converters.abstract_converter import AbstractConverter
-from converters.vcf_from_annotsv_tools import check_config, merge_full_and_split
+from variantconvert.converters.abstract_converter import AbstractConverter
+from variantconvert.converters.vcf_from_annotsv_tools import check_config, merge_full_and_split
 
-sys.path.append("..")
-from commons import (
+from variantconvert.commons import (
     create_vcf_header,
     info_string_to_dict,
     is_helper_func,
@@ -21,7 +20,7 @@ from commons import (
     remove_decimal_or_strip,
 )
 
-from helpers.annotsv_helper import AnnotSvHelper
+from variantconvert.helpers.annotsv_helper import AnnotSvHelper
 
 
 class VcfFromAnnotsv(AbstractConverter):

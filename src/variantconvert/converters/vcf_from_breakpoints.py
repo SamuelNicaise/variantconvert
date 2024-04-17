@@ -192,9 +192,9 @@ class VcfFromBreakpoints(AbstractConverter):
                                 sample_field.append(self.config["GENERAL"]["default_genotype"])
                                 continue
                             sample_field.append(data[val][index])
-                        sample_field_dic[
-                            data[self.config["VCF_COLUMNS"]["SAMPLE"]][index]
-                        ] = ":".join(sample_field)
+                        sample_field_dic[data[self.config["VCF_COLUMNS"]["SAMPLE"]][index]] = (
+                            ":".join(sample_field)
+                        )
 
                     for sample in sample_list:
                         if sample in sample_field_dic:

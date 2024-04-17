@@ -7,10 +7,9 @@ import sys
 
 from converters.vcf_from_breakpoints import VcfFromBreakpoints
 
-sys.path.append("..")
-from commons import create_vcf_header, is_helper_func, clean_string
+from variantconvert.commons import create_vcf_header, is_helper_func, clean_string
 from variantconvert.helpers.helper_functions import HelperFunctions
-from variant import Variant
+from variantconvert.variant import Variant
 
 
 class VcfFromBedpe(VcfFromBreakpoints):

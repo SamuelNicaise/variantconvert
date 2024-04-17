@@ -14,8 +14,7 @@ import sys
 from os.path import join as osj
 from pyfaidx import Fasta
 
-sys.path.append(os.path.join(os.path.dirname(__file__), "."))
-from commons import set_log_level
+from variantconvert.commons import set_log_level
 
 
 def get_full_path(config_path):
@@ -120,6 +119,8 @@ def main_config(args):
                         raise FileNotFoundError(path)
             else:
                 target_files.append(path)
+
+    target_files = [v for v in target_files if not v.endswith("__init__.py")]
 
     log.debug(f"Config will be applied to files: {target_files}")
 

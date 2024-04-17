@@ -9,9 +9,7 @@ import sys
 from os.path import join as osj
 import pandas as pd
 
-from converters.abstract_converter import AbstractConverter
-
-sys.path.append("..")
+from variantconvert.converters.abstract_converter import AbstractConverter
 from variantconvert.helpers.helper_functions import HelperFunctions
 
 
