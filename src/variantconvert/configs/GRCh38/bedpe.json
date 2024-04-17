@@ -1,6 +1,8 @@
 {
 	"GENERAL": {
 		"origin": "bedpe",
+		"input_format": "bedpe",
+		"output_format": "vcf",
 		"skip_rows": 0,
 		"comment": "",
 		"unique_variant_id": [

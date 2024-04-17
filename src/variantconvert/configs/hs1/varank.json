@@ -1,6 +1,8 @@
 {
 	"GENERAL": {
 		"origin": "VaRank",
+		"input_format": "varank",
+		"output_format": "vcf",
 		"skip_rows": 2,
 		"comment": "",
 		"varank_filename_ends": [

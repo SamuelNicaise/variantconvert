@@ -1,6 +1,8 @@
 {
 	"GENERAL": {
 		"origin": "arriba",
+		"input_format": "breakpoints",
+		"output_format": "vcf",
 		"skip_rows": 0,
 		"comment": "",
 		"unique_variant_id": [

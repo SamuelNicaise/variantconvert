@@ -1,6 +1,8 @@
 {
 	"GENERAL": {
 		"origin": "canoes_bed",
+		"input_format": "tsv",
+		"output_format": "vcf",
 		"skip_rows": 0,
 		"comment": "",
 		"unique_variant_id": [

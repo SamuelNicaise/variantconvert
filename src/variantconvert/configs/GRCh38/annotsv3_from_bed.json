@@ -1,6 +1,8 @@
 {
 	"GENERAL": {
 		"origin": "AnnotSV",
+		"input_format": "annotsv",
+		"output_format": "vcf",
 		"skip_rows": 0,
 		"comment": "",
 		"unique_variant_id": [
@@ -8,7 +10,7 @@
 		],
 		"default_present_genotype": "0/1",
 		"default_absent_genotype": "./.",
-		"mode": "full&split",
+		"mode": "combined",
 		"keep_empty_info": "false"
 	},
 	"GENOME": {
@@ -214,16 +216,22 @@
 	},
 	"VCF_COLUMNS": {
 		"#CHROM": "SV_chrom",
-		"POS": "SV_start",
+		"POS": [
+			"HELPER_FUNCTION",
+			"get_pos_annotsv",
+			"SV_start",
+			"Tx_start",
+			"Annotation_mode"
+		],
 		"ID": [
 			"HELPER_FUNCTION",
 			"get_undefined_value"
 		],
 		"REF": [
 			"HELPER_FUNCTION",
-			"get_ref_from_decon",
+			"get_ref_annotsv",
 			"SV_chrom",
-			"SV_start"
+			"POS"
 		],
 		"ALT": [
 			"HELPER_FUNCTION",
@@ -237,13 +245,24 @@
 		"FILTER": "",
 		"INFO": {
 			"AnnotSV_ID": "AnnotSV_ID",
-			"SVTYPE_ANNOTSV": "SV_type",
 			"INFO": "INFO",
 			"ID": "ID",
 			"SV_start": "SV_start",
-			"SV_end": "SV_end",
-			"SV_length": "SV_length",
-			"SV_type": "SV_type",
+			"END": [
+				"HELPER_FUNCTION",
+				"get_end_annotsv",
+				"Annotation_mode",
+				"SV_end",
+				"Tx_end"
+			],
+			"SVLEN": [
+				"HELPER_FUNCTION",
+				"get_svlen_annotsv",
+				"Annotation_mode",
+				"SV_length",
+				"Overlapped_tx_length"
+			],
+			"SVTYPE": "SV_type",
 			"Annotation_mode": "Annotation_mode"
 		},
 		"FORMAT": "",
@@ -267,21 +286,21 @@
 				"Description": "Name of the chromosome"
 			},
 			"SV_start": {
-				"Type": "String",
+				"Type": "Integer",
 				"Number": ".",
 				"Description": "Starting position of the SV in the chromosome"
 			},
-			"SV_end": {
-				"Type": "String",
+			"END": {
+				"Type": "Integer",
 				"Number": ".",
 				"Description": "Ending position of the SV in the chromosome"
 			},
-			"SV_length": {
-				"Type": "String",
+			"SVLEN": {
+				"Type": "Integer",
 				"Number": ".",
 				"Description": "Length of the SV (bp) (deletions have negative values)"
 			},
-			"SV_type": {
+			"SVTYPE": {
 				"Type": "String",
 				"Number": ".",
 				"Description": "Type of the SV (DEL, DUP, ...)"
@@ -300,11 +319,6 @@
 				"Type": "String",
 				"Number": ".",
 				"Description": "Alternate nucleotide sequence (extracted only from a VCF input file)"
-			},
-			"FORMAT": {
-				"Type": "String",
-				"Number": ".",
-				"Description": "The FORMAT column from a VCF file"
 			},
 			"'SampleID'": {
 				"Type": "String",
@@ -332,27 +346,27 @@
 				"Description": "Transcript symbol"
 			},
 			"Tx_start": {
-				"Type": "String",
+				"Type": "Integer",
 				"Number": ".",
 				"Description": "Starting position of the transcript"
 			},
 			"Tx_end": {
-				"Type": "String",
+				"Type": "Integer",
 				"Number": ".",
 				"Description": "Ending position of the transcript"
 			},
 			"Overlapped_tx_length": {
-				"Type": "String",
+				"Type": "Integer",
 				"Number": ".",
 				"Description": "Length of the transcript (bp) overlapping with the SV"
 			},
 			"Overlapped_CDS_length": {
-				"Type": "String",
+				"Type": "Integer",
 				"Number": ".",
 				"Description": "Length of the CoDing Sequence (CDS) (bp) overlapped with the SV"
 			},
 			"Overlapped_CDS_percent": {
-				"Type": "String",
+				"Type": "Integer",
 				"Number": ".",
 				"Description": "Percent of the CoDing Sequence (CDS) (bp) overlapped with the SV"
 			},
@@ -362,7 +376,7 @@
 				"Description": "Indicates if the CDS length is not divisible by three (yes or no)"
 			},
 			"Exon_count": {
-				"Type": "String",
+				"Type": "Integer",
 				"Number": ".",
 				"Description": "Number of exons of the transcript"
 			},
@@ -377,7 +391,7 @@
 				"Description": "SV location in the gene's coding regions. Values: UTR (no CDS in the gene), 5'UTR (before the CDS start), 3'UTR (after the CDS end), CDS (between the CDS start and the CDS end, can be in an exon or an intron). e.g. 3'UTR-CDS"
 			},
 			"Dist_nearest_SS": {
-				"Type": "String",
+				"Type": "Integer",
 				"Number": ".",
 				"Description": "Absolute distance to nearest splice site after considering exonic and intronic SV breakpoints"
 			},
@@ -387,12 +401,12 @@
 				"Description": "Nearest splice site type: 5' (donor) or 3' (acceptor)"
 			},
 			"Intersect_start": {
-				"Type": "String",
+				"Type": "Integer",
 				"Number": ".",
 				"Description": "Start position of the intersection between the SV and a transcript"
 			},
 			"Intersect_end": {
-				"Type": "String",
+				"Type": "Integer",
 				"Number": ".",
 				"Description": "End position of the intersection between the SV and a transcript"
 			},
@@ -412,7 +426,7 @@
 				"Description": "Coordinates of the benign gain genomic regions completely overlapping the SV to annotate"
 			},
 			"B_gain_AFmax": {
-				"Type": "String",
+				"Type": "Float",
 				"Number": ".",
 				"Description": "Maximum allele frequency of the reported benign gain genomic regions (if available)"
 			},
@@ -427,7 +441,7 @@
 				"Description": "Coordinates of the benign loss genomic regions completely overlapping the SV to annotate"
 			},
 			"B_loss_AFmax": {
-				"Type": "String",
+				"Type": "Float",
 				"Number": ".",
 				"Description": "Maximum allele frequency of the reported benign loss genomic regions (if available)"
 			},
@@ -442,7 +456,7 @@
 				"Description": "Coordinates of the benign insertion genomic regions completely overlapping the SV to annotate"
 			},
 			"B_ins_AFmax": {
-				"Type": "String",
+				"Type": "Float",
 				"Number": ".",
 				"Description": "Maximum allele frequency of the reported benign insertion genomic regions (if available)"
 			},
@@ -457,7 +471,7 @@
 				"Description": "Coordinates of the benign inversion genomic regions completely overlapping the SV to annotate"
 			},
 			"B_inv_AFmax": {
-				"Type": "String",
+				"Type": "Float",
 				"Number": ".",
 				"Description": "Maximum allele frequency of the reported benign inversion genomic regions (if available)"
 			},
@@ -522,7 +536,7 @@
 				"Description": "Coordinates of the pathogenic insertion genomic regions completely overlapped with the SV to annotate"
 			},
 			"P_snvindel_nb": {
-				"Type": "String",
+				"Type": "Integer",
 				"Number": ".",
 				"Description": "Number of pathogenic snv/indel from public databases completely overlapped with the SV to annotate"
 			},
@@ -632,17 +646,17 @@
 				"Description": "ACMG genes"
 			},
 			"HI": {
-				"Type": "String",
+				"Type": "Integer",
 				"Number": ".",
 				"Description": "ClinGen Haploinsufficiency Score"
 			},
 			"TS": {
-				"Type": "String",
+				"Type": "Float",
 				"Number": ".",
 				"Description": "ClinGen Triplosensitivity Score"
 			},
 			"DDD_HI_percent": {
-				"Type": "String",
+				"Type": "Float",
 				"Number": ".",
 				"Description": "Haploinsufficiency ranks from DDD"
 			},
@@ -692,27 +706,27 @@
 				"Description": "DDD Pubmed Id"
 			},
 			"ExAC_synZ": {
-				"Type": "String",
+				"Type": "Float",
 				"Number": ".",
 				"Description": "Positive synZ_ExAC (Z score) from ExAC indicate gene intolerance to synonymous variation"
 			},
 			"ExAC_misZ": {
-				"Type": "String",
+				"Type": "Float",
 				"Number": ".",
 				"Description": "Positive misZ_ExAC (Z score) from ExAC indicate gene intolerance to missense variation"
 			},
 			"ExAC_delZ": {
-				"Type": "String",
+				"Type": "Float",
 				"Number": ".",
 				"Description": "Positive delZ_ExAC (Z score) from ExAC indicate gene intolerance to deletion"
 			},
 			"ExAC_dupZ": {
-				"Type": "String",
+				"Type": "Float",
 				"Number": ".",
 				"Description": "Positive dupZ_ExAC (Z score) from ExAC indicate gene intolerance to duplication"
 			},
 			"ExAC_cnvZ": {
-				"Type": "String",
+				"Type": "Float",
 				"Number": ".",
 				"Description": "Positive cnvZ_ExAC (Z score) from ExAC indicate gene intolerance to CNV"
 			},
@@ -742,22 +756,22 @@
 				"Description": "Set to 'yes' if the SV overlaps an OMIM morbid gene candidate"
 			},
 			"LOEUF_bin": {
-				"Type": "String",
+				"Type": "Integer",
 				"Number": ".",
 				"Description": "Minimal 'decile bin of LOEUF' for given transcripts of a gene (lower values indicate more constrained). Values = integer [0-9]"
 			},
 			"GnomAD_pLI": {
-				"Type": "String",
+				"Type": "Float",
 				"Number": ".",
 				"Description": "Score computed by gnomAD indicating the probability that a gene is intolerant to a loss of function variation (Nonsense, splice acceptor/donor variants due to SNV/indel)"
 			},
 			"ExAC_pLI": {
-				"Type": "String",
+				"Type": "Float",
 				"Number": ".",
 				"Description": "Score computed by ExAC indicating the probability that a gene is intolerant to a loss of function variation (Nonsense, splice acceptor/donor variants due to SNV/indel). ExAC considers pLI>=0.9 as an extremely LoF intolerant gene"
 			},
 			"Exomiser_gene_pheno_score": {
-				"Type": "String",
+				"Type": "Float",
 				"Number": ".",
 				"Description": "Exomiser score for how close each overlapped gene is to the phenotype"
 			},
@@ -782,27 +796,27 @@
 				"Description": "List of heterozygous SNV/indel (reported with 'chrom_position') presents in the gene overlapped by the annotated SV"
 			},
 			"Count_hom(sample)": {
-				"Type": "String",
+				"Type": "Integer",
 				"Number": ".",
 				"Description": "Number of homozygous SNV/indel (extracted from VCF input file) in the individual 'sample' which are present: 1) in the deletion SV ('full' annotation) and 2) between intersectStart and intersectEnd ('split' annotation)"
 			},
 			"Count_htz(sample)": {
-				"Type": "String",
+				"Type": "Integer",
 				"Number": ".",
 				"Description": "Number of heterozygous SNV/indel (extracted from VCF input file) in the individual 'sample' which are present: 1) in the SV ('full' annotation) and 2) between intersectStart and intersectEnd ('split' annotation)"
 			},
 			"Count_htz/allHom(sample)": {
-				"Type": "String",
+				"Type": "Float",
 				"Number": ".",
 				"Description": "Ratio for QC filtering: #htz(sample)/#allHom(sample)"
 			},
 			"Count_htz/total(cohort)": {
-				"Type": "String",
+				"Type": "Float",
 				"Number": ".",
 				"Description": "Ratio for QC filtering: #htz(sample)/#total(cohort)"
 			},
 			"Count_total(cohort)": {
-				"Type": "String",
+				"Type": "Integer",
 				"Number": ".",
 				"Description": "Total count of SNV/indel called from all the samples of the cohort and present in the interval of the deletion"
 			},

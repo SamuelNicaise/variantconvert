@@ -1,6 +1,8 @@
 {
 	"GENERAL": {
 		"origin": "AnnotSV",
+		"input_format": "annotsv",
+		"output_format": "vcf",
 		"skip_rows": 0,
 		"comment": "",
 		"unique_variant_id": [
@@ -8,7 +10,7 @@
 		],
 		"keep_info": "true",
 		"keep_empty_info": "false",
-		"mode": "full&split"
+		"mode": "combined"
 	},
 	"GENOME": {
 		"assembly": "hs1",
