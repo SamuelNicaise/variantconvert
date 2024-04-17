@@ -31,6 +31,7 @@ import variantconvert
 
 sys.path.append(os.path.join(os.path.dirname(__file__), ".."))
 from variantconvert.__main__ import main_convert
+from variantconvert.config import change_config
 
 
 def identical_except_date_and_genome(vcf_list: typing.List[str]):
@@ -42,7 +43,7 @@ def identical_except_date_and_genome(vcf_list: typing.List[str]):
     if len(vcf_list) < 2:
         raise RuntimeError("Expected a list containing at least 2 VCF paths")
 
-    VARIABLE_FIELDS = {"##fileDate=", "##reference=", "##InputFile="}
+    VARIABLE_FIELDS = {"##fileDate=", "##reference=", "##InputFile=", "##inputFile="}
 
     vcfs_lines = []
     k = 0
@@ -137,30 +138,6 @@ def test_decon_one_sample_to_vcf(tmp_path):
     identical_except_date_and_genome([control, decon_tester.outputFile])
 
 
-
-def test_annotsv_to_vcf(tmp_path):
-    annotsv_tester = type(
-        "obj",
-        (object,),
-        {
-            "inputFile": osj(
-                os.path.dirname(__file__),
-                "data",
-                "DECON.results_all.AnnotSV.tsv",
-            ),
-            "outputFile": osj(tmp_path, "decon_annotsv_test.vcf"),
-            "configFile": osj(variantconvert.__default_config__, "hg19", "annotsv3_from_vcf.json"),
-            "verbosity": "debug",
-        },
-    )
-    remove_if_exists(annotsv_tester.outputFile)
-    main_convert(annotsv_tester)
-    assert os.path.exists(annotsv_tester.outputFile)
-
-    control = osj(os.path.dirname(__file__), "controls", "decon_annotsv_test.vcf")
-    identical_except_date_and_genome([control, annotsv_tester.outputFile])
-
-
 def test_bed_to_vcf(tmp_path):
     bed_tester = type(
         "obj",
@@ -228,75 +205,6 @@ def test_arriba_breakpoints_to_vcf(tmp_path):
 
     control = osj(os.path.dirname(__file__), "controls", "arriba.vcf")
     identical_except_date_and_genome([control, breakpoints_tester.outputFile])
-
-
-def test_bed_based_annotsv3_to_vcf(tmp_path):
-    breakpoints_tester = type(
-        "obj",
-        (object,),
-        {
-            "inputFile": osj(
-                os.path.dirname(__file__),
-                "data",
-                "annotsv_from_bed.tsv",
-            ),
-            "outputFile": osj(tmp_path, "annotsv3_from_bed.vcf"),
-            "configFile": osj(variantconvert.__default_config__, "hg19", "annotsv3_from_bed.json"),
-            "verbosity": "debug",
-        },
-    )
-    remove_if_exists(breakpoints_tester.outputFile)
-    main_convert(breakpoints_tester)
-    assert os.path.exists(breakpoints_tester.outputFile)
-
-    control = osj(os.path.dirname(__file__), "controls", "annotsv3_from_bed.vcf")
-    identical_except_date_and_genome([control, breakpoints_tester.outputFile])
-
-
-def test_multisample_bed_based_annotsv3_to_vcf(tmp_path):
-    breakpoints_tester = type(
-        "obj",
-        (object,),
-        {
-            "inputFile": osj(
-                os.path.dirname(__file__),
-                "data",
-                "multisample_from_bed.annotated.tsv",
-            ),
-            "outputFile": osj(tmp_path, "multisample_annotsv3_from_bed.vcf"),
-            "configFile": osj(variantconvert.__default_config__, "hg19", "annotsv3_from_bed.json"),
-            "verbosity": "debug",
-        },
-    )
-    remove_if_exists(breakpoints_tester.outputFile)
-    main_convert(breakpoints_tester)
-    assert os.path.exists(breakpoints_tester.outputFile)
-
-    control = osj(os.path.dirname(__file__), "controls", "multisample_annotsv3_from_bed.vcf")
-    identical_except_date_and_genome([control, breakpoints_tester.outputFile])
-
-
-def test_annotsv_with_wild_types_to_vcf(tmp_path):
-    annotsv_tester = type(
-        "obj",
-        (object,),
-        {
-            "inputFile": osj(
-                os.path.dirname(__file__),
-                "data",
-                "annotsv_wt_samples.tsv",
-            ),
-            "outputFile": osj(tmp_path, "annotsv_wt_samples.vcf"),
-            "configFile": osj(variantconvert.__default_config__, "hg19", "annotsv3_from_vcf.json"),
-            "verbosity": "debug",
-        },
-    )
-    remove_if_exists(annotsv_tester.outputFile)
-    main_convert(annotsv_tester)
-    assert os.path.exists(annotsv_tester.outputFile)
-
-    control = osj(os.path.dirname(__file__), "controls", "annotsv_wt_samples.vcf")
-    identical_except_date_and_genome([control, annotsv_tester.outputFile])
 
 
 def test_bedpe_to_vcf(tmp_path):

@@ -9,6 +9,7 @@ import time
 from natsort import index_natsorted
 
 from converters.abstract_converter import AbstractConverter
+from converters.vcf_from_annotsv_tools import check_config, merge_full_and_split
 
 sys.path.append("..")
 from commons import (
@@ -35,6 +36,10 @@ class VcfFromAnnotsv(AbstractConverter):
     Sept 2022 update: add support for AnnotSV files obtained from bed files
     Those do not have REF, ALT, FORMAT and <sample_name> columns
     """
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.config = check_config(self.config)
 
     def _build_input_dataframe(self):
         df = pd.read_csv(
@@ -130,7 +135,7 @@ class VcfFromAnnotsv(AbstractConverter):
                 return True
             return False
 
-    def _build_input_annot_df(self):
+    def _build_input_annot_df(self) -> pd.DataFrame:
         """
         remove vcf base cols, FORMAT, Samples_ID, and each <sample> column
         expand 'INFO' field from origin vcf into new annotation columns
@@ -141,13 +146,26 @@ class VcfFromAnnotsv(AbstractConverter):
         columns_to_drop.append(self.config["VCF_COLUMNS"]["SAMPLE"])
         columns_to_drop.append(self.config["VCF_COLUMNS"]["FORMAT"])
 
-        # TODO: properly verify all booleans on config load
+        # TODO: verify all booleans on config load
         if self.config["GENERAL"].get("keep_info", False) in (True, "true", "True"):
             self.keep_info = True
-            self.original_info_col = self.input_df[self.config["VCF_COLUMNS"]["INFO"]["INFO"]]
+            if self.config["GENERAL"]["mode"] == "combined":
+                self.original_info_col = self.input_df[
+                    [
+                        self.config["VCF_COLUMNS"]["INFO"]["AnnotSV_ID"],
+                        self.config["VCF_COLUMNS"]["INFO"]["INFO"],
+                    ]
+                ]
+                self.original_info_col.set_index(
+                    self.config["VCF_COLUMNS"]["INFO"]["AnnotSV_ID"], inplace=True
+                )
+                self.original_info_col = self.original_info_col["INFO"].to_dict()
+            else:
+                self.original_info_col = self.input_df[self.config["VCF_COLUMNS"]["INFO"]["INFO"]]
+                self.original_info_col = self.original_info_col.to_dict()
         else:
             self.keep_info = False
-        columns_to_drop.append(self.config["VCF_COLUMNS"]["INFO"]["INFO"])
+        # columns_to_drop.append(self.config["VCF_COLUMNS"]["INFO"]["INFO"])
 
         df = self.input_df.copy()
         for col in columns_to_drop:
@@ -182,24 +200,36 @@ class VcfFromAnnotsv(AbstractConverter):
         supplemental_info_fields = []
 
         # method of versions < 2.0.0: merge full and split annotations into one variant
-        # id_col = self.config["VCF_COLUMNS"]["INFO"]["AnnotSV_ID"]
-        # for variant_id, df_variant in self.input_annot_df.groupby(id_col):
-        #     merged_annots = self._merge_full_and_split(df_variant)
-        #     annots_dic[variant_id] = merged_annots
+        if self.config["GENERAL"]["mode"] == "combined":
+            id_col = self.config["VCF_COLUMNS"]["INFO"]["AnnotSV_ID"]
+            for variant_id, df_variant in self.input_annot_df.groupby(id_col):
+                merged_annots = merge_full_and_split(self.config, self.sample_list, df_variant)
+                annots_dic[variant_id] = merged_annots
 
-        for variant_idx, df_variant in self.input_annot_df.iterrows():
-            annots_dic[variant_idx] = df_variant.to_dict()
+                if self.keep_info:
+                    info_dict = info_string_to_dict(self.original_info_col[variant_id])
+                    for annot in info_dict:
+                        if annot not in annots_dic[variant_id]:
+                            annots_dic[variant_id][annot] = info_dict[annot]
+                            if annot not in supplemental_info_fields:
+                                supplemental_info_fields.append(annot)
 
-            if variant_idx == 0:
-                log.debug(f"annots dic first variant before adding INFO: {annots_dic[0]}")
+        else:
+            for variant_idx, df_variant in self.input_annot_df.iterrows():
+                annots_dic[variant_idx] = df_variant.to_dict()
 
-            if self.keep_info:
-                info_dict = info_string_to_dict(self.original_info_col.iloc[variant_idx])
-                for annot in info_dict:
-                    if annot not in annots_dic[variant_idx]:
-                        annots_dic[variant_idx][annot] = info_dict[annot]
-                        if annot not in supplemental_info_fields:
-                            supplemental_info_fields.append(annot)
+                if variant_idx == 0:
+                    log.debug(f"annots dic first variant before adding INFO: {annots_dic[0]}")
+
+                if self.keep_info:
+                    info_dict = info_string_to_dict(self.original_info_col[variant_idx])
+                    for annot in info_dict:
+                        if annot not in annots_dic[variant_idx]:
+                            annots_dic[variant_idx][annot] = info_dict[annot]
+                            if annot not in supplemental_info_fields:
+                                supplemental_info_fields.append(annot)
+                else:
+                    annots_dic[variant_idx].pop("INFO", None)
 
         if self.keep_info:
             self.supplemental_header = self._build_supplemental_header(
@@ -208,8 +238,7 @@ class VcfFromAnnotsv(AbstractConverter):
         else:
             self.supplemental_header = self._build_supplemental_header(annots_dic, [])
 
-        log.debug(f"annots dic first variant after adding info: {annots_dic[0]}")
-
+        # log.debug(f"annots dic first variant after adding info: {annots_dic[0]}")
         return annots_dic
 
     def _build_supplemental_header(self, annots_dic, additional_info_fields):
@@ -270,7 +299,9 @@ class VcfFromAnnotsv(AbstractConverter):
                         number = 0
                         field_type = "Flag"
                     else:
-                        number = info[field].count(",") + 1
+                        # used to infer: number = info[field].count(",") + 1
+                        # instead: always put "." as it can change for each variant depending on the number of split annots
+                        number = "."
 
             if field in additional_info_fields:
                 description = (
@@ -388,8 +419,18 @@ class VcfFromAnnotsv(AbstractConverter):
                 index_natsorted(self.input_df[self.config["VCF_COLUMNS"]["#CHROM"]])
             ]
 
+            already_seen_variants = set()  # for combined mode
+
             for row_idx, row_data in self.input_df.iterrows():
                 df_variant = row_data.to_dict()  # for ease of dev
+                if self.config["GENERAL"]["mode"] == "combined":
+                    variant_idx = df_variant[self.config["VCF_COLUMNS"]["INFO"]["AnnotSV_ID"]]
+                    if variant_idx in already_seen_variants:
+                        continue
+                    else:
+                        already_seen_variants.add(variant_idx)
+                else:
+                    variant_idx = row_idx
 
                 if (
                     self.config["GENERAL"]["mode"] == "full"
@@ -412,14 +453,18 @@ class VcfFromAnnotsv(AbstractConverter):
                 main_cols = "\t".join([df_variant[c] for c in self.main_vcf_cols])
                 vcf.write(main_cols + "\t")
 
+                # INFO field
                 info_list = []
-                for k, v in self._get_variant_info_dict(info_input_dic[row_idx], helper).items():
+                for k, v in self._get_variant_info_dict(
+                    info_input_dic[variant_idx], helper
+                ).items():
                     if v != None:
                         info_list.append(k + "=" + v)
                     else:
                         info_list.append(k)  # deal with INFO flags
                 vcf.write(";".join(info_list) + "\t")
 
+                # FORMAT and samples
                 if self.config["VCF_COLUMNS"]["FORMAT"] != "":
                     sample_cols = "\t".join(
                         [df_variant[self.config["VCF_COLUMNS"]["FORMAT"]]]

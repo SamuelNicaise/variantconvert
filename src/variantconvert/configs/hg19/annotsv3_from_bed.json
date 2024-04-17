@@ -10,7 +10,7 @@
 		],
 		"default_present_genotype": "0/1",
 		"default_absent_genotype": "./.",
-		"mode": "full&split",
+		"mode": "combined",
 		"keep_empty_info": "false"
 	},
 	"GENOME": {

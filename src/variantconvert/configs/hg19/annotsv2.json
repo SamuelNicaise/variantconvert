@@ -10,7 +10,7 @@
 		],
 		"keep_info": "true",
 		"keep_empty_info": "false",
-		"mode": "full&split"
+		"mode": "combined"
 	},
 	"GENOME": {
 		"assembly": "hg19",

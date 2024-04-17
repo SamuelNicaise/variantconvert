@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 """
 @Author: Samuel Nicaise
-@Version: v1.2.2
+@Version: v2.0.0
 
 #for testing:
 docker run --rm -ti --entrypoint=bash -v /home1:/home1 tsvconvert

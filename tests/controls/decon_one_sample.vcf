@@ -1,7 +1,8 @@
 ##fileformat=VCFv4.3
 ##fileDate=23/12/2023
-##source=Decon
 ##InputFile=/mnt/c/Users/Ichtyornis/Projects/variantconvert_project/variantconvert/tests/data/DECON.one_sample.all.tsv
+##source=variantconvert from Decon
+##variantconvertVersion=2.0.0
 ##FILTER=<ID=PASS,Description="Passed filter">
 ##ALT=<ID=DUP,Description="Duplication">
 ##ALT=<ID=DEL,Description="Deletion">

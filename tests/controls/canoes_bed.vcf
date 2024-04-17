@@ -1,7 +1,8 @@
 ##fileformat=VCFv4.3
 ##fileDate=23/01/2023
-##source=canoes_bed
 ##InputFile=/home1/HUB/bin/variantconvert/current/tests/data/canoes.bed
+##source=variantconvert from canoes_bed
+##variantconvertVersion=2.0.0
 ##FILTER=<ID=PASS,Description="Passed filter">
 ##ALT=<ID=DUP,Description="Duplication">
 ##ALT=<ID=DEL,Description="Deletion">

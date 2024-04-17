@@ -1,7 +1,9 @@
 ##fileformat=VCFv4.2
 ##fileDate=15/01/2024
-##source=AnnotSV
 ##InputFile=/mnt/c/Users/Ichtyornis/Projects/variantconvert_project/variantconvert/tests/data/multisample_from_bed.annotated.tsv
+##source=variantconvert from AnnotSV
+##variantconvertVersion=2.0.0
+##variantconvertMode=full&split
 ##FILTER=<ID=PASS,Description="Passed filter">
 ##ALT=<ID=DUP,Description="Duplication">
 ##ALT=<ID=DEL,Description="Deletion">
@@ -117,11 +119,11 @@
 ##INFO=<ID=AnnotSV_ranking_score,Number=.,Type=Float,Description="SV ranking score following the 2019 joint consensus recommendation of ACMG and ClinGen. Scoring: pathogenic >= 0.99, likely pathogenic [0.90;0.98], variant of uncertain significance [0.89;-0.89], likely benign [-0.90;-0.98], benign <= -0.99.">
 ##INFO=<ID=AnnotSV_ranking_criteria,Number=.,Type=String,Description="Decision criteria explaining the AnnotSV ranking score">
 ##INFO=<ID=ACMG_class,Number=.,Type=String,Description="SV ranking class into 1 of 5: class 1 (benign), class 2 (likely benign), class 3 (variant of unknown significance), class 4 (likely pathogenic), class 5 (pathogenic)">
-##INFO=<ID=Biologist_annotation,Number=1,Type=String,Description="Imported from AnnotSV">
-##INFO=<ID=Biologist_ranking,Number=1,Type=String,Description="Imported from AnnotSV">
-##INFO=<ID=OMIM_phenotype.1,Number=4,Type=String,Description="Imported from AnnotSV">
-##INFO=<ID=OMIM_inheritance.1,Number=1,Type=String,Description="Imported from AnnotSV">
-##INFO=<ID=OMIM_ID.1,Number=1,Type=String,Description="Imported from AnnotSV">
+##INFO=<ID=Biologist_annotation,Number=.,Type=String,Description="Imported from AnnotSV">
+##INFO=<ID=Biologist_ranking,Number=.,Type=String,Description="Imported from AnnotSV">
+##INFO=<ID=OMIM_phenotype.1,Number=.,Type=String,Description="Imported from AnnotSV">
+##INFO=<ID=OMIM_inheritance.1,Number=.,Type=String,Description="Imported from AnnotSV">
+##INFO=<ID=OMIM_ID.1,Number=.,Type=String,Description="Imported from AnnotSV">
 ##FORMAT=<ID=GT,Number=1,Type=String,Description="Genotype">
 ##FORMAT=<ID=RE,Number=1,Type=Integer,Description="Reads Expected: the number of expected reads under the probabilistic model (Decon)">
 ##FORMAT=<ID=RO,Number=1,Type=Integer,Description="Reads observed: the number of observed reads (Decon)">

@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 """
 @Author: Samuel Nicaise
-@Version: v1.2.2
+@Version: v2.0.0
 """
 
 import logging as log
@@ -11,6 +11,8 @@ import time
 
 from functools import lru_cache
 from pyfaidx import Fasta
+
+import variantconvert
 
 
 def set_log_level(verbosity):
@@ -120,10 +122,13 @@ def create_vcf_header(
     input_path, config, sample_list, breakpoints=False, supplemental_header=[], fileformat="VCFv4.3"
 ):
     header = []
-    header.append("##fileformat=%s" % fileformat)
-    header.append("##fileDate=%s" % time.strftime("%d/%m/%Y"))
-    header.append("##source=" + config["GENERAL"]["origin"])
-    header.append("##InputFile=%s" % os.path.abspath(input_path))
+    header.append(f"##fileformat={fileformat}")
+    header.append(f"##fileDate={time.strftime('%d/%m/%Y')}")
+    header.append(f"##inputFile={os.path.abspath(input_path)}")
+    header.append(f"##source=variantconvert from {config['GENERAL']['origin']}")
+    header.append(f"##variantconvertVersion={variantconvert.__version__}")
+    if "mode" in config["GENERAL"]:
+        header.append(f"##variantconvertMode={config['GENERAL']['mode']}")
 
     # TODO: FILTER is not present in any tool implemented yet
     # so all variants are set to PASS
@@ -252,3 +257,20 @@ def is_float(element: any) -> bool:
         return True
     except ValueError:
         return False
+
+
+def all_equal(l: list) -> bool:
+    """
+    >>> all_equal(["a", "a", "a"])
+    True
+    >>> all_equal(["a", "b", "a"])
+    False
+    >>> all_equal([])
+    True
+    """
+    try:
+        if l.count(l[0]) == len(l):
+            return True
+    except IndexError:
+        return True  # faster than checking every time if len(v) > 0
+    return False

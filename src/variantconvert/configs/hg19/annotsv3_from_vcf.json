@@ -8,7 +8,7 @@
 		"unique_variant_id": [
 			"AnnotSV_ID"
 		],
-		"mode": "full&split",
+		"mode": "combined",
 		"keep_info": "true",
 		"keep_empty_info": "false"
 	},

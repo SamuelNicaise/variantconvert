@@ -1,12 +1,12 @@
 # -*- coding: utf-8 -*-
 """
 @Author: Samuel Nicaise
-@Version: v1.2.2
+@Version: v2.0.0
 """
 import appdirs
 import os
 
-__version__ = "1.2.2"
+__version__ = "2.0.0"
 
 __default_config__ = os.path.join(os.path.dirname(__file__), "configs")
 

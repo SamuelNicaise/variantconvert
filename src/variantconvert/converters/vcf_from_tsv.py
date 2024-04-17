@@ -77,7 +77,7 @@ class VcfFromTsv(AbstractConverter):
         self.output_path = output_path
         self._init_dataframe()
         sample_list = self._get_sample_list()
-        print(f"sample_list:{sample_list}")
+        log.debug(f"sample_list:{sample_list}")
         helper = HelperFunctions(self.config)
 
         with open(output_path, "w") as vcf:
@@ -154,9 +154,9 @@ class VcfFromTsv(AbstractConverter):
                                 sample_field.append("0/1")
                                 continue
                             sample_field.append(data[val][index])
-                        sample_field_dic[
-                            data[self.config["VCF_COLUMNS"]["SAMPLE"]][index]
-                        ] = ":".join(sample_field)
+                        sample_field_dic[data[self.config["VCF_COLUMNS"]["SAMPLE"]][index]] = (
+                            ":".join(sample_field)
+                        )
 
                     for sample in sample_list:
                         if sample in sample_field_dic:
