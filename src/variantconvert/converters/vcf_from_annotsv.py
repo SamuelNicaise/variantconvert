@@ -173,7 +173,7 @@ class VcfFromAnnotsv(AbstractConverter):
             except KeyError:
                 log.debug(f"Failed to drop column: {col}")
 
-        df = df.replace(";", ",", regex=True)  # any ';' in annots will ruin the vcf INFO field
+        df = df.replace(";", "|", regex=True)  # any ';' in annots will ruin the vcf INFO field
 
         # TODO: check if CHROM col is in compliance with config ref genome (chrX or X)
         # if self.config["GENOME"]["vcf_header"][0].startswith("##contig=<ID=chr"):
@@ -375,7 +375,7 @@ class VcfFromAnnotsv(AbstractConverter):
                     continue
                 if v != None:
                     if isinstance(v, str):
-                        v = v.replace(";", ",")
+                        v = v.replace(";", "|")
                     cleaned_info_dic[k] = remove_decimal_or_strip(v)
                 else:
                     cleaned_info_dic[k] = None
