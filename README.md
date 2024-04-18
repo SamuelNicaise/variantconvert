@@ -164,17 +164,29 @@ Each SV from an AnnotSV tsv file is represented with 2 types of lines:
 - An annotation on the "full" length of the SV. Every SV are reported, even those not covering a gene.
 - An annotation of the SV "split" by gene. This type of annotation gives an opportunity to focus on each gene overlapped by the SV. Thus, when a SV spans over several genes, the output will contain as many annotations lines as genes covered.
 
-In the converted VCF, each SV is represented with only 1 line. All the annotations (full & split) are reported in the INFO field.
-For one SV, all values from a same tsv output column are merged with a "|".
+#### Example of a duplication overlapping 2 genes (1 full line + 2 split lines in the tsv)
 
-Example of a duplication overlapping 1 gene (1 full line + 1 split line in the tsv). The tsv output columns are represented in the INFO field in this way:
+|AnnotSV_ID|SV_chrom|SV_start|SV_end|SV_length|Variant_type|Annotation_mode|Gene_name|DDD_HI_percent|
+|---|---|---|---|---|---|---|---|---|
+|10_46976157_47590995_1|10|46976157|47590995|614838|DUP|full|AGAP9;ANTXRLP1|91.07|
+|10_46976157_47590995_1|10|46976157|47590995|614838|DUP|split|AGAP9|88.1|
+|10_46976157_47590995_1|10|46976157|47590995|614838|DUP|split|ANTXRLP1| |
 
+In the converted VCF, each SV is represented with only 1 line by default (mode: "combined" in JSON config). All the annotations (full & split) are reported in the INFO field.
+For one SV, all values from a same tsv output column are merged as lists separated by ",". Consequently, all "," in annotations are replaced with "|". If all values (full and all split lines) are identical, they are merged as one.
+
+The tsv output columns are represented in the VCF in this way:
 ```txt
-AnnotSV_ID=21_35722427_35906593_DUP_1|21_35722427_35906593_DUP_1;SV_chrom=21|21;SV_start=35722427|35722427;SV_end=35906593|35906593;SV_lengt
-h=184166|184166;SV_type=DUP|DUP;Annotation_mode=full&split;CytoBand=q22.12|q22.12;Gene_name=PPP1R2P2|PPP1R2P2;...
+#mode=combined
+#CHROM	POS	REF	ALT	INFO
+chr10	46976157	G	<DUP>	AnnotSV_ID=10_46976157_47590995_1;SV_start=46976157;END=47590995;SVLEN=614838;Annotation=full,split,split;Gene_name=AGAP9|ANTXRLP1,AGAP9,ANTXRLP1;DDD_HI_percent=91.07,88.1,.
 ```
 
 Warning: the AnnotSV > VCF converter uses VCF 4.2 specification, so spaces are replaced with an "_" in the output VCF.
+
+#### Alternative modes
+
+If using lists is complex for your downstream analysis, other conversion modes are available. Instead of combining all full and split annotations, they can be each represented on one line (mode: full&split), or only "full" annotation can be kept (mode: full). Conversion mode can be changed in the JSON config.
 
 ### GT warning
 
