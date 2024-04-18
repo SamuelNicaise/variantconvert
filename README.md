@@ -80,7 +80,7 @@ variantconvert --help
 Or if you did not use the `pip install` command above:
 
 ```bash
-python variantconvert/__main__.py --help
+python src/variantconvert/__main__.py --help
 ```
 
 Example of a common use case: convert a STAR-Fusion output file to a VCF.
@@ -179,7 +179,7 @@ The tsv output columns are represented in the VCF in this way:
 ```txt
 #mode=combined
 #CHROM	POS	REF	ALT	INFO
-chr10	46976157	G	<DUP>	AnnotSV_ID=10_46976157_47590995_1;SV_start=46976157;END=47590995;SVLEN=614838;Annotation=full,split,split;Gene_name=AGAP9|ANTXRLP1,AGAP9,ANTXRLP1;DDD_HI_percent=91.07,88.1,.
+chr10	46976157	G	<DUP>	AnnotSV_ID=10_46976157_47590995_1;SV_start=46976157;END=47590995;SVLEN=614838;Annotation_mode=full,split,split;Gene_name=AGAP9|ANTXRLP1,AGAP9,ANTXRLP1;DDD_HI_percent=91.07,88.1,.
 ```
 
 Warning: the AnnotSV > VCF converter uses VCF 4.2 specification, so spaces are replaced with an "_" in the output VCF.
@@ -187,6 +187,15 @@ Warning: the AnnotSV > VCF converter uses VCF 4.2 specification, so spaces are r
 #### Alternative modes
 
 If using lists is complex for your downstream analysis, other conversion modes are available. Instead of combining all full and split annotations, they can be each represented on one line (mode: full&split), or only "full" annotation can be kept (mode: full). Conversion mode can be changed in the JSON config.
+
+```bash
+#switch to "full" mode (only full annotations, one line per variant)
+variantconvert config -c hg19/* --set GENERAL.mode=full
+#switch to "full&split" mode (full and split annotations on separated lines). Use quotes as shown below if using bash because of the '&' character.
+variantconvert config -c hg19/* --set 'GENERAL.mode=full&split'
+#switch back to default "combined" mode (full and split annotations combined into one line per variant)
+variantconvert config -c hg19/* --set GENERAL.mode=combined
+```
 
 ### GT warning
 
