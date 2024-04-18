@@ -1,0 +1,293 @@
+{
+	"GENERAL": {
+		"origin": "arriba",
+		"input_format": "breakpoints",
+		"output_format": "vcf",
+		"skip_rows": 0,
+		"comment": "",
+		"unique_variant_id": [
+			"#gene1",
+			"gene2",
+			"breakpoint1",
+			"breakpoint2"
+		],
+		"default_genotype": "0/1"
+	},
+	"GENOME": {
+		"assembly": "GRCh37",
+		"path": "/home1/data/genomes/GRCh37/Homo_sapiens.GRCh37.dna.primary_assembly.fa",
+		"vcf_header": [
+			"##contig=<ID=1,length=249250621,assembly=GRCh37>",
+			"##contig=<ID=10,length=135534747,assembly=GRCh37>",
+			"##contig=<ID=11,length=135006516,assembly=GRCh37>",
+			"##contig=<ID=12,length=133851895,assembly=GRCh37>",
+			"##contig=<ID=13,length=115169878,assembly=GRCh37>",
+			"##contig=<ID=14,length=107349540,assembly=GRCh37>",
+			"##contig=<ID=15,length=102531392,assembly=GRCh37>",
+			"##contig=<ID=16,length=90354753,assembly=GRCh37>",
+			"##contig=<ID=17,length=81195210,assembly=GRCh37>",
+			"##contig=<ID=18,length=78077248,assembly=GRCh37>",
+			"##contig=<ID=19,length=59128983,assembly=GRCh37>",
+			"##contig=<ID=2,length=243199373,assembly=GRCh37>",
+			"##contig=<ID=20,length=63025520,assembly=GRCh37>",
+			"##contig=<ID=21,length=48129895,assembly=GRCh37>",
+			"##contig=<ID=22,length=51304566,assembly=GRCh37>",
+			"##contig=<ID=3,length=198022430,assembly=GRCh37>",
+			"##contig=<ID=4,length=191154276,assembly=GRCh37>",
+			"##contig=<ID=5,length=180915260,assembly=GRCh37>",
+			"##contig=<ID=6,length=171115067,assembly=GRCh37>",
+			"##contig=<ID=7,length=159138663,assembly=GRCh37>",
+			"##contig=<ID=8,length=146364022,assembly=GRCh37>",
+			"##contig=<ID=9,length=141213431,assembly=GRCh37>",
+			"##contig=<ID=MT,length=16569,assembly=GRCh37>",
+			"##contig=<ID=X,length=155270560,assembly=GRCh37>",
+			"##contig=<ID=Y,length=59373566,assembly=GRCh37>",
+			"##contig=<ID=GL000192.1,length=547496,assembly=GRCh37>",
+			"##contig=<ID=GL000225.1,length=211173,assembly=GRCh37>",
+			"##contig=<ID=GL000194.1,length=191469,assembly=GRCh37>",
+			"##contig=<ID=GL000193.1,length=189789,assembly=GRCh37>",
+			"##contig=<ID=GL000200.1,length=187035,assembly=GRCh37>",
+			"##contig=<ID=GL000222.1,length=186861,assembly=GRCh37>",
+			"##contig=<ID=GL000212.1,length=186858,assembly=GRCh37>",
+			"##contig=<ID=GL000195.1,length=182896,assembly=GRCh37>",
+			"##contig=<ID=GL000223.1,length=180455,assembly=GRCh37>",
+			"##contig=<ID=GL000224.1,length=179693,assembly=GRCh37>",
+			"##contig=<ID=GL000219.1,length=179198,assembly=GRCh37>",
+			"##contig=<ID=GL000205.1,length=174588,assembly=GRCh37>",
+			"##contig=<ID=GL000215.1,length=172545,assembly=GRCh37>",
+			"##contig=<ID=GL000216.1,length=172294,assembly=GRCh37>",
+			"##contig=<ID=GL000217.1,length=172149,assembly=GRCh37>",
+			"##contig=<ID=GL000199.1,length=169874,assembly=GRCh37>",
+			"##contig=<ID=GL000211.1,length=166566,assembly=GRCh37>",
+			"##contig=<ID=GL000213.1,length=164239,assembly=GRCh37>",
+			"##contig=<ID=GL000220.1,length=161802,assembly=GRCh37>",
+			"##contig=<ID=GL000218.1,length=161147,assembly=GRCh37>",
+			"##contig=<ID=GL000209.1,length=159169,assembly=GRCh37>",
+			"##contig=<ID=GL000221.1,length=155397,assembly=GRCh37>",
+			"##contig=<ID=GL000214.1,length=137718,assembly=GRCh37>",
+			"##contig=<ID=GL000228.1,length=129120,assembly=GRCh37>",
+			"##contig=<ID=GL000227.1,length=128374,assembly=GRCh37>",
+			"##contig=<ID=GL000191.1,length=106433,assembly=GRCh37>",
+			"##contig=<ID=GL000208.1,length=92689,assembly=GRCh37>",
+			"##contig=<ID=GL000198.1,length=90085,assembly=GRCh37>",
+			"##contig=<ID=GL000204.1,length=81310,assembly=GRCh37>",
+			"##contig=<ID=GL000233.1,length=45941,assembly=GRCh37>",
+			"##contig=<ID=GL000237.1,length=45867,assembly=GRCh37>",
+			"##contig=<ID=GL000230.1,length=43691,assembly=GRCh37>",
+			"##contig=<ID=GL000242.1,length=43523,assembly=GRCh37>",
+			"##contig=<ID=GL000243.1,length=43341,assembly=GRCh37>",
+			"##contig=<ID=GL000241.1,length=42152,assembly=GRCh37>",
+			"##contig=<ID=GL000236.1,length=41934,assembly=GRCh37>",
+			"##contig=<ID=GL000240.1,length=41933,assembly=GRCh37>",
+			"##contig=<ID=GL000206.1,length=41001,assembly=GRCh37>",
+			"##contig=<ID=GL000232.1,length=40652,assembly=GRCh37>",
+			"##contig=<ID=GL000234.1,length=40531,assembly=GRCh37>",
+			"##contig=<ID=GL000202.1,length=40103,assembly=GRCh37>",
+			"##contig=<ID=GL000238.1,length=39939,assembly=GRCh37>",
+			"##contig=<ID=GL000244.1,length=39929,assembly=GRCh37>",
+			"##contig=<ID=GL000248.1,length=39786,assembly=GRCh37>",
+			"##contig=<ID=GL000196.1,length=38914,assembly=GRCh37>",
+			"##contig=<ID=GL000249.1,length=38502,assembly=GRCh37>",
+			"##contig=<ID=GL000246.1,length=38154,assembly=GRCh37>",
+			"##contig=<ID=GL000203.1,length=37498,assembly=GRCh37>",
+			"##contig=<ID=GL000197.1,length=37175,assembly=GRCh37>",
+			"##contig=<ID=GL000245.1,length=36651,assembly=GRCh37>",
+			"##contig=<ID=GL000247.1,length=36422,assembly=GRCh37>",
+			"##contig=<ID=GL000201.1,length=36148,assembly=GRCh37>",
+			"##contig=<ID=GL000235.1,length=34474,assembly=GRCh37>",
+			"##contig=<ID=GL000239.1,length=33824,assembly=GRCh37>",
+			"##contig=<ID=GL000210.1,length=27682,assembly=GRCh37>",
+			"##contig=<ID=GL000231.1,length=27386,assembly=GRCh37>",
+			"##contig=<ID=GL000229.1,length=19913,assembly=GRCh37>",
+			"##contig=<ID=GL000226.1,length=15008,assembly=GRCh37>",
+			"##contig=<ID=GL000207.1,length=4262,assembly=GRCh37>",
+			"##reference=file:///home1/data/genomes/GRCh37/Homo_sapiens.GRCh37.dna.primary_assembly.fa"
+		]
+	},
+	"VCF_COLUMNS": {
+		"#CHROM": [
+			"HELPER_FUNCTION",
+			"get_chr_from_breakpoint",
+			"breakpoint1",
+			"breakpoint2"
+		],
+		"POS": [
+			"HELPER_FUNCTION",
+			"get_pos_from_breakpoint",
+			"breakpoint1",
+			"breakpoint2"
+		],
+		"ID": "",
+		"REF": [
+			"HELPER_FUNCTION",
+			"get_ref_from_breakpoint",
+			"breakpoint1",
+			"breakpoint2"
+		],
+		"ALT": [
+			"HELPER_FUNCTION",
+			"get_alt_from_arriba_breakpoint",
+			"breakpoint1",
+			"breakpoint2",
+			"direction1",
+			"direction2"
+		],
+		"QUAL": "",
+		"FILTER": "",
+		"INFO": {
+			"Fusion_Gene1": "#gene1",
+			"Fusion_Gene2": "gene2",
+			"Fusion_Site1": "site1",
+			"Fusion_Site2": "site2",
+			"Fusion_Type": "type",
+			"Split_Reads1": "split_reads1",
+			"Split_Reads2": "split_reads2",
+			"DiscordantReadPairs": "discordant_mates",
+			"Fusion_Coverage1": "coverage1",
+			"Fusion_Coverage2": "coverage2",
+			"Fusion_Confidence": "confidence",
+			"Reading_Frame": "reading_frame",
+			"Arriba_tags": "tags",
+			"Retained_Protein_Domains": "retained_protein_domains",
+			"Closest_Genomic_Breakpoint1": "closest_genomic_breakpoint1",
+			"Closest_Genomic_Breakpoint2": "closest_genomic_breakpoint2",
+			"Fusion_Gene_ID1": "gene_id1",
+			"Fusion_Gene_ID2": "gene_id2",
+			"Arriba_Transcript_ID1": "transcript_id1",
+			"Arriba_Transcript_ID2": "transcript_id1",
+			"Fusion_Direction1": "direction1",
+			"Fusion_Direction2": "direction2",
+			"Arriba_Filters": "filters"
+		},
+		"FORMAT": {
+			"GT": ""
+		},
+		"SAMPLE": ""
+	},
+	"COLUMNS_DESCRIPTION": {
+		"INFO": {
+			"Fusion_Gene1": {
+				"Type": "String",
+				"Number": "1",
+				"Description": "Fusion gene 1"
+			},
+			"Fusion_Gene2": {
+				"Type": "String",
+				"Number": "1",
+				"Description": "Fusion gene 2"
+			},
+			"Fusion_Site1": {
+				"Type": "String",
+				"Number": "1",
+				"Description": "information about the location of breakpoint 1. Possible values are: 5' UTR, 3' UTR, UTR (overlapping with a 5' UTR as well as a 3' UTR), CDS (coding sequence), exon, intron, and intergenic. The keyword exon is used for non-coding genes or for ambiguous situations where the breakpoint overlaps with both a coding exon and a UTR. If the breakpoint coincides with an exon boundary, the additional keyword splice-site is appended."
+			},
+			"Fusion_Site2": {
+				"Type": "String",
+				"Number": "1",
+				"Description": "information about the location of breakpoint 2. Possible values are: 5' UTR, 3' UTR, UTR (overlapping with a 5' UTR as well as a 3' UTR), CDS (coding sequence), exon, intron, and intergenic. The keyword exon is used for non-coding genes or for ambiguous situations where the breakpoint overlaps with both a coding exon and a UTR. If the breakpoint coincides with an exon boundary, the additional keyword splice-site is appended."
+			},
+			"Fusion_Type": {
+				"Type": "String",
+				"Number": "1",
+				"Description": "Based on the orientation of the supporting reads and the coordinates of breakpoints, the type of event can be inferred. Possible values are: translocation (between different chromosomes), duplication, inversion, and deletion. If genes are fused head-to-head or tail-to-tail, this is indicated as 5'-5' or 3'-3' respectively. Genes fused in such an orientation cannot yield a chimeric protein, since one of the genes is transcribed from the wrong strand. This type of event is equivalent to the truncation of the genes. The following types of events are flagged with an extra keyword, because they are frequent types of false positives and/or it is not clear if they are somatic or germline variants: Deletions with a size in the range of introns (<400kb) are flagged as read-through, because there is a high chance that the fusion arises from read-through transcription rather than an underlying genomic deletion. Intragenic duplications with both breakpoints at splice-sites are flagged as non-canonical-splicing, because the supporting reads might originate from circular RNAs, which are very abundant even in normal tissue, but manifest as duplications in RNA-Seq data. Internal tandem duplications are flagged as ITD. It is not always clear whether the ITDs observable in RNA-Seq data are somatic or germline variants, because ITDs are abundant in the germline and germline variants cannot be filtered effectively due to lack of a normal control."
+			},
+			"Split_Reads1": {
+				"Type": "Integer",
+				"Number": "1",
+				"Description": "Total split reads supporting the fusion on breakpoint 1"
+			},
+			"Split_Reads2": {
+				"Type": "Integer",
+				"Number": "1",
+				"Description": "Total split reads supporting the fusion on breakpoint 2"
+			},
+			"DiscordantReadPairs": {
+				"Type": "Integer",
+				"Number": "1",
+				"Description": "Total discordant read pairs supporting the fusion"
+			},
+			"Fusion_Coverage1": {
+				"Type": "Integer",
+				"Number": "1",
+				"Description": "Total discordant read pairs supporting the fusion"
+			},
+			"Fusion_Coverage2": {
+				"Type": "Integer",
+				"Number": "1",
+				"Description": "Total discordant read pairs supporting the fusion"
+			},
+			"Fusion_Confidence": {
+				"Type": "String",
+				"Number": "1",
+				"Description": "Each Arriba prediction is assigned one of the confidences 'low', 'medium', or 'high'. Several characteristics are taken into account, including: the number of supporting reads, the balance of split reads and discordant mates, the distance between the breakpoints, the type of event, whether the breakpoints are intragenic or not, and whether there are other events which corroborate the prediction, e.g. multiple isoforms or balanced translocations."
+			},
+			"Reading_Frame": {
+				"Type": "String",
+				"Number": "1",
+				"Description": "States whether the gene at the 3' end of the fusion is fused in-frame or out-of-frame. 'stop-codon' indicates that there is a stop codon prior to the fusion junction, such that the 3' end is not translated, even if the reading frame is preserved across the junction. The prediction of the reading frame builds on the prediction of the peptide sequence. A dot (.) indicates that the peptide sequence cannot be predicted"
+			},
+			"Arriba_tags": {
+				"Type": "String",
+				"Number": "1",
+				"Description": "User-defined list of tags provided to Arriba via the parameter -t, this column is populated with the provided tag whenever a fusion matches the coordinates specified for the respective tag"
+			},
+			"Retained_Protein_Domains": {
+				"Type": "String",
+				"Number": "1",
+				"Description": " If Arriba is provided with protein domain annotation using the parameter -p, then this column is populated with protein domains retained in the fusion. Redundant protein domains are only listed once. After every domain the fraction that is retained is stated as a percentage value in parentheses. The protein domains of the 5' and 3' genes are separated by a pipe symbol (|)."
+			},
+			"Closest_Genomic_Breakpoint1": {
+				"Type": "String",
+				"Number": "1",
+				"Description": " If Arriba is provided with protein domain annotation using the parameter -p, then this column is populated with protein domains retained in the fusion. Redundant protein domains are only listed once. After every domain the fraction that is retained is stated as a percentage value in parentheses. The protein domains of the 5' and 3' genes are separated by a pipe symbol (|)."
+			},
+			"Closest_Genomic_Breakpoint2": {
+				"Type": "String",
+				"Number": "1",
+				"Description": " If Arriba is provided with protein domain annotation using the parameter -p, then this column is populated with protein domains retained in the fusion. Redundant protein domains are only listed once. After every domain the fraction that is retained is stated as a percentage value in parentheses. The protein domains of the 5' and 3' genes are separated by a pipe symbol (|)."
+			},
+			"Fusion_Gene_ID1": {
+				"Type": "String",
+				"Number": "1",
+				"Description": " If Arriba is provided with protein domain annotation using the parameter -p, then this column is populated with protein domains retained in the fusion. Redundant protein domains are only listed once. After every domain the fraction that is retained is stated as a percentage value in parentheses. The protein domains of the 5' and 3' genes are separated by a pipe symbol (|)."
+			},
+			"Fusion_Gene_ID2": {
+				"Type": "String",
+				"Number": "1",
+				"Description": " If Arriba is provided with protein domain annotation using the parameter -p, then this column is populated with protein domains retained in the fusion. Redundant protein domains are only listed once. After every domain the fraction that is retained is stated as a percentage value in parentheses. The protein domains of the 5' and 3' genes are separated by a pipe symbol (|)."
+			},
+			"Arriba_Transcript_ID1": {
+				"Type": "String",
+				"Number": "1",
+				"Description": " If Arriba is provided with protein domain annotation using the parameter -p, then this column is populated with protein domains retained in the fusion. Redundant protein domains are only listed once. After every domain the fraction that is retained is stated as a percentage value in parentheses. The protein domains of the 5' and 3' genes are separated by a pipe symbol (|)."
+			},
+			"Arriba_Transcript_ID2": {
+				"Type": "String",
+				"Number": "1",
+				"Description": " If Arriba is provided with protein domain annotation using the parameter -p, then this column is populated with protein domains retained in the fusion. Redundant protein domains are only listed once. After every domain the fraction that is retained is stated as a percentage value in parentheses. The protein domains of the 5' and 3' genes are separated by a pipe symbol (|)."
+			},
+			"Fusion_Direction1": {
+				"Type": "String",
+				"Number": "1",
+				"Description": "Fusion_Direction1 and Fusion_Direction2 indicate the orientation of the fusion. A value of downstream means that the partner is fused downstream of the breakpoint, i.e. at a coordinate higher than the breakpoint. A value of upstream means the partner is fused at a coordinate lower than the breakpoint. When the prediction of the strands or of the 5' gene fails, this information gives insight into which parts of the fused genes are retained in the fusion."
+			},
+			"Fusion_Direction2": {
+				"Type": "String",
+				"Number": "1",
+				"Description": "Fusion_Direction1 and Fusion_Direction2 indicate the orientation of the fusion. A value of downstream means that the partner is fused downstream of the breakpoint, i.e. at a coordinate higher than the breakpoint. A value of upstream means the partner is fused at a coordinate lower than the breakpoint. When the prediction of the strands or of the 5' gene fails, this information gives insight into which parts of the fused genes are retained in the fusion."
+			},
+			"Arriba_Filters": {
+				"Type": "String",
+				"Number": "1",
+				"Description": "Lists the filters which removed one or more of the supporting reads. https://arriba.readthedocs.io/en/latest/internal-algorithm/ describes all filters in detail. The number of filtered reads is given in parentheses after the name of the filter. The total number of supporting reads can be obtained by summing up the reads given in the columns split_reads1, split_reads2, discordant_mates, and filters. If a filter discarded the event as a whole (all reads), the number of filtered reads is not stated."
+			}
+		},
+		"FORMAT": {
+			"GT": {
+				"Type": "String",
+				"Number": "1",
+				"Description": "Genotype"
+			}
+		}
+	}
+}

@@ -1,7 +1,8 @@
 ##fileformat=VCFv4.3
 ##fileDate=03/04/2023
-##source=SNP array
 ##InputFile=/home1/BAS/hameaue/variant_convert/variantconvert/tests/data/snp_test.tsv
+##source=variantconvert from SNP array
+##variantconvertVersion=2.0.0
 ##FILTER=<ID=PASS,Description="Passed filter">
 ##INFO=<ID=SVTYPE,Number=1,Type=String,Description="Type of structural variant">
 ##INFO=<ID=MATEID,Number=1,Type=String,Description="ID of mate breakends">
