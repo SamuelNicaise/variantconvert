@@ -184,7 +184,7 @@
 				"Type": "String",
 				"Description": "Variant Coding effect (synonymous, missense, stop gain, in-frame, frameshift, start loss, stop loss)"
 			},
-			"VarLocation": {
+			"varLocation": {
 				"Type": "String",
 				"Description": "Variant location (upstream, 5'UTR, exon, intron, 3'UTR, downstream)"
 			},
@@ -248,11 +248,11 @@
 				"Type": "String",
 				"Description": "List of ClinVar phenotypes Ids separated by '|'"
 			},
-			"rsID": {
+			"rsId": {
 				"Type": "String",
 				"Description": "dbSNP variation"
 			},
-			"rsValidation": {
+			"rsValidations": {
 				"Type": "String",
 				"Description": "dbSNP validated status"
 			},
@@ -307,6 +307,10 @@
 			"1000g_AMR_AF": {
 				"Type": "Float",
 				"Description": "1000 genomes allele frequency in American population"
+			},
+			"GnomAD_pLI": {
+				"Type": "Float",
+				"Description": "Score computed by gnomAD indicating the probability that a gene is intolerant to a loss of function variation (Nonsense, splice acceptor/donor variants due to SNV/indel)"
 			},
 			"gnomadAltFreq_all": {
 				"Type": "Float",
@@ -480,9 +484,49 @@
 				"Type": "String",
 				"Description": "gnomAD variant origin (Exomes, genomes, or both)"
 			},
-			"deltaMaxEntSscorePercent": {
+			"deltaMaxEntScorePercent": {
 				"Type": "Float",
 				"Description": "% difference between the splice score of variant with the score of the reference base"
+			},
+			"ExAC_cnvZ": {
+				"Type": "Float",
+				"Description": "Positive cnvZ_ExAC (Z score) from ExAC indicate gene intolerance to CNV"
+			},
+			"ExAC_delZ": {
+				"Type": "Float",
+				"Description": "Positive delZ_ExAC (Z score) from ExAC indicate gene intolerance to deletion"
+			},
+			"ExAC_dupZ": {
+				"Type": "Float",
+				"Description": "Positive dupZ_ExAC (Z score) from ExAC indicate gene intolerance to duplication"
+			},
+			"ExAC_misZ": {
+				"Type": "Float",
+				"Description": "Positive misZ_ExAC (Z score) from ExAC indicate gene intolerance to missense variation"
+			},
+			"ExAC_pLI": {
+				"Type": "Float",
+				"Description": "Score computed by ExAC indicating the probability that a gene is intolerant to a loss of function variation (Nonsense, splice acceptor/donor variants due to SNV/indel). ExAC consider pLI>=0.9 as an extremely LoF intolerant gene"
+			},
+			"ExAC_synZ": {
+				"Type": "Float",
+				"Description": "Positive synZ_ExAC (Z score) from ExAC indicate gene intolerance to synonymous variation"
+			},
+			"Exomiser_gene_pheno_score": {
+				"Type": "Float",
+				"Description": "Exomiser score for how close each overlapped gene is to the phenotype"
+			},
+			"Human_pheno_evidence": {
+				"Type": "String",
+				"Description": "Phenotypic evidence from Human model"
+			},
+			"Mouse_pheno_evidence": {
+				"Type": "String",
+				"Description": "Phenotypic evidence from Mouse model"
+			},
+			"Fish_pheno_evidence": {
+				"Type": "String",
+				"Description": "Phenotypic evidence from Fish model"
 			},
 			"wtMaxEntScore": {
 				"Type": "Float",
@@ -532,7 +576,7 @@
 				"Type": "String",
 				"Description": "Splicing  effect  in  variation  vicinity  (New  donor  Site,  New  Acceptor  Site,  Cryptic  Donor  Strongly  Activated, Cryptic Donor Weakly Activated, Cryptic Acceptor Strongly Activated, Cryptic Acceptor Weakly Activated)"
 			},
-			"localSpliceSiteAnnotation": {
+			"localSpliceAnnotation": {
 				"Type": "String",
 				"Description": "Splice site annotation: 'essential splice donor': variant in 5' SS at intronic position +1 or +2, 'essential splice acceptor': variant in 3' SS at intronic position -1 or -2, 'close splice donor': variant in 5' SS at position -3 to -1, +3 to +6, 'close splice acceptor': variant in 3' SS at position -12 to -2, and 0 to +2"
 			},
@@ -552,6 +596,14 @@
 				"Type": "Float",
 				"Description": "WT seq. HSF score used for local splice effect detection"
 			},
+			"localSS_varSSFScore": {
+				"Type": "Float",
+				"Description": "Variant seq. SSF score used for local splice effect detection"
+			},
+			"localSS_wtSSFScore": {
+				"Type": "Float",
+				"Description": "WT seq. SSF score used for local splice effect detection"
+			},
 			"localSS_varMaxEntScore": {
 				"Type": "Float",
 				"Description": "Variant seq. MaxEntScan score used for local splice effect detection"
@@ -563,6 +615,10 @@
 			"localSS_varHSFScore": {
 				"Type": "Float",
 				"Description": "Variant seq. HSF score used for local splice effect detection"
+			},
+			"LOEUF_bin": {
+				"Type": "Integer",
+				"Description": "Minimal 'decile bin of LOEUF' for given transcripts of a gene (lower values indicate a more constrained gene). Compared to the pLI, this score is continuous."
 			},
 			"branchPointPos": {
 				"Type": "Float",
@@ -608,11 +664,11 @@
 				"Type": "Float",
 				"Description": "phyloP score"
 			},
-			"PhastCons": {
+			"phastCons": {
 				"Type": "Float",
 				"Description": "phastCons score"
 			},
-			"GranthamDist": {
+			"granthamDist": {
 				"Type": "String",
 				"Description": "Grantham distance"
 			},
@@ -659,6 +715,30 @@
 			"countVariantDepth": {
 				"Type": "Float",
 				"Description": "Number of samples considered for the average SNV read depth"
+			},
+			"DDD_consequence": {
+				"Type": "String",
+				"Description": "Deciphering Developmental Disorders (DDD) Study (Firth, et al., 2011)"
+			},
+			"DDD_disease": {
+				"Type": "String",
+				"Description": "Deciphering Developmental Disorders (DDD) Study (Firth, et al., 2011)"
+			},
+			"DDD_HI_percent": {
+				"Type": "String",
+				"Description": "Deciphering Developmental Disorders (DDD) Study (Firth, et al., 2011)"
+			},
+			"DDD_mode": {
+				"Type": "String",
+				"Description": "Deciphering Developmental Disorders (DDD) Study (Firth, et al., 2011)"
+			},
+			"DDD_pmid": {
+				"Type": "String",
+				"Description": "Deciphering Developmental Disorders (DDD) Study (Firth, et al., 2011)"
+			},
+			"DDD_status": {
+				"Type": "String",
+				"Description": "Deciphering Developmental Disorders (DDD) Study (Firth, et al., 2011)"
 			},
 			"familyBarcode": {
 				"Type": "String",
@@ -832,6 +912,14 @@
 				"Type": "Float",
 				"Description": "Score computed in the ExAc database indicating the probability that a gene is intolerant to a loss of function variation  (Nonsense,  splice  acceptor  and  donor  variants  caused  by  SNV).  ExAC  consider  pLI  >=  0.9  as  an extremely LoF intolerant set of genes"
 			},
+			"HI": {
+				"Type": "Float",
+				"Description": "ClinGen Haploinsufficiency Score"
+			},
+			"TS": {
+				"Type": "Float",
+				"Description": "ClinGen Triplosensitivity Score"
+			},
 			"HI_percent": {
 				"Type": "Float",
 				"Description": "Haploinsufficiency ranks"
@@ -839,6 +927,26 @@
 			"varankVarScore": {
 				"Type": "Integer",
 				"Description": "VaRank score"
+			},
+			"OMIM_ID": {
+				"Type": "Integer",
+				"Description": "OMIM unique six-digit identifier"
+			},
+			"OMIM_phenotype": {
+				"Type": "String",
+				"Description": "e.g. Charcot-Marie-Tooth disease"
+			},
+			"OMIM_inheritance": {
+				"Type": "String",
+				"Description": "e.g. AD (= 'Autosomal dominant')"
+			},
+			"OMIM_morbid": {
+				"Type": "String",
+				"Description": "Set to 'yes' if the gene is an OMIM morbid gene"
+			},
+			"OMIM_morbid_candidate": {
+				"Type": "String",
+				"Description": "Set to 'yes' if the gene is an OMIM morbid gene candidate"
 			}
 		},
 		"FORMAT": {
