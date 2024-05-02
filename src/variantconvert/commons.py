@@ -36,6 +36,7 @@ def set_log_level(verbosity):
 
 
 def run_shell(cmd):
+    log.debug(cmd)
     if log.root.level <= 10:  # only show stdout/stderr if level is log.DEBUG
         redirect = None
     else:
