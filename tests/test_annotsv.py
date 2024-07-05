@@ -175,7 +175,7 @@ def test_annotsv_with_wild_types_to_vcf_fullandsplit(tmp_path):
     annotsv_test_routine(tmp_path, input_file, control, config, config_change)
 
 
-def test_annotsv_with_wild_types_to_vcf_full(tmp_path):
+def test_annotsv_with_wild_types_to_vcf_combined(tmp_path):
     input_file = osj(os.path.dirname(__file__), "data", "annotsv_wt_samples.tsv")
     control = osj(
         os.path.dirname(__file__), "controls", "annotsv_combined", "annotsv_wt_samples.vcf"
