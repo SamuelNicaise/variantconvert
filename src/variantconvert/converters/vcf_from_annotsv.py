@@ -54,6 +54,7 @@ class VcfFromAnnotsv(AbstractConverter):
         df.reset_index(drop=True, inplace=True)
 
         sample_col = self.config["VCF_COLUMNS"]["SAMPLE"]
+
         if isinstance(sample_col, str) and sample_col != "":
             # avoid replacing "NA" sample by a dot
             df.loc[:, df.columns != sample_col] = df.loc[:, df.columns != sample_col].fillna(".")

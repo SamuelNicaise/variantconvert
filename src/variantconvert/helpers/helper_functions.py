@@ -61,6 +61,7 @@ class HelperFunctions:
             "get_pos_from_bedpe": self.get_pos_from_bedpe,
             "get_ref_from_bedpe": self.get_ref_from_bedpe,
             "get_alt_from_bedpe": self.get_alt_from_bedpe,
+            "remove_quotes": self.remove_quotes,
         }
 
     def get(self, func_name):
@@ -284,3 +285,7 @@ class HelperFunctions:
             strand2,
             ref2,
         )
+
+    @staticmethod
+    def remove_quotes(data):
+        return data.strip("'")

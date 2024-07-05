@@ -12,13 +12,14 @@ import glob
 import logging as log
 import multiprocessing
 import os
+import shutil
 import tqdm
 import time
 
 from os.path import join as osj
 
-from commons import run_shell, set_log_level
-from converter_factory import ConverterFactory
+from variantconvert.commons import run_shell, set_log_level
+from variantconvert.converter_factory import ConverterFactory
 
 
 def conversion_worker(args):
@@ -109,4 +110,4 @@ def main_varank_batch(args):
         log.info("Merging converted files...")
         log.debug(cmd)
         run_shell(cmd)
-    # shutil.rmtree(tmp_dir)
+    shutil.rmtree(tmp_dir)

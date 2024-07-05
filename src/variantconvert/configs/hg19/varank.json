@@ -70,6 +70,11 @@
 			],
 			"FindByPipelines": "FindByPipelines",
 			"POOL_barcode": "BARCODE_2",
+			"familyBarcode": [
+				"HELPER_FUNCTION",
+				"remove_quotes",
+				"familyBarcode"
+			],
 			"GMC": ""
 		}
 	},
@@ -978,6 +983,11 @@
 				"Number": "1",
 				"Type": "String",
 				"Description": "Barcode from STARK's POOL module"
+			},
+			"familyBarcode": {
+				"Number": "1",
+				"Type": "String",
+				"Description": "Homozygote or heterozygote status for the sample of interest and its associated samples in VaRank config"
 			},
 			"GMC": {
 				"Number": "1",
