@@ -60,44 +60,44 @@
 ##INFO=<ID=1000g_EUR_AF,Number=1,Type=Float,Description="1000 genomes allele frequency in European population">
 ##INFO=<ID=1000g_AMR_AF,Number=1,Type=Float,Description="1000 genomes allele frequency in American population">
 ##INFO=<ID=gnomadAltFreq_all,Number=1,Type=Float,Description="gnomAD alternate allele frequency (All populations)">
-##INFO=<ID=gnomadHomCount_all,Number=1,Type=Float,Description="gnomAD homozygous genotype count (All populations)">
-##INFO=<ID=gnomadHetCount_all,Number=1,Type=Float,Description="gnomAD heterozygous genotype count (All populations)">
-##INFO=<ID=gnomadHemCount_all,Number=1,Type=Float,Description="gnomAD hemizygous genotype count (All populations)">
+##INFO=<ID=gnomadHomCount_all,Number=1,Type=Integer,Description="gnomAD homozygous genotype count (All populations)">
+##INFO=<ID=gnomadHetCount_all,Number=1,Type=Integer,Description="gnomAD heterozygous genotype count (All populations)">
+##INFO=<ID=gnomadHemCount_all,Number=1,Type=Integer,Description="gnomAD hemizygous genotype count (All populations)">
 ##INFO=<ID=gnomadAltFreq_afr,Number=1,Type=Float,Description="gnomAD alternate allele frequency (African)">
-##INFO=<ID=gnomadHomCount_afr,Number=1,Type=Float,Description="gnomAD homozygous genotype count (African)">
-##INFO=<ID=gnomadHetCount_afr,Number=1,Type=Float,Description="gnomAD heterozygous genotype count (African)">
-##INFO=<ID=gnomadHemCount_afr,Number=1,Type=Float,Description="gnomAD hemizygous genotype count (African)">
+##INFO=<ID=gnomadHomCount_afr,Number=1,Type=Integer,Description="gnomAD homozygous genotype count (African)">
+##INFO=<ID=gnomadHetCount_afr,Number=1,Type=Integer,Description="gnomAD heterozygous genotype count (African)">
+##INFO=<ID=gnomadHemCount_afr,Number=1,Type=Integer,Description="gnomAD hemizygous genotype count (African)">
 ##INFO=<ID=gnomadAltFreq_amr,Number=1,Type=Float,Description="gnomAD alternate allele frequency (Latino)">
-##INFO=<ID=gnomadHomCount_amr,Number=1,Type=Float,Description="gnomAD homozygous genotype count (Latino)">
-##INFO=<ID=gnomadHetCount_amr,Number=1,Type=Float,Description="gnomAD heterozygous genotype count (Latino)">
-##INFO=<ID=gnomadHemCount_amr,Number=1,Type=Float,Description="gnomAD hemizygous genotype count (Latino)">
+##INFO=<ID=gnomadHomCount_amr,Number=1,Type=Integer,Description="gnomAD homozygous genotype count (Latino)">
+##INFO=<ID=gnomadHetCount_amr,Number=1,Type=Integer,Description="gnomAD heterozygous genotype count (Latino)">
+##INFO=<ID=gnomadHemCount_amr,Number=1,Type=Integer,Description="gnomAD hemizygous genotype count (Latino)">
 ##INFO=<ID=gnomadAltFreq_asj,Number=1,Type=Float,Description="gnomAD alternate allele frequency (Ashkenazy Jewish)">
-##INFO=<ID=gnomadHomCount_asj,Number=1,Type=Float,Description="gnomAD homozygous genotype count (Ashkenazy Jewish)">
-##INFO=<ID=gnomadHetCount_asj,Number=1,Type=Float,Description="gnomAD heterozygous genotype count (Ashkenazy Jewish)">
-##INFO=<ID=gnomadHemCount_asj,Number=1,Type=Float,Description="gnomAD hemizygous genotype count (Ashkenazy Jewish)">
+##INFO=<ID=gnomadHomCount_asj,Number=1,Type=Integer,Description="gnomAD homozygous genotype count (Ashkenazy Jewish)">
+##INFO=<ID=gnomadHetCount_asj,Number=1,Type=Integer,Description="gnomAD heterozygous genotype count (Ashkenazy Jewish)">
+##INFO=<ID=gnomadHemCount_asj,Number=1,Type=Integer,Description="gnomAD hemizygous genotype count (Ashkenazy Jewish)">
 ##INFO=<ID=gnomadAltFreq_eas,Number=1,Type=Float,Description="gnomAD alternate allele frequency (East Asian)">
-##INFO=<ID=gnomadHomCount_eas,Number=1,Type=Float,Description="gnomAD homozygous genotype count (East Asian)">
-##INFO=<ID=gnomadHetCount_eas,Number=1,Type=Float,Description="gnomAD heterozygous genotype count (East Asian)">
-##INFO=<ID=gnomadHemCount_eas,Number=1,Type=Float,Description="gnomAD hemizygous genotype count (East Asian)">
+##INFO=<ID=gnomadHomCount_eas,Number=1,Type=Integer,Description="gnomAD homozygous genotype count (East Asian)">
+##INFO=<ID=gnomadHetCount_eas,Number=1,Type=Integer,Description="gnomAD heterozygous genotype count (East Asian)">
+##INFO=<ID=gnomadHemCount_eas,Number=1,Type=Integer,Description="gnomAD hemizygous genotype count (East Asian)">
 ##INFO=<ID=gnomadAltFreq_sas,Number=1,Type=Float,Description="gnomAD alternate allele frequency (South Asian)">
-##INFO=<ID=gnomadHomCount_sas,Number=1,Type=Float,Description="gnomAD homozygous genotype count (South Asian)">
-##INFO=<ID=gnomadHetCount_sas,Number=1,Type=Float,Description="gnomAD heterozygous genotype count (South Asian)">
-##INFO=<ID=gnomadHemCount_sas,Number=1,Type=Float,Description="gnomAD hemizygous genotype count (South Asian)">
+##INFO=<ID=gnomadHomCount_sas,Number=1,Type=Integer,Description="gnomAD homozygous genotype count (South Asian)">
+##INFO=<ID=gnomadHetCount_sas,Number=1,Type=Integer,Description="gnomAD heterozygous genotype count (South Asian)">
+##INFO=<ID=gnomadHemCount_sas,Number=1,Type=Integer,Description="gnomAD hemizygous genotype count (South Asian)">
 ##INFO=<ID=gnomadAltFreq_nfe,Number=1,Type=Float,Description="gnomAD alternate allele frequency (Non-Finnish European)">
-##INFO=<ID=gnomadHomCount_nfe,Number=1,Type=Float,Description="gnomAD homozygous genotype count (Non-Finnish European)">
-##INFO=<ID=gnomadHetCount_nfe,Number=1,Type=Float,Description="gnomAD heterozygous genotype count (Non-Finnish European)">
-##INFO=<ID=gnomadHemCount_nfe,Number=1,Type=Float,Description="gnomAD hemizygous genotype count (Non-Finnish European)">
+##INFO=<ID=gnomadHomCount_nfe,Number=1,Type=Integer,Description="gnomAD homozygous genotype count (Non-Finnish European)">
+##INFO=<ID=gnomadHetCount_nfe,Number=1,Type=Integer,Description="gnomAD heterozygous genotype count (Non-Finnish European)">
+##INFO=<ID=gnomadHemCount_nfe,Number=1,Type=Integer,Description="gnomAD hemizygous genotype count (Non-Finnish European)">
 ##INFO=<ID=gnomadAltFreq_fin,Number=1,Type=Float,Description="gnomAD alternate allele frequency (Finnish European)">
-##INFO=<ID=gnomadHomCount_fin,Number=1,Type=Float,Description="gnomAD homozygous genotype count (Finnish European)">
-##INFO=<ID=gnomadHetCount_fin,Number=1,Type=Float,Description="gnomAD heterozygous genotype count (Finnish European)">
-##INFO=<ID=gnomadHemCount_fin,Number=1,Type=Float,Description="gnomAD hemizygous genotype count (Finnish European)">
+##INFO=<ID=gnomadHomCount_fin,Number=1,Type=Integer,Description="gnomAD homozygous genotype count (Finnish European)">
+##INFO=<ID=gnomadHetCount_fin,Number=1,Type=Integer,Description="gnomAD heterozygous genotype count (Finnish European)">
+##INFO=<ID=gnomadHemCount_fin,Number=1,Type=Integer,Description="gnomAD hemizygous genotype count (Finnish European)">
 ##INFO=<ID=gnomadAltFreq_oth,Number=1,Type=Float,Description="gnomAD alternate allele frequency (Other populations)">
-##INFO=<ID=gnomadHomCount_oth,Number=1,Type=Float,Description="gnomAD homozygous genotype count (Other populations)">
-##INFO=<ID=gnomadHetCount_oth,Number=1,Type=Float,Description="gnomAD heterozygous genotype count (Other populations)">
-##INFO=<ID=gnomadHemCount_oth,Number=1,Type=Float,Description="gnomAD hemizygous genotype count (Other populations)">
+##INFO=<ID=gnomadHomCount_oth,Number=1,Type=Integer,Description="gnomAD homozygous genotype count (Other populations)">
+##INFO=<ID=gnomadHetCount_oth,Number=1,Type=Integer,Description="gnomAD heterozygous genotype count (Other populations)">
+##INFO=<ID=gnomadHemCount_oth,Number=1,Type=Integer,Description="gnomAD hemizygous genotype count (Other populations)">
 ##INFO=<ID=gnomadAltFreq_popmax,Number=1,Type=Float,Description="gnomAD alternate allele frequency (Maximum Allele Frequency across populations, excluding OTH)">
 ##INFO=<ID=gnomadFilter,Number=1,Type=String,Description="gnomAD VCF filter value (AC0, PASS, RF...)">
-##INFO=<ID=gnomadReadDepth,Number=1,Type=String,Description="gnomAD read depth">
+##INFO=<ID=gnomadReadDepth,Number=1,Type=Integer,Description="gnomAD read depth">
 ##INFO=<ID=gnomadOrigin,Number=1,Type=String,Description="gnomAD variant origin (Exomes, genomes, or both)">
 ##INFO=<ID=deltaMaxEntScorePercent,Number=1,Type=Float,Description="% difference between the splice score of variant with the score of the reference base">
 ##INFO=<ID=wtMaxEntScore,Number=1,Type=Float,Description="WT seq. MaxEntScan score">
@@ -139,16 +139,16 @@
 ##INFO=<ID=annotationAnalysis,Number=1,Type=String,Description="Indicates the annotation status (value: Yes or No)">
 ##INFO=<ID=avgTotalDepth,Number=1,Type=Float,Description="Total read depth average at the variant position for all samples analyzed that have the variation">
 ##INFO=<ID=sdTotalDepth,Number=1,Type=Float,Description="Standard deviation associated with Avg_TotalDepth">
-##INFO=<ID=countTotalDepth,Number=1,Type=Float,Description="Number of samples considered for the average total read depth">
-##INFO=<ID=avgVariantDepth,Number=1,Type=String,Description="Variation read depth average at the variant position for all samples analyzed that have the variation">
-##INFO=<ID=sdVariantDepth,Number=1,Type=String,Description="Standard deviation associated with Avg_SNVDepth">
-##INFO=<ID=countVariantDepth,Number=1,Type=Float,Description="Number of samples considered for the average SNV read depth">
+##INFO=<ID=countTotalDepth,Number=1,Type=Integer,Description="Number of samples considered for the average total read depth">
+##INFO=<ID=avgVariantDepth,Number=1,Type=Integer,Description="Variation read depth average at the variant position for all samples analyzed that have the variation">
+##INFO=<ID=sdVariantDepth,Number=1,Type=Float,Description="Standard deviation associated with Avg_SNVDepth">
+##INFO=<ID=countVariantDepth,Number=1,Type=Integer,Description="Number of samples considered for the average SNV read depth">
 ##INFO=<ID=familyBarcode,Number=1,Type=String,Description="Homozygote or heterozygote status for the sample of interest and its associated samples">
 ##INFO=<ID=barcode,Number=1,Type=String,Description="Homozygote or heterozygote status for all sample analyzed together (Hom: 2 ; Het: 1; Sample name is given at the first line of the file: ## Barcode)">
-##INFO=<ID=homCount,Number=1,Type=Float,Description="Number of homozygote over all samples analyzed together">
-##INFO=<ID=hetCount,Number=1,Type=Float,Description="Number of heterozygote over all samples analyzed together">
-##INFO=<ID=alleleCount,Number=1,Type=String,Description="Number of alleles supporting the variant">
-##INFO=<ID=sampleCount,Number=1,Type=Float,Description="Total number of samples">
+##INFO=<ID=homCount,Number=1,Type=Integer,Description="Number of homozygote over all samples analyzed together">
+##INFO=<ID=hetCount,Number=1,Type=Integer,Description="Number of heterozygote over all samples analyzed together">
+##INFO=<ID=alleleCount,Number=1,Type=Integer,Description="Number of alleles supporting the variant">
+##INFO=<ID=sampleCount,Number=1,Type=Integer,Description="Total number of samples">
 ##INFO=<ID=alleleFrequency,Number=1,Type=Float,Description="Allele frequency in all samples analyzed (with 4 decimals)">
 ##INFO=<ID=samVa,Number=1,Type=String,Description="Sample ID of the 10 first non WT variants, with their homozygote/heterozygote status">
 ##INFO=<ID=Mim Number,Number=1,Type=String,Description="OMIM unique six digit identifier">
