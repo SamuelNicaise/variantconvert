@@ -203,7 +203,7 @@ class VcfFromVarank(AbstractConverter):
         # INFO
         for key in self.config["COLUMNS_DESCRIPTION"]["INFO"]:
             if key in self.df.columns or key in self.config["VCF_COLUMNS"]:
-                number = "1"  # TODO: update config to include number
+                number = self.config["COLUMNS_DESCRIPTION"]["INFO"][key].get("Number", ".")
                 description = self.config["COLUMNS_DESCRIPTION"]["INFO"][key]["Description"]
                 info_type = self.config["COLUMNS_DESCRIPTION"]["INFO"][key]["Type"]
                 header.append(
@@ -227,7 +227,7 @@ class VcfFromVarank(AbstractConverter):
         # FORMAT
         for key in self.config["COLUMNS_DESCRIPTION"]["FORMAT"]:
             if key in self.df.columns or key in self.config["VCF_COLUMNS"]["FORMAT"]:
-                number = self.config["COLUMNS_DESCRIPTION"]["FORMAT"][key]["Number"]
+                number = self.config["COLUMNS_DESCRIPTION"]["FORMAT"][key].get("Number", ".")
                 description = self.config["COLUMNS_DESCRIPTION"]["FORMAT"][key]["Description"]
                 format_type = self.config["COLUMNS_DESCRIPTION"]["FORMAT"][key]["Type"]
                 header.append(

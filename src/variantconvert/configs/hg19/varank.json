@@ -75,7 +75,8 @@
 				"remove_quotes",
 				"familyBarcode"
 			],
-			"GMC": ""
+			"GMC": "",
+			"ExomiserGenePhenoScore": "Exomiser_gene_pheno_score"
 		}
 	},
 	"COLUMNS_DESCRIPTION": {
@@ -321,15 +322,15 @@
 				"Description": "gnomAD alternate allele frequency (All populations)"
 			},
 			"gnomadHomCount_all": {
-				"Type": "Float",
+				"Type": "Integer",
 				"Description": "gnomAD homozygous genotype count (All populations)"
 			},
 			"gnomadHetCount_all": {
-				"Type": "Float",
+				"Type": "Integer",
 				"Description": "gnomAD heterozygous genotype count (All populations)"
 			},
 			"gnomadHemCount_all": {
-				"Type": "Float",
+				"Type": "Integer",
 				"Description": "gnomAD hemizygous genotype count (All populations)"
 			},
 			"gnomadAltFreq_afr": {
@@ -337,15 +338,15 @@
 				"Description": "gnomAD alternate allele frequency (African)"
 			},
 			"gnomadHomCount_afr": {
-				"Type": "Float",
+				"Type": "Integer",
 				"Description": "gnomAD homozygous genotype count (African)"
 			},
 			"gnomadHetCount_afr": {
-				"Type": "Float",
+				"Type": "Integer",
 				"Description": "gnomAD heterozygous genotype count (African)"
 			},
 			"gnomadHemCount_afr": {
-				"Type": "Float",
+				"Type": "Integer",
 				"Description": "gnomAD hemizygous genotype count (African)"
 			},
 			"gnomadAltFreq_amr": {
@@ -353,15 +354,15 @@
 				"Description": "gnomAD alternate allele frequency (Latino)"
 			},
 			"gnomadHomCount_amr": {
-				"Type": "Float",
+				"Type": "Integer",
 				"Description": "gnomAD homozygous genotype count (Latino)"
 			},
 			"gnomadHetCount_amr": {
-				"Type": "Float",
+				"Type": "Integer",
 				"Description": "gnomAD heterozygous genotype count (Latino)"
 			},
 			"gnomadHemCount_amr": {
-				"Type": "Float",
+				"Type": "Integer",
 				"Description": "gnomAD hemizygous genotype count (Latino)"
 			},
 			"gnomadAltFreq_asj": {
@@ -369,15 +370,15 @@
 				"Description": "gnomAD alternate allele frequency (Ashkenazy Jewish)"
 			},
 			"gnomadHomCount_asj": {
-				"Type": "Float",
+				"Type": "Integer",
 				"Description": "gnomAD homozygous genotype count (Ashkenazy Jewish)"
 			},
 			"gnomadHetCount_asj": {
-				"Type": "Float",
+				"Type": "Integer",
 				"Description": "gnomAD heterozygous genotype count (Ashkenazy Jewish)"
 			},
 			"gnomadHemCount_asj": {
-				"Type": "Float",
+				"Type": "Integer",
 				"Description": "gnomAD hemizygous genotype count (Ashkenazy Jewish)"
 			},
 			"gnomadAltFreq_eas": {
@@ -385,15 +386,15 @@
 				"Description": "gnomAD alternate allele frequency (East Asian)"
 			},
 			"gnomadHomCount_eas": {
-				"Type": "Float",
+				"Type": "Integer",
 				"Description": "gnomAD homozygous genotype count (East Asian)"
 			},
 			"gnomadHetCount_eas": {
-				"Type": "Float",
+				"Type": "Integer",
 				"Description": "gnomAD heterozygous genotype count (East Asian)"
 			},
 			"gnomadHemCount_eas": {
-				"Type": "Float",
+				"Type": "Integer",
 				"Description": "gnomAD hemizygous genotype count (East Asian)"
 			},
 			"gnomadAltFreq_sas": {
@@ -401,15 +402,15 @@
 				"Description": "gnomAD alternate allele frequency (South Asian)"
 			},
 			"gnomadHomCount_sas": {
-				"Type": "Float",
+				"Type": "Integer",
 				"Description": "gnomAD homozygous genotype count (South Asian)"
 			},
 			"gnomadHetCount_sas": {
-				"Type": "Float",
+				"Type": "Integer",
 				"Description": "gnomAD heterozygous genotype count (South Asian)"
 			},
 			"gnomadHemCount_sas": {
-				"Type": "Float",
+				"Type": "Integer",
 				"Description": "gnomAD hemizygous genotype count (South Asian)"
 			},
 			"gnomadAltFreq_nfe": {
@@ -417,15 +418,15 @@
 				"Description": "gnomAD alternate allele frequency (Non-Finnish European)"
 			},
 			"gnomadHomCount_nfe": {
-				"Type": "Float",
+				"Type": "Integer",
 				"Description": "gnomAD homozygous genotype count (Non-Finnish European)"
 			},
 			"gnomadHetCount_nfe": {
-				"Type": "Float",
+				"Type": "Integer",
 				"Description": "gnomAD heterozygous genotype count (Non-Finnish European)"
 			},
 			"gnomadHemCount_nfe": {
-				"Type": "Float",
+				"Type": "Integer",
 				"Description": "gnomAD hemizygous genotype count (Non-Finnish European)"
 			},
 			"gnomadAltFreq_fin": {
@@ -433,15 +434,15 @@
 				"Description": "gnomAD alternate allele frequency (Finnish European)"
 			},
 			"gnomadHomCount_fin": {
-				"Type": "Float",
+				"Type": "Integer",
 				"Description": "gnomAD homozygous genotype count (Finnish European)"
 			},
 			"gnomadHetCount_fin": {
-				"Type": "Float",
+				"Type": "Integer",
 				"Description": "gnomAD heterozygous genotype count (Finnish European)"
 			},
 			"gnomadHemCount_fin": {
-				"Type": "Float",
+				"Type": "Integer",
 				"Description": "gnomAD hemizygous genotype count (Finnish European)"
 			},
 			"gnomadAltFreq_oth": {
@@ -449,15 +450,15 @@
 				"Description": "gnomAD alternate allele frequency (Other populations)"
 			},
 			"gnomadHomCount_oth": {
-				"Type": "Float",
+				"Type": "Integer",
 				"Description": "gnomAD homozygous genotype count (Other populations)"
 			},
 			"gnomadHetCount_oth": {
-				"Type": "Float",
+				"Type": "Integer",
 				"Description": "gnomAD heterozygous genotype count (Other populations)"
 			},
 			"gnomadHemCount_oth": {
-				"Type": "Float",
+				"Type": "Integer",
 				"Description": "gnomAD hemizygous genotype count (Other populations)"
 			},
 			"gnomadAltFreq_popmax": {
@@ -465,15 +466,15 @@
 				"Description": "gnomAD alternate allele frequency (Maximum Allele Frequency across populations, excluding OTH)"
 			},
 			"gnomadHomCount_popmax": {
-				"Type": "Float",
+				"Type": "Integer",
 				"Description": "gnomAD homozygous genotype count (Maximum Allele Frequency across populations, excluding OTH)"
 			},
 			"gnomadHetCount_popmax": {
-				"Type": "Float",
+				"Type": "Integer",
 				"Description": "gnomAD heterozygous genotype count (Maximum Allele Frequency across populations, excluding OTH)"
 			},
 			"gnomadHemCount_popmax": {
-				"Type": "Float",
+				"Type": "Integer",
 				"Description": "gnomAD hemizygous genotype count (Maximum Allele Frequency across populations, excluding OTH)"
 			},
 			"gnomadFilter": {
@@ -481,7 +482,7 @@
 				"Description": "gnomAD VCF filter value (AC0, PASS, RF...)"
 			},
 			"gnomadReadDepth": {
-				"Type": "String",
+				"Type": "Integer",
 				"Description": "gnomAD read depth"
 			},
 			"gnomadOrigin": {
@@ -515,10 +516,6 @@
 			"ExAC_synZ": {
 				"Type": "Float",
 				"Description": "Positive synZ_ExAC (Z score) from ExAC indicate gene intolerance to synonymous variation"
-			},
-			"Exomiser_gene_pheno_score": {
-				"Type": "Float",
-				"Description": "Exomiser score for how close each overlapped gene is to the phenotype"
 			},
 			"Human_pheno_evidence": {
 				"Type": "String",
@@ -689,7 +686,7 @@
 				"Description": "AlignGVGD: deviation (GD)"
 			},
 			"vaRank_VarScore": {
-				"Type": "String",
+				"Type": "Integer",
 				"Description": "Prioritization score according to VaRank"
 			},
 			"annotationAnalysis": {
@@ -705,19 +702,19 @@
 				"Description": "Standard deviation associated with Avg_TotalDepth"
 			},
 			"countTotalDepth": {
-				"Type": "Float",
+				"Type": "Integer",
 				"Description": "Number of samples considered for the average total read depth"
 			},
 			"avgVariantDepth": {
-				"Type": "String",
+				"Type": "Integer",
 				"Description": "Variation read depth average at the variant position for all samples analyzed that have the variation"
 			},
 			"sdVariantDepth": {
-				"Type": "String",
+				"Type": "Float",
 				"Description": "Standard deviation associated with Avg_SNVDepth"
 			},
 			"countVariantDepth": {
-				"Type": "Float",
+				"Type": "Integer",
 				"Description": "Number of samples considered for the average SNV read depth"
 			},
 			"DDD_consequence": {
@@ -753,19 +750,19 @@
 				"Description": "Homozygote or heterozygote status for all sample analyzed together (Hom: 2 ; Het: 1; Sample name is given at the first line of the file: ## Barcode)"
 			},
 			"homCount": {
-				"Type": "Float",
+				"Type": "Integer",
 				"Description": "Number of homozygote over all samples analyzed together"
 			},
 			"hetCount": {
-				"Type": "Float",
+				"Type": "Integer",
 				"Description": "Number of heterozygote over all samples analyzed together"
 			},
 			"alleleCount": {
-				"Type": "String",
+				"Type": "Integer",
 				"Description": "Number of alleles supporting the variant"
 			},
 			"sampleCount": {
-				"Type": "Float",
+				"Type": "Integer",
 				"Description": "Total number of samples"
 			},
 			"alleleFrequency": {
@@ -938,10 +935,12 @@
 			},
 			"OMIM_phenotype": {
 				"Type": "String",
+				"Number": ".",
 				"Description": "e.g. Charcot-Marie-Tooth disease"
 			},
 			"OMIM_inheritance": {
 				"Type": "String",
+				"Number": ".",
 				"Description": "e.g. AD (= 'Autosomal dominant')"
 			},
 			"OMIM_morbid": {
@@ -993,6 +992,11 @@
 				"Number": "1",
 				"Type": "String",
 				"Description": "Gene Mutations Count: number of variants occuring in the same gene based on 'genes' column. Computed by variantconvert"
+			},
+			"ExomiserGenePhenoScore": {
+				"Number": "1",
+				"Type": "Float",
+				"Description": "Exomiser score for how close the overlapped gene is to the phenotype"
 			}
 		}
 	}

@@ -20,4 +20,4 @@ install:
 
 #a current issue I'm trying to fix
 debug:
-	python src/variantconvert/__main__.py convert -i tests/data/DECON.results_all.AnnotSV.tsv -o decon_annotsv_test.vcf -c src/variantconvert/configs/hg19/annotsv3_from_vcf.json -v debug
+	python src/variantconvert/__main__.py convert -i tests/data/fam01_SAMPLE_VARANK_hg19_allVariants.rankingByGene.tsv -o varank_test.vcf -c src/variantconvert/configs/hg19/varank.json --coordConversionFile tests/data/VCF_Coordinates_Conversion.tsv -v info 
