@@ -203,7 +203,7 @@ class VcfFromVarank(AbstractConverter):
         # INFO
         for key in self.config["COLUMNS_DESCRIPTION"]["INFO"]:
             if key in self.df.columns or key in self.config["VCF_COLUMNS"]:
-                number = self.config["COLUMNS_DESCRIPTION"]["INFO"][key].get("Number", ".")
+                number = self.config["COLUMNS_DESCRIPTION"]["INFO"][key].get("Number", "1")
                 description = self.config["COLUMNS_DESCRIPTION"]["INFO"][key]["Description"]
                 info_type = self.config["COLUMNS_DESCRIPTION"]["INFO"][key]["Type"]
                 header.append(

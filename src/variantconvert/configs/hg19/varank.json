@@ -75,8 +75,7 @@
 				"remove_quotes",
 				"familyBarcode"
 			],
-			"GMC": "",
-			"ExomiserGenePhenoScore": "Exomiser_gene_pheno_score"
+			"GMC": ""
 		}
 	},
 	"COLUMNS_DESCRIPTION": {
