@@ -31,9 +31,17 @@ class VcfFromTsv(AbstractConverter):
             lambda row: self._get_unique_variant_id(row), axis=1
         )
         if self.config["VCF_COLUMNS"]["SAMPLE"] != "":
-            self.df[self.config["VCF_COLUMNS"]["SAMPLE"]] = self.df.apply(
-                lambda row: self._bwamem_name_bugfix(row), axis=1
-            )
+            try:
+                self.df[self.config["VCF_COLUMNS"]["SAMPLE"]] = self.df.apply(
+                    lambda row: self._bwamem_name_bugfix(row), axis=1
+                )
+            except AttributeError as e:
+                #cast the column to str and try again (in some apps all sample names are numeric and pandas casts the column to int)
+                self.df[self.config["VCF_COLUMNS"]["SAMPLE"]] = self.df[
+                    self.config["VCF_COLUMNS"]["SAMPLE"]
+                ].astype(str).apply(
+                    lambda row: self._bwamem_name_bugfix({self.config["VCF_COLUMNS"]["SAMPLE"]: row})
+                )
         log.debug(self.df)
 
     def _get_sample_list(self):
