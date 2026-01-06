@@ -55,12 +55,13 @@ class VcfFromAnnotsv(AbstractConverter):
 
         sample_col = self.config["VCF_COLUMNS"]["SAMPLE"]
 
-        if isinstance(sample_col, str) and sample_col != "":
+        if isinstance(sample_col, str) and sample_col != "" and sample_col in df.columns:
             # avoid replacing "NA" sample by a dot
-            df.loc[:, df.columns != sample_col] = df.loc[:, df.columns != sample_col].fillna(".")
-            df.loc[:, sample_col] = df.loc[:, sample_col].fillna("NA")
+            df[sample_col] = df[sample_col].where(~df[sample_col].isna(), "NA")
+            other_cols = df.columns.difference([sample_col])
+            df[other_cols] = df[other_cols].where(~df[other_cols].isna(), ".")
         else:
-            df.fillna(".", inplace=True)  # default empty value in VCF
+            df = df.where(~df.isna(), ".")  # default empty value in VCF
 
         df = df.astype(str)
         log.debug(df)
