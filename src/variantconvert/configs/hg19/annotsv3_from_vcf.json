@@ -54,12 +54,7 @@
 			"Annotation_mode"
 		],
 		"ID": "ID",
-		"REF": [
-			"HELPER_FUNCTION",
-			"get_ref_annotsv",
-			"SV_chrom",
-			"POS"
-		],
+		"REF": "REF",
 		"ALT": "ALT",
 		"QUAL": "QUAL",
 		"FILTER": "FILTER",
