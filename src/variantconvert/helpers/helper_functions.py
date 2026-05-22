@@ -5,7 +5,7 @@
 """
 
 from commons import get_genome
-
+import numpy as np
 
 class HelperFunctions:
     """
@@ -62,6 +62,8 @@ class HelperFunctions:
             "get_ref_from_bedpe": self.get_ref_from_bedpe,
             "get_alt_from_bedpe": self.get_alt_from_bedpe,
             "remove_quotes": self.remove_quotes,
+            "float_with_inf_and_undetermined": self.float_with_inf_and_undetermined,
+            "vep_from_archer_tsv": self.vep_from_archer_tsv,
         }
 
     def get(self, func_name):
@@ -289,3 +291,35 @@ class HelperFunctions:
     @staticmethod
     def remove_quotes(data):
         return data.strip("'")
+
+    @staticmethod
+    def float_with_inf_and_undetermined(data):
+        if data == "inf":
+            return str(np.inf)
+        elif data in ("indeterminate", "undetermined", "."):
+            return str(np.nan)
+        else:
+            return str(float(data))
+
+    @staticmethod
+    def vep_from_archer_tsv(pick, transcript_id, canonical, symbol, exon, codons, consequence, existing_variation, HGVSc, HGVSp, SIFT, PolyPhen):
+        """
+        Reconstruct a VEP CSQ string based on the columns provided by Archer's TSV output.
+
+        Example
+        input: 
+        transcript_id=ENST00000389048|ENST00000431873|ENST00000453137
+        canonical=YES||
+        symbol=ALK|ALK|ALK
+
+        output should be:
+        ENST00000389048|YES|ALK,ENST00000431873||ALK,ENST00000453137||ALK
+        """
+        args = [pick, transcript_id, canonical, symbol, exon, codons, consequence, existing_variation, HGVSc, HGVSp, SIFT, PolyPhen]
+        split_args = [arg.split("|") for arg in args]
+        
+        if not all(len(split_args[0]) == len(arg) for arg in split_args):
+            raise ValueError("All arguments must have the same number of '|' separated values.")
+        
+        combined = ",".join("|".join(values) for values in zip(*split_args))
+        return combined

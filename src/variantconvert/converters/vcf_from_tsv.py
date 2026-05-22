@@ -143,11 +143,16 @@ class VcfFromTsv(AbstractConverter):
                 if len(sample_list) == 1:
                     sample_field = []
                     for index in unique_id_to_index_list[data[self.UNIQUE_ID][i]]:
-                        for key, val in self.config["VCF_COLUMNS"]["FORMAT"].items():
-                            if key == "GT" and val == "":
-                                sample_field.append("0/1")
-                                continue
-                            sample_field.append(data[val][index])
+                        for format_key, format_val in self.config["VCF_COLUMNS"]["FORMAT"].items():
+                            if is_helper_func(format_val):
+                                func = helper.get(format_val[1])
+                                args = [data[c][i] for c in format_val[2:]]
+                                sample_value = func(*args)
+                            elif format_key == "GT" and format_val == "":
+                                sample_value = "0/1"
+                            else:
+                                sample_value = data[format_val][index]
+                            sample_field.append(sample_value)
                         line += ":".join(sample_field)
                     # TODO: deal with monosample files with variants that are not associated to any sample
 
@@ -157,11 +162,16 @@ class VcfFromTsv(AbstractConverter):
                     # If the variant exists in other lines in the source file, fetch their sample data now
                     for index in unique_id_to_index_list[data[self.UNIQUE_ID][i]]:
                         sample_field = []
-                        for key, val in self.config["VCF_COLUMNS"]["FORMAT"].items():
-                            if key == "GT" and val == "":
-                                sample_field.append("0/1")
-                                continue
-                            sample_field.append(data[val][index])
+                        for format_key, format_val in self.config["VCF_COLUMNS"]["FORMAT"].items():
+                            if is_helper_func(format_val):
+                                func = helper.get(format_val[1])
+                                args = [data[c][i] for c in format_val[2:]]
+                                sample_value = func(*args)
+                            elif format_key == "GT" and format_val == "":
+                                sample_value = "0/1"
+                            else:
+                                sample_value = data[format_val][index]
+                            sample_field.append(sample_value)
                         sample_field_dic[data[self.config["VCF_COLUMNS"]["SAMPLE"]][index]] = (
                             ":".join(sample_field)
                         )
